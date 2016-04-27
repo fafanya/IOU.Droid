@@ -28,23 +28,8 @@ namespace share
 
         private void InitializeGroups()
         {
-            /*List<UGroup> groups = new List<UGroup>();
-            UGroup groupWORK = new UGroup();
-            groupWORK.Id = 1;
-            groupWORK.Name = "Work";
-            UGroup groupFRIENDS = new UGroup();
-            groupFRIENDS.Id = 2;
-            groupFRIENDS.Name = "Friends";
-
-            groups.Add(groupWORK);
-            groups.Add(groupFRIENDS);*/
-
-
             var groups = UDataBase.LoadGroups();
             ListAdapter = new GroupsAdapter(this, groups.ToArray());
-
-            //string[] items = new string[] { "Vegetables", "Fruits", "Flower Buds", "Legumes", "Bulbs", "Tubers" };
-            //ListAdapter = new ArrayAdapter<String>(this, Android.Resource.Layout.SimpleListItem1, items);
         }
 
         protected override void OnListItemClick(ListView l, View v, int position, long id)
