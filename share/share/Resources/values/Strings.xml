@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="Hello">Hello World, Click Me!</string>
+    <string name="ApplicationName">test</string>
+    <string name="whatson_tab_label">What\'s On</string>
+    <string name="speakers_tab_label">Speakers</string>
+    <string name="sessions_tab_label">Sessions</string>
+</resources>
