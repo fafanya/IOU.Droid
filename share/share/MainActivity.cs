@@ -5,12 +5,14 @@ using Android.App;
 using Android.Content;
 using Android.Runtime;
 using Android.Views;
-using Android.Widget;
+//using Android.Widget;
 using Android.OS;
+using Android.Support.V7.App;
+using Android.Support.V7.Widget;
 
 namespace share
 {
-    [Activity(Label = "GROUPS", MainLauncher = true, Icon = "@drawable/icon")]
+    /*[Activity(Label = "GROUPS", MainLauncher = true, Icon = "@drawable/icon")]
     public class MainActivity : ListActivity
     {
         protected override void OnCreate(Bundle bundle)
@@ -36,6 +38,23 @@ namespace share
         {
             var intent = new Intent(this, typeof(GroupActivity));
             StartActivity(intent);
+        }
+    }*/
+
+    [Activity(Label = "GROUPS", MainLauncher = true, Icon = "@drawable/icon")]
+    public class MainActivity : AppCompatActivity
+    {
+        protected override void OnCreate(Bundle bundle)
+        {
+            base.OnCreate(bundle);
+            SetContentView(Resource.Layout.activity_main);
+
+            var toolbar = FindViewById<Toolbar>(Resource.Id.toolbar);
+
+            //Toolbar will now take on default actionbar characteristics
+            SetSupportActionBar(toolbar);
+
+            SupportActionBar.Title = "Hello from Appcompat Toolbar";
         }
     }
 }
