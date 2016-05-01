@@ -12,11 +12,11 @@ using Android.Widget;
 
 namespace share
 {
-    public class GroupsAdapter : BaseAdapter<UGroup>
+    public class DebtorListAdapter : BaseAdapter<UMember>
     {
-        UGroup[] items;
+        UMember[] items;
         Activity context;
-        public GroupsAdapter(Activity context, UGroup[] items) : base()
+        public DebtorListAdapter(Activity context, UMember[] items) : base()
         {
             this.context = context;
             this.items = items;
@@ -27,7 +27,7 @@ namespace share
             return items[position].Id;
         }
 
-        public override UGroup this[int position]
+        public override UMember this[int position]
         {
             get { return items[position]; }
         }
@@ -42,10 +42,11 @@ namespace share
             View view = convertView;
             if (view == null)
             {
-                view = context.LayoutInflater.Inflate(Android.Resource.Layout.SimpleListItem1, null);
+                view = context.LayoutInflater.Inflate(Android.Resource.Layout.SimpleSpinnerItem, null);
             }
             view.FindViewById<TextView>(Android.Resource.Id.Text1).Text = items[position].Name;
             return view;
         }
+
     }
 }
