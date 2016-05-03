@@ -2302,9 +2302,6 @@ namespace share
 			// aapt resource value: 0x7f060048
 			public const int title_template = 2131099720;
 			
-			// aapt resource value: 0x7f060098
-			public const int toolbar = 2131099800;
-			
 			// aapt resource value: 0x7f060074
 			public const int toolbarEditBillActivity = 2131099764;
 			
@@ -2328,6 +2325,9 @@ namespace share
 			
 			// aapt resource value: 0x7f060095
 			public const int toolbarGroupActivity = 2131099797;
+			
+			// aapt resource value: 0x7f060098
+			public const int toolbarGroupListActivity = 2131099800;
 			
 			// aapt resource value: 0x7f060032
 			public const int top = 2131099698;

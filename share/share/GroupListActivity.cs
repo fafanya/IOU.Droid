@@ -18,7 +18,7 @@ namespace share
     {
         ListView ListView { get; set; }
         FloatingActionButton Fab { get; set; }
-
+        private Android.Support.V7.Widget.Toolbar toolbar;
         Type m_ListItemActivity = typeof(GroupActivity);
         Type m_EditItemActivity = typeof(EditGroupActivity);
         GroupListAdapter m_ListAdapter;
@@ -27,6 +27,11 @@ namespace share
         {
             base.OnCreate(bundle);
             SetContentView(Resource.Layout.GroupListActivity);
+
+            toolbar = FindViewById<Android.Support.V7.Widget.Toolbar>(Resource.Id.toolbarGroupListActivity);
+            SetSupportActionBar(toolbar);
+            //SupportActionBar.SetDisplayHomeAsUpEnabled(true);
+            //SupportActionBar.SetDisplayShowHomeEnabled(true);
 
             InitializeApp();
             InitializeList();
