@@ -244,7 +244,7 @@ namespace share
 
             return result;
         }
-        public static List<UBill> LoadBillList(int eventId = 0, int memberId = 0)
+        public static List<UBill> LoadBillList(int eventId = 0, int memberId = 0, int groupId = 0)
         {
             SqliteDataReader reader;
             string commandText;
@@ -257,6 +257,11 @@ namespace share
             {
                 commandText = "SELECT B.*, M.Name FROM BILL B, MEMBER M WHERE M.ID = B.Member_ID"
                     +" AND B.Member_ID = " + memberId + ";";
+            }
+            else if(groupId != 0)
+            {
+                commandText = "SELECT B.*, M.Name FROM BILL B, MEMBER M, EVENT E WHERE M.ID = B.Member_ID"
+                    + " AND B.Event_ID = E.ID AND E.Group_ID = " + groupId + ";";
             }
             else
             {
@@ -286,7 +291,7 @@ namespace share
 
             return result;
         }
-        public static List<UPayment> LoadPaymentList(int eventId = 0, int memberId = 0)
+        public static List<UPayment> LoadPaymentList(int eventId = 0, int memberId = 0, int groupId = 0)
         {
             SqliteDataReader reader;
             string commandText;
@@ -299,6 +304,11 @@ namespace share
             {
                 commandText = "SELECT P.*, M.Name FROM PAYMENT P, MEMBER M WHERE M.ID = P.Member_ID"
                     + " AND P.Member_ID = " + memberId + ";";
+            }
+            else if (groupId != 0)
+            {
+                commandText = "SELECT P.*, M.Name FROM PAYMENT P, MEMBER M, EVENT E WHERE M.ID = P.Member_ID"
+                    + " AND P.Event_ID = E.ID AND E.Group_ID = " + groupId + ";";
             }
             else
             {
@@ -551,9 +561,26 @@ namespace share
             return result;
         }
 
-        public static List<TotalDebt> LoadTotalDebtList(int eventId = 0)
+        public static List<TotalDebt> LoadTotalDebtList(int eventId = 0, int groupId = 0)
         {
-            List<TotalDebt> result = new List<TotalDebt>();
+            List<TotalDebt> result;
+
+            if(eventId != 0)
+            {
+                List<UMember> members = LoadMemberList(groupId);
+                List<UBill> bills = LoadBillList(eventId);
+                List<UPayment> payments = LoadPaymentList(eventId);
+                result = Algorithm.RecountEventTotalDebtList(eventId, members, bills, payments);
+            }
+            else
+            {
+                List<UMember> members = LoadMemberList(groupId);
+                List<UDebt> debts = LoadDebtList(groupId);
+                List<UEvent> events = LoadEventList(groupId);
+                List<UBill> bills = LoadBillList(groupId: groupId);
+                List<UPayment> payments = LoadPaymentList(groupId: groupId);
+                result = Algorithm.RecountGroupTotalDebtList(members, debts, bills, events, payments);
+            }
 
             return result;
         }

@@ -14,37 +14,31 @@ using Android.Support.V4.App;
 
 namespace share
 {
-    public class BillListFragment : ListFragment
+    public class DebtListFragment : ListFragment
     {
         private int m_GroupId;
-        private int m_EventId;
 
         FloatingActionButton Fab { get; set; }
 
-        Type m_ListItemActivity = typeof(EditBillActivity);
-        Type m_EditItemActivity = typeof(EditBillActivity);
+        Type m_ListItemActivity = typeof(EditDebtActivity);
+        Type m_EditItemActivity = typeof(EditDebtActivity);
 
-        BillListAdapter m_ListAdapter;
-        public override void OnCreate(Bundle savedInstanceState)
+        DebtListAdapter m_ListAdapter;
+        public override void OnActivityCreated(Bundle savedInstanceState)
         {
-            base.OnCreate(savedInstanceState);
+            base.OnActivityCreated(savedInstanceState);
+
+            InitializeList();
+            InitializeFab();
+            InitializeConextMenu();
         }
 
-        public void Refresh()
+        private void Refresh()
         {
             m_GroupId = Arguments.GetInt("Group_ID", -2);
-            m_EventId = Arguments.GetInt("Event_ID", -2);
-            var items = Controller.LoadBillList(m_EventId);
-            m_ListAdapter = new BillListAdapter(Activity, items.ToArray());
+            var items = Controller.LoadDebtList(m_GroupId);
+            m_ListAdapter = new DebtListAdapter(Activity, items.ToArray());
             ListAdapter = m_ListAdapter;
-        }
-
-        public override void OnViewCreated(View view, Bundle savedInstanceState)
-        {
-            base.OnViewCreated(view, savedInstanceState);
-            InitializeFab();
-            InitializeList();
-            InitializeConextMenu();
         }
 
         private void InitializeList()
@@ -54,22 +48,21 @@ namespace share
 
         private void InitializeFab()
         {
-            Fab = View.FindViewById<FloatingActionButton>(Resource.Id.fabBillListFragment);
+            Fab = View.FindViewById<FloatingActionButton>(Resource.Id.fabDebtListFragment);
             Fab.Click += Fab_Click;
         }
 
         public override View OnCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
         {
-            View view = inflater.Inflate(Resource.Layout.BillListFragment, null);
+            View view = inflater.Inflate(Resource.Layout.DebtListFragment, null);
             return view;
         }
 
         public override void OnListItemClick(ListView lValue, View vValue, int position, long id)
         {
-            var intent = new Intent(Activity, typeof(EditBillActivity));
+            var intent = new Intent(Activity, typeof(EditDebtActivity));
             intent.PutExtra("ID", (int)id);
             intent.PutExtra("Group_ID", m_GroupId);
-            intent.PutExtra("Event_ID", m_EventId);
             StartActivity(intent);
         }
 
@@ -82,7 +75,6 @@ namespace share
             Intent intent = new Intent(Activity, m_EditItemActivity);
             intent.PutExtra("ID", -1);
             intent.PutExtra("Group_ID", m_GroupId);
-            intent.PutExtra("Event_ID", m_EventId);
             StartActivityForResult(intent, 0);
         }
         public override void OnCreateContextMenu(IContextMenu menu, View v, IContextMenuContextMenuInfo menuInfo)
@@ -107,7 +99,6 @@ namespace share
                     var intent = new Intent(Activity, m_EditItemActivity);
                     intent.PutExtra("ID", id);
                     intent.PutExtra("Group_ID", m_GroupId);
-                    intent.PutExtra("Event_ID", m_EventId);
                     StartActivityForResult(intent, 1);
                 }
                 else if (item.ItemId == 2)

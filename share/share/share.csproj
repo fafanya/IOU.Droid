@@ -88,7 +88,7 @@
     <Compile Include="Adapters\PaymentListAdapter.cs" />
     <Compile Include="Adapters\TotalDebtListAdapter.cs" />
     <Compile Include="Adapters\ViewPagerAdapter.cs" />
-    <Compile Include="Algorithm\Program.cs" />
+    <Compile Include="Algorithm\Algorithm.cs" />
     <Compile Include="BillListFragment.cs" />
     <Compile Include="DebtListFragment.cs" />
     <Compile Include="EditBillActivity.cs" />

@@ -19,6 +19,7 @@ namespace share
         private ViewPager viewPager;
 
         private int m_ID;
+        private int m_GroupId;
 
         protected override void OnCreate(Bundle savedInstanceState)
         {
@@ -31,6 +32,7 @@ namespace share
             SupportActionBar.SetDefaultDisplayHomeAsUpEnabled(true);
 
             m_ID = Intent.GetIntExtra("ID", -2);
+            m_GroupId = Intent.GetIntExtra("Group_ID", -2);
 
             viewPager = FindViewById<ViewPager>(Resource.Id.viewpagerEventActivity);
             setupViewPager(viewPager);
@@ -45,6 +47,7 @@ namespace share
 
             Bundle args = new Bundle();
             args.PutInt("Event_ID", m_ID);
+            args.PutInt("Group_ID", m_ID);
 
             TotalDebtListFragment totalDebtListFragment = new TotalDebtListFragment();
             PaymentListFragment paymentListFragment = new PaymentListFragment();

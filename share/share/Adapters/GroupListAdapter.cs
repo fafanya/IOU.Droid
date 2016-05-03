@@ -1,22 +1,17 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-
 using Android.App;
-using Android.Content;
-using Android.OS;
-using Android.Runtime;
 using Android.Views;
 using Android.Widget;
 
 namespace share
 {
-    public class TotalDebtListAdapter : BaseAdapter<TotalDebt>
+    public class GroupListAdapter : BaseAdapter<UGroup>
     {
-        TotalDebt[] items;
+        UGroup[] items;
         Activity context;
-        public TotalDebtListAdapter(Activity context, TotalDebt[] items) : base()
+        public GroupListAdapter(Activity context, UGroup[] items) : base()
         {
             this.context = context;
             this.items = items;
@@ -27,7 +22,7 @@ namespace share
             return items[position].Id;
         }
 
-        public override TotalDebt this[int position]
+        public override UGroup this[int position]
         {
             get { return items[position]; }
         }
@@ -44,9 +39,7 @@ namespace share
             {
                 view = context.LayoutInflater.Inflate(Android.Resource.Layout.SimpleListItem1, null);
             }
-            view.FindViewById<TextView>(Android.Resource.Id.Text1).Text
-                = items[position].DebtorName + " -> " + items[position].LenderName + ": "
-                + items[position].Amount;
+            view.FindViewById<TextView>(Android.Resource.Id.Text1).Text = items[position].Name;
             return view;
         }
     }

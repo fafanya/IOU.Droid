@@ -3,5 +3,22 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
-
+    <Spinner
+        android:id="@+id/spBillMember"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content" />
+    <EditText
+        android:id="@+id/etBillAmount"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content" />
+    <Button
+        android:id="@+id/btnBillOK"
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:text="@string/ok" />
+    <Button
+        android:id="@+id/btnBillCancel"
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:text="@string/cancel" />
 </LinearLayout>

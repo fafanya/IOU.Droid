@@ -3,21 +3,17 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
-    <Spinner
-        android:id="@+id/spPaymentMember"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content" />
     <EditText
-        android:id="@+id/etPaymentAmount"
+        android:id="@+id/etEventName"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content" />
     <Button
-        android:id="@+id/btnPaymentOK"
+        android:id="@+id/btnEventOK"
         android:layout_height="wrap_content"
         android:layout_width="wrap_content"
         android:text="@string/ok" />
     <Button
-        android:id="@+id/btnPaymentCancel"
+        android:id="@+id/btnEventCancel"
         android:layout_height="wrap_content"
         android:layout_width="wrap_content"
         android:text="@string/cancel" />

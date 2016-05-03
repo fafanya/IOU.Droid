@@ -12,11 +12,11 @@ using Android.Widget;
 
 namespace share
 {
-    public class TotalDebtListAdapter : BaseAdapter<TotalDebt>
+    public class DebtListAdapter : BaseAdapter<UDebt>
     {
-        TotalDebt[] items;
+        UDebt[] items;
         Activity context;
-        public TotalDebtListAdapter(Activity context, TotalDebt[] items) : base()
+        public DebtListAdapter(Activity context, UDebt[] items) : base()
         {
             this.context = context;
             this.items = items;
@@ -27,7 +27,7 @@ namespace share
             return items[position].Id;
         }
 
-        public override TotalDebt this[int position]
+        public override UDebt this[int position]
         {
             get { return items[position]; }
         }
@@ -45,7 +45,7 @@ namespace share
                 view = context.LayoutInflater.Inflate(Android.Resource.Layout.SimpleListItem1, null);
             }
             view.FindViewById<TextView>(Android.Resource.Id.Text1).Text
-                = items[position].DebtorName + " -> " + items[position].LenderName + ": "
+                = items[position].DebtorName + " -> " + items[position].LenderName + ": " 
                 + items[position].Amount;
             return view;
         }

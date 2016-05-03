@@ -62,6 +62,7 @@ namespace share
         {
             var intent = new Intent(Activity, typeof(EventActivity));
             intent.PutExtra("ID", (int)id);
+            intent.PutExtra("Group_ID", m_GroupId);
             StartActivity(intent);
         }
 
@@ -97,6 +98,7 @@ namespace share
                 {
                     var intent = new Intent(Activity, m_EditItemActivity);
                     intent.PutExtra("ID", id);
+                    intent.PutExtra("Group_ID", m_GroupId);
                     StartActivityForResult(intent, 1);
                 }
                 else if (item.ItemId == 2)
