@@ -8,10 +8,11 @@ using Android.Support.V7.App;
 using Android.Support.V7.Widget;
 using Android.Support.Design.Widget;
 using Android.Support.V4.View;
+using Android.Views;
 
 namespace share
 {
-    [Android.App.Activity(Label = "Group", Theme = "@style/MyMaterialTheme")]
+    [Android.App.Activity(Label = "Group", Theme = "@style/MyTheme")]
     public class GroupActivity : AppCompatActivity
     {
         private Toolbar toolbar;
@@ -25,10 +26,10 @@ namespace share
             base.OnCreate(savedInstanceState);
             SetContentView(Resource.Layout.GroupActivity);
 
-            toolbar = FindViewById<Toolbar>(Resource.Id.toolbar);
+            toolbar = FindViewById<Toolbar>(Resource.Id.toolbarGroupActivity);
             SetSupportActionBar(toolbar);
-
-            SupportActionBar.SetDefaultDisplayHomeAsUpEnabled(true);
+            SupportActionBar.SetDisplayHomeAsUpEnabled(true);
+            SupportActionBar.SetDisplayShowHomeEnabled(true);
 
             m_ID = Intent.GetIntExtra("ID", -2);
 
@@ -37,6 +38,25 @@ namespace share
 
             tabLayout = FindViewById<TabLayout>(Resource.Id.tabs);
             tabLayout.SetupWithViewPager(viewPager);
+            //setupTabIcons();
+        }
+
+        public override bool OnOptionsItemSelected(IMenuItem item)
+        {
+            if (item.ItemId == Android.Resource.Id.Home)
+            {
+                Finish();
+            }
+
+            return base.OnOptionsItemSelected(item);
+        }
+
+        private void setupTabIcons()
+        {
+            tabLayout.GetTabAt(0).SetIcon(Resource.Drawable.Icon);
+            tabLayout.GetTabAt(1).SetIcon(Resource.Drawable.image);
+            tabLayout.GetTabAt(2).SetIcon(Resource.Drawable.image);
+            tabLayout.GetTabAt(3).SetIcon(Resource.Drawable.image);
         }
 
         private void setupViewPager(ViewPager viewPager)
@@ -56,10 +76,10 @@ namespace share
             debtListFragment.Arguments = args;
             totalDebtListFragment.Arguments = args;
 
-            adapter.addFragment(eventListFragment, new Java.Lang.String("E"));
-            adapter.addFragment(memberListFragment, new Java.Lang.String("M"));
-            adapter.addFragment(debtListFragment, new Java.Lang.String("D"));
-            adapter.addFragment(totalDebtListFragment, new Java.Lang.String("T"));
+            adapter.addFragment(eventListFragment, new Java.Lang.String("Events"));
+            adapter.addFragment(memberListFragment, new Java.Lang.String("Members"));
+            adapter.addFragment(debtListFragment, new Java.Lang.String("Debts"));
+            adapter.addFragment(totalDebtListFragment, new Java.Lang.String("Total"));
 
             viewPager.Adapter = adapter;
         }

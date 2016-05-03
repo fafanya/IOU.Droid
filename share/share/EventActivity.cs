@@ -8,10 +8,11 @@ using Android.Support.V7.App;
 using Android.Support.V7.Widget;
 using Android.Support.Design.Widget;
 using Android.Support.V4.View;
+using Android.Views;
 
 namespace share
 {
-    [Android.App.Activity(Label = "Event", Theme = "@style/MyMaterialTheme")]
+    [Android.App.Activity(Label = "Event", Theme = "@style/MyTheme")]
     public class EventActivity : AppCompatActivity
     {
         private Toolbar toolbar;
@@ -28,8 +29,8 @@ namespace share
 
             toolbar = FindViewById<Toolbar>(Resource.Id.toolbarEventActivity);
             SetSupportActionBar(toolbar);
-
-            SupportActionBar.SetDefaultDisplayHomeAsUpEnabled(true);
+            SupportActionBar.SetDisplayHomeAsUpEnabled(true);
+            SupportActionBar.SetDisplayShowHomeEnabled(true);
 
             m_ID = Intent.GetIntExtra("ID", -2);
             m_GroupId = Intent.GetIntExtra("Group_ID", -2);
@@ -39,6 +40,24 @@ namespace share
 
             tabLayout = FindViewById<TabLayout>(Resource.Id.tabsEventActivity);
             tabLayout.SetupWithViewPager(viewPager);
+            //setupTabIcons();
+        }
+
+        public override bool OnOptionsItemSelected(IMenuItem item)
+        {
+            if (item.ItemId == Android.Resource.Id.Home)
+            {
+                Finish();
+            }
+
+            return base.OnOptionsItemSelected(item);
+        }
+
+        private void setupTabIcons()
+        {
+            tabLayout.GetTabAt(0).SetIcon(Resource.Drawable.image);
+            tabLayout.GetTabAt(1).SetIcon(Resource.Drawable.image);
+            tabLayout.GetTabAt(2).SetIcon(Resource.Drawable.image);
         }
 
         private void setupViewPager(ViewPager viewPager)
@@ -57,9 +76,9 @@ namespace share
             paymentListFragment.Arguments = args;
             billListFragment.Arguments = args;
 
-            adapter.addFragment(billListFragment, new Java.Lang.String("B"));
-            adapter.addFragment(paymentListFragment, new Java.Lang.String("P"));
-            adapter.addFragment(totalDebtListFragment, new Java.Lang.String("T"));
+            adapter.addFragment(billListFragment, new Java.Lang.String("Bills"));
+            adapter.addFragment(paymentListFragment, new Java.Lang.String("Payments"));
+            adapter.addFragment(totalDebtListFragment, new Java.Lang.String("Total"));
 
             viewPager.Adapter = adapter;
         }

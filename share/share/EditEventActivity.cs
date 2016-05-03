@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-using Android.App;
 using Android.Support.V7.App;
 using Android.Content;
 using Android.OS;
@@ -13,18 +12,23 @@ using Android.Widget;
 
 namespace share
 {
-    [Activity(Label = "Event")]
+    [Android.App.Activity(Label = "Event", Theme = "@style/MyTheme")]
     public class EditEventActivity : AppCompatActivity
     {
         int m_ID;
         UEvent m_Event;
-
+        private Android.Support.V7.Widget.Toolbar toolbar;
         EditText m_etName;
 
         protected override void OnCreate(Bundle savedInstanceState)
         {
             base.OnCreate(savedInstanceState);
             SetContentView(Resource.Layout.EditEventActivity);
+
+            toolbar = FindViewById<Android.Support.V7.Widget.Toolbar>(Resource.Id.toolbarEditEventActivity);
+            SetSupportActionBar(toolbar);
+            SupportActionBar.SetDisplayHomeAsUpEnabled(true);
+            SupportActionBar.SetDisplayShowHomeEnabled(true);
 
             m_etName = FindViewById<EditText>(Resource.Id.etEventName);
             Button btnOK = FindViewById<Button>(Resource.Id.btnEventOK);
@@ -35,7 +39,15 @@ namespace share
 
             InitializeUObject();
         }
+        public override bool OnOptionsItemSelected(IMenuItem item)
+        {
+            if (item.ItemId == Android.Resource.Id.Home)
+            {
+                Finish();
+            }
 
+            return base.OnOptionsItemSelected(item);
+        }
         private void InitializeUObject()
         {
             m_ID = Intent.GetIntExtra("ID", -2);
@@ -55,7 +67,7 @@ namespace share
 
         private void BtnCancel_Click(object sender, EventArgs e)
         {
-            SetResult(Result.Canceled);
+            SetResult(Android.App.Result.Canceled);
             Finish();
         }
 
@@ -71,7 +83,7 @@ namespace share
                 Controller.UpdateObject(m_Event);
             }
 
-            SetResult(Result.Ok);
+            SetResult(Android.App.Result.Ok);
             Finish();
         }
     }

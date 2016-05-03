@@ -77,6 +77,7 @@ namespace share
         {
             RegisterForContextMenu(ListView);
         }
+
         private void Fab_Click(object sender, EventArgs e)
         {
             Intent intent = new Intent(Activity, m_EditItemActivity);
@@ -85,6 +86,7 @@ namespace share
             intent.PutExtra("Event_ID", m_EventId);
             StartActivityForResult(intent, 0);
         }
+
         public override void OnCreateContextMenu(IContextMenu menu, View v, IContextMenuContextMenuInfo menuInfo)
         {
             base.OnCreateContextMenu(menu, v, menuInfo);
@@ -92,6 +94,7 @@ namespace share
             menu.Add(2, 1, 0, "Edit");
             menu.Add(2, 2, 0, "Delete");
         }
+
         public override bool OnContextItemSelected(IMenuItem item)
         {
             if (item.GroupId == 2)
@@ -119,6 +122,7 @@ namespace share
             }
             return false;
         }
+
         public override void OnActivityResult(int requestCode, int resultCode, Intent data)
         {
             base.OnActivityResult(requestCode, resultCode, data);

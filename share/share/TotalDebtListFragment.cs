@@ -23,8 +23,6 @@ namespace share
         public override void OnCreate(Bundle savedInstanceState)
         {
             base.OnCreate(savedInstanceState);
-
-            
         }
 
         public override void OnViewCreated(View view, Bundle savedInstanceState)

@@ -13,7 +13,7 @@ using Android.Support.Design.Widget;
 
 namespace share
 {
-    [Activity(Label = "Groups", MainLauncher = true, Icon = "@drawable/icon")]
+    [Activity(Label = "Debts", MainLauncher = true, Icon = "@drawable/icon", Theme = "@style/MyTheme")]
     public class GroupListActivity : AppCompatActivity
     {
         ListView ListView { get; set; }

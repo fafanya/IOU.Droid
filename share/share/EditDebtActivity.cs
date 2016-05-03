@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-using Android.App;
 using Android.Support.V7.App;
 using Android.Content;
 using Android.OS;
@@ -13,12 +12,12 @@ using Android.Widget;
 
 namespace share
 {
-    [Activity(Label = "Debt")]
-    public class EditDebtActivity : Activity
+    [Android.App.Activity(Label = "Debt", Theme = "@style/MyTheme")]
+    public class EditDebtActivity : AppCompatActivity
     {
         int m_ID;
         UDebt m_Debt;
-
+        private Android.Support.V7.Widget.Toolbar toolbar;
         EditText m_etDebtAmount;
         EditText m_etName;
         Spinner m_spDebtor;
@@ -32,6 +31,11 @@ namespace share
             base.OnCreate(savedInstanceState);
             SetContentView(Resource.Layout.EditDebtActivity);
 
+            toolbar = FindViewById<Android.Support.V7.Widget.Toolbar>(Resource.Id.toolbarEditDebtActivity);
+            SetSupportActionBar(toolbar);
+            SupportActionBar.SetDisplayHomeAsUpEnabled(true);
+            SupportActionBar.SetDisplayShowHomeEnabled(true);
+
             m_etDebtAmount = FindViewById<EditText>(Resource.Id.etDebtAmount);
             m_etName = FindViewById<EditText>(Resource.Id.etDebtName);
             m_spDebtor = FindViewById<Spinner>(Resource.Id.spDebtor);
@@ -44,7 +48,15 @@ namespace share
 
             InitializeUObject();
         }
+        public override bool OnOptionsItemSelected(IMenuItem item)
+        {
+            if (item.ItemId == Android.Resource.Id.Home)
+            {
+                Finish();
+            }
 
+            return base.OnOptionsItemSelected(item);
+        }
         private void InitializeUObject()
         {
             int groupId = Intent.GetIntExtra("Group_ID", -2);
@@ -93,7 +105,7 @@ namespace share
 
         private void BtnCancel_Click(object sender, EventArgs e)
         {
-            SetResult(Result.Canceled);
+            SetResult(Android.App.Result.Canceled);
             Finish();
         }
 
@@ -113,7 +125,7 @@ namespace share
                 Controller.UpdateObject(m_Debt);
             }
 
-            SetResult(Result.Ok);
+            SetResult(Android.App.Result.Ok);
             Finish();
         }
     }

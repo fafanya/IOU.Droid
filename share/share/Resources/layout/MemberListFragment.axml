@@ -12,6 +12,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|right"
         android:layout_margin="16dp"
+        android:src="@drawable/plus"
         android:id="@+id/fabMemberListFragment"
         app:layout_anchor="@android:id/list"
         app:layout_anchorGravity="bottom|right|end" />

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-using Android.App;
+using Android.Support.V7.App;
 using Android.Content;
 using Android.OS;
 using Android.Runtime;
@@ -12,12 +12,12 @@ using Android.Widget;
 
 namespace share
 {
-    [Activity(Label = "Bill")]
-    public class EditBillActivity : Activity
+    [Android.App.Activity(Label = "Bill", Theme = "@style/MyTheme")]
+    public class EditBillActivity : AppCompatActivity
     {
         int m_ID;
         UBill m_Bill;
-
+        private Android.Support.V7.Widget.Toolbar toolbar;
         EditText m_etBillAmount;
         Spinner m_spMember;
 
@@ -27,6 +27,11 @@ namespace share
         {
             base.OnCreate(savedInstanceState);
             SetContentView(Resource.Layout.EditBillActivity);
+
+            toolbar = FindViewById<Android.Support.V7.Widget.Toolbar>(Resource.Id.toolbarEditBillActivity);
+            SetSupportActionBar(toolbar);
+            SupportActionBar.SetDisplayHomeAsUpEnabled(true);
+            SupportActionBar.SetDisplayShowHomeEnabled(true);
 
             m_etBillAmount = FindViewById<EditText>(Resource.Id.etBillAmount);
             m_spMember = FindViewById<Spinner>(Resource.Id.spBillMember);
@@ -38,7 +43,15 @@ namespace share
 
             InitializeUObject();
         }
+        public override bool OnOptionsItemSelected(IMenuItem item)
+        {
+            if (item.ItemId == Android.Resource.Id.Home)
+            {
+                Finish();
+            }
 
+            return base.OnOptionsItemSelected(item);
+        }
         private void InitializeUObject()
         {
             int eventId = Intent.GetIntExtra("Event_ID", -2);
@@ -75,7 +88,7 @@ namespace share
 
         private void BtnCancel_Click(object sender, EventArgs e)
         {
-            SetResult(Result.Canceled);
+            SetResult(Android.App.Result.Canceled);
             Finish();
         }
 
@@ -93,7 +106,7 @@ namespace share
                 Controller.UpdateObject(m_Bill);
             }
 
-            SetResult(Result.Ok);
+            SetResult(Android.App.Result.Ok);
             Finish();
         }
     }
