@@ -12,7 +12,7 @@ using Android.Widget;
 
 namespace share
 {
-    [Android.App.Activity(Label = "CreateMemberActivity", Theme = "@style/MyTheme")]
+    [Android.App.Activity(Label = "Участник", Theme = "@style/MyTheme")]
     public class EditMemberActivity : AppCompatActivity
     {
         int m_ID;
@@ -57,11 +57,13 @@ namespace share
                 m_Member = new UMember();
                 m_Member.Id = -1;
                 m_Member.GroupId = groupId;
+                SupportActionBar.Title = "Новый участник";
             }
             else
             {
                 m_Member = Controller.LoadMemberDetails(m_ID);
                 m_etName.Text = m_Member.Name;
+                SupportActionBar.Title = m_Member.Name;
             }
         }
 

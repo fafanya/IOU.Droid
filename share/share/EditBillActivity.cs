@@ -12,7 +12,7 @@ using Android.Widget;
 
 namespace share
 {
-    [Android.App.Activity(Label = "Bill", Theme = "@style/MyTheme")]
+    [Android.App.Activity(Label = "Ñ÷¸ò", Theme = "@style/MyTheme")]
     public class EditBillActivity : AppCompatActivity
     {
         int m_ID;

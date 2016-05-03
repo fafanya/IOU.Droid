@@ -12,7 +12,7 @@ using Android.Views;
 
 namespace share
 {
-    [Android.App.Activity(Label = "Group", Theme = "@style/MyTheme")]
+    [Android.App.Activity(Theme = "@style/MyTheme")]
     public class GroupActivity : AppCompatActivity
     {
         private Toolbar toolbar;
@@ -24,14 +24,23 @@ namespace share
         protected override void OnCreate(Bundle savedInstanceState)
         {
             base.OnCreate(savedInstanceState);
+
+            
+
             SetContentView(Resource.Layout.GroupActivity);
 
             toolbar = FindViewById<Toolbar>(Resource.Id.toolbarGroupActivity);
             SetSupportActionBar(toolbar);
+
+            m_ID = Intent.GetIntExtra("ID", -2);
+            UGroup g = Controller.LoadGroupDetails(m_ID);
+            SupportActionBar.Title = g.Name;
+
+
             SupportActionBar.SetDisplayHomeAsUpEnabled(true);
             SupportActionBar.SetDisplayShowHomeEnabled(true);
 
-            m_ID = Intent.GetIntExtra("ID", -2);
+            
 
             viewPager = FindViewById<ViewPager>(Resource.Id.viewpager);
             setupViewPager(viewPager);
@@ -76,10 +85,10 @@ namespace share
             debtListFragment.Arguments = args;
             totalDebtListFragment.Arguments = args;
 
-            adapter.addFragment(eventListFragment, new Java.Lang.String("Events"));
-            adapter.addFragment(memberListFragment, new Java.Lang.String("Members"));
-            adapter.addFragment(debtListFragment, new Java.Lang.String("Debts"));
-            adapter.addFragment(totalDebtListFragment, new Java.Lang.String("Total"));
+            adapter.addFragment(eventListFragment, new Java.Lang.String("Мер-ия"));
+            adapter.addFragment(memberListFragment, new Java.Lang.String("Учт-ки"));
+            adapter.addFragment(debtListFragment, new Java.Lang.String("Долги"));
+            adapter.addFragment(totalDebtListFragment, new Java.Lang.String("Итог"));
 
             viewPager.Adapter = adapter;
         }

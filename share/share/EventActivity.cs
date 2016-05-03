@@ -12,7 +12,7 @@ using Android.Views;
 
 namespace share
 {
-    [Android.App.Activity(Label = "Event", Theme = "@style/MyTheme")]
+    [Android.App.Activity(Theme = "@style/MyTheme")]
     public class EventActivity : AppCompatActivity
     {
         private Toolbar toolbar;
@@ -29,10 +29,14 @@ namespace share
 
             toolbar = FindViewById<Toolbar>(Resource.Id.toolbarEventActivity);
             SetSupportActionBar(toolbar);
+
+            m_ID = Intent.GetIntExtra("ID", -2);
+            UEvent e = Controller.LoadEventDetails(m_ID);
+            SupportActionBar.Title = e.Name;
+
             SupportActionBar.SetDisplayHomeAsUpEnabled(true);
             SupportActionBar.SetDisplayShowHomeEnabled(true);
 
-            m_ID = Intent.GetIntExtra("ID", -2);
             m_GroupId = Intent.GetIntExtra("Group_ID", -2);
 
             viewPager = FindViewById<ViewPager>(Resource.Id.viewpagerEventActivity);
@@ -76,9 +80,9 @@ namespace share
             paymentListFragment.Arguments = args;
             billListFragment.Arguments = args;
 
-            adapter.addFragment(billListFragment, new Java.Lang.String("Bills"));
-            adapter.addFragment(paymentListFragment, new Java.Lang.String("Payments"));
-            adapter.addFragment(totalDebtListFragment, new Java.Lang.String("Total"));
+            adapter.addFragment(billListFragment, new Java.Lang.String("—чета"));
+            adapter.addFragment(paymentListFragment, new Java.Lang.String("ќплаты"));
+            adapter.addFragment(totalDebtListFragment, new Java.Lang.String("»тог"));
 
             viewPager.Adapter = adapter;
         }

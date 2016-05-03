@@ -12,7 +12,7 @@ using Android.Widget;
 
 namespace share
 {
-    [Android.App.Activity(Label = "Debt", Theme = "@style/MyTheme")]
+    [Android.App.Activity(Label = "Долг", Theme = "@style/MyTheme")]
     public class EditDebtActivity : AppCompatActivity
     {
         int m_ID;
@@ -76,12 +76,14 @@ namespace share
                 m_Debt = new UDebt();
                 m_Debt.Id = -1;
                 m_Debt.GroupId = groupId;
+                SupportActionBar.Title = "Добавить долг";
             }
             else
             {
                 m_Debt = Controller.LoadDebtDetails(m_ID);
                 m_etName.Text = m_Debt.Name;
                 m_etDebtAmount.Text = m_Debt.Amount.ToString();
+                SupportActionBar.Title = m_Debt.Name;
 
                 for (int position = 0; position < m_DebtorAdapter.Count; position++)
                 {

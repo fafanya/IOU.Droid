@@ -12,7 +12,7 @@ using Android.Widget;
 
 namespace share
 {
-    [Android.App.Activity(Label = "Event", Theme = "@style/MyTheme")]
+    [Android.App.Activity(Label = "Событие", Theme = "@style/MyTheme")]
     public class EditEventActivity : AppCompatActivity
     {
         int m_ID;
@@ -57,11 +57,13 @@ namespace share
                 m_Event = new UEvent();
                 m_Event.Id = -1;
                 m_Event.GroupId = groupId;
+                SupportActionBar.Title = "Новое событие";
             }
             else
             {
                 m_Event = Controller.LoadEventDetails(m_ID);
                 m_etName.Text = m_Event.Name;
+                SupportActionBar.Title = m_Event.Name;
             }
         }
 

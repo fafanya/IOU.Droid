@@ -12,7 +12,7 @@ using Android.Widget;
 
 namespace share
 {
-    [Android.App.Activity(Label = "Group", Theme = "@style/MyTheme")]
+    [Android.App.Activity(Label = "Группа", Theme = "@style/MyTheme")]
     public class EditGroupActivity : AppCompatActivity
     {
         int m_ID;
@@ -55,13 +55,13 @@ namespace share
             {
                 m_Group = new UGroup();
                 m_Group.Id = -1;
-                Title = "New Group";
+                SupportActionBar.Title = "Новая группа";
             }
             else
             {
                 m_Group = Controller.LoadGroupDetails(m_ID);
                 m_etName.Text = m_Group.Name;
-                Title = m_Group.Name;
+                SupportActionBar.Title = m_Group.Name;
             }
         }
 
