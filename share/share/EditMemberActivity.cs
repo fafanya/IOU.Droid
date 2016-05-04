@@ -52,11 +52,13 @@ namespace share
         {
             m_ID = Intent.GetIntExtra("ID", -2);
             int groupId = Intent.GetIntExtra("Group_ID", -2);
+            int eventId = Intent.GetIntExtra("Event_ID", -2);
             if (m_ID < 0)
             {
                 m_Member = new UMember();
                 m_Member.Id = -1;
                 m_Member.GroupId = groupId;
+                m_Member.EventId = eventId;
                 SupportActionBar.Title = "Новый участник";
             }
             else

@@ -12,35 +12,34 @@ using Android.Views;
 
 namespace share
 {
-    [Android.App.Activity(Theme = "@style/MyTheme")]
-    public class GroupActivity : AppCompatActivity
+    [Android.App.Activity(Label = "Менеджер\nДолгов", MainLauncher = true, Icon = "@drawable/icon", Theme = "@style/MyTheme")]
+    public class MainActivity : AppCompatActivity
     {
         private Toolbar toolbar;
         private TabLayout tabLayout;
         private ViewPager viewPager;
 
-        private int m_ID;
-
         protected override void OnCreate(Bundle savedInstanceState)
         {
             base.OnCreate(savedInstanceState);
-            SetContentView(Resource.Layout.GroupActivity);
+            SetContentView(Resource.Layout.MainActivity);
 
-            toolbar = FindViewById<Toolbar>(Resource.Id.toolbarGroupActivity);
+            toolbar = FindViewById<Toolbar>(Resource.Id.toolbarMainActivity);
             SetSupportActionBar(toolbar);
+            SupportActionBar.Title = "Менеджер долгов";
 
-            m_ID = Intent.GetIntExtra("ID", -2);
-            UGroup g = Controller.LoadGroupDetails(m_ID);
-            SupportActionBar.Title = g.Name;
+            InitializeApp();
 
-            SupportActionBar.SetDisplayHomeAsUpEnabled(true);
-            SupportActionBar.SetDisplayShowHomeEnabled(true);
-
-            viewPager = FindViewById<ViewPager>(Resource.Id.viewpager);
+            viewPager = FindViewById<ViewPager>(Resource.Id.viewpagerMainActivity);
             setupViewPager(viewPager);
 
-            tabLayout = FindViewById<TabLayout>(Resource.Id.tabs);
+            tabLayout = FindViewById<TabLayout>(Resource.Id.tabsMainActivity);
             tabLayout.SetupWithViewPager(viewPager);
+        }
+
+        private void InitializeApp()
+        {
+            Controller.Initialize();
         }
 
         public override bool OnOptionsItemSelected(IMenuItem item)
@@ -58,22 +57,16 @@ namespace share
             ViewPagerAdapter adapter = new ViewPagerAdapter(SupportFragmentManager);
 
             Bundle args = new Bundle();
-            args.PutInt("Group_ID", m_ID);
+            args.PutInt("Group_ID", 0);
 
             EventListFragment eventListFragment = new EventListFragment();
-            MemberListFragment memberListFragment = new MemberListFragment();
-            DebtListFragment debtListFragment = new DebtListFragment();
-            TotalDebtListFragment totalDebtListFragment = new TotalDebtListFragment();
+            GroupListFragment groupListFragment = new GroupListFragment();
 
             eventListFragment.Arguments = args;
-            memberListFragment.Arguments = args;
-            debtListFragment.Arguments = args;
-            totalDebtListFragment.Arguments = args;
+            groupListFragment.Arguments = args;
 
-            adapter.addFragment(memberListFragment, new Java.Lang.String("Челы"));
             adapter.addFragment(eventListFragment, new Java.Lang.String("События"));
-            adapter.addFragment(debtListFragment, new Java.Lang.String("Долги"));
-            adapter.addFragment(totalDebtListFragment, new Java.Lang.String("Итог"));
+            adapter.addFragment(groupListFragment, new Java.Lang.String("Группы"));
 
             viewPager.Adapter = adapter;
         }

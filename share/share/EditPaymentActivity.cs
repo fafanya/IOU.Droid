@@ -57,7 +57,15 @@ namespace share
             int eventId = Intent.GetIntExtra("Event_ID", -2);
             int groupId = Intent.GetIntExtra("Group_ID", -2);
 
-            var memberItems = Controller.LoadMemberList(groupId);
+            List<UMember> memberItems;
+            if (groupId != 0)
+            {
+                memberItems = Controller.LoadMemberList(groupId);
+            }
+            else
+            {
+                memberItems = Controller.LoadMemberList(eventId: eventId);
+            }
 
             m_MemberAdapter = new DebtorListAdapter(this, memberItems.ToArray());
 

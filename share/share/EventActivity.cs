@@ -73,6 +73,13 @@ namespace share
             Bundle args = new Bundle();
             args.PutInt("Event_ID", m_ID);
             args.PutInt("Group_ID", m_GroupId);
+            
+            if(m_GroupId == 0)
+            {
+                MemberListFragment memberListFragment = new MemberListFragment();
+                memberListFragment.Arguments = args;
+                adapter.addFragment(memberListFragment, new Java.Lang.String("Челы"));
+            }
 
             if (m_Event.EventTypeId == UEventType.tOwn)
             {

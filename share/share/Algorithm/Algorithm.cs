@@ -119,24 +119,18 @@ namespace share
             else if (e.EventTypeId == UEventType.tCommon)
             {
                 double summa = 0.0;
-
-                List<CustomMember> distinctMembers = new List<CustomMember>();
                 foreach (UPayment p in payments.Where(x => x.EventId == e.Id))
                 {
                     summa += p.Amount;
                     foreach (CustomMember m in cMembers.Where(x => x.Member.Id == p.MemberId))
                     {
-                        if (distinctMembers.Count(x => x.Member.Id == m.Member.Id) == 0)
-                        {
-                            distinctMembers.Add(m);
-                        }
                         m.Balance -= p.Amount;
                     }
                 }
 
-                int count = distinctMembers.Count;
+                int count = cMembers.Count;
                 double avg = summa / count;
-                foreach (CustomMember m in distinctMembers)
+                foreach (CustomMember m in cMembers)
                 {
                     m.Balance += avg;
                 }

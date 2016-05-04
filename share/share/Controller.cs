@@ -17,7 +17,7 @@ namespace share
 {
     public class Controller
     {
-        private static string m_DBName = "udb11.db";
+        private static string m_DBName = "udb14.db";
 
         public static void Initialize()
         {
@@ -46,7 +46,7 @@ namespace share
                     command.ExecuteNonQueryAsync();
 
                     command.CommandText = "CREATE TABLE IF NOT EXISTS MEMBER (ID INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE," +
-                        "Group_ID INTEGER NOT NULL, Name TEXT NOT NULL);";
+                        "Group_ID INTEGER NOT NULL, Event_ID INTEGER, Name TEXT NOT NULL);";
                     command.CommandType = CommandType.Text;
                     command.ExecuteNonQueryAsync();
 
@@ -158,7 +158,7 @@ namespace share
 
             return result;
         }
-        public static List<UEvent> LoadEventList(int groupId)
+        public static List<UEvent> LoadEventList(int groupId = 0)
         {
             SqliteDataReader reader = GetReader("SELECT E.*, ET.Name as EventTypeName FROM EVENT E, EVENTTYPE ET WHERE E.EventType_ID = ET.ID AND E.Group_ID = " + groupId + ";");
 
@@ -183,9 +183,17 @@ namespace share
 
             return result;
         }
-        public static List<UMember> LoadMemberList(int groupId)
+        public static List<UMember> LoadMemberList(int groupId = 0, int eventId = 0)
         {
-            SqliteDataReader reader = GetReader("SELECT * FROM MEMBER M WHERE M.Group_ID = " + groupId + ";");
+            SqliteDataReader reader;
+            if (eventId != 0)
+            {
+                reader = GetReader("SELECT * FROM MEMBER M WHERE M.Event_ID = " + eventId + ";");
+            }
+            else
+            {
+                reader = GetReader("SELECT * FROM MEMBER M WHERE M.Group_ID = " + groupId + ";");
+            }
 
             List<UMember> result = new List<UMember>();
             while (reader.Read())
@@ -195,9 +203,16 @@ namespace share
                 var id = reader["ID"];
                 var name = reader["Name"];
                 var groupid = reader["Group_ID"];
+                var eventid = reader["Event_ID"];
                 item.Id = int.Parse(id.ToString());
                 item.GroupId = int.Parse(groupid.ToString());
                 item.Name = (string)name;
+
+                int tempEventId;
+                if(int.TryParse(eventid.ToString(), out tempEventId))
+                {
+                    item.EventId = tempEventId;
+                }
 
                 result.Add(item);
             }
@@ -511,7 +526,7 @@ namespace share
         }
         public static void CreateMember(UMember m)
         {
-            string commandText = "INSERT INTO MEMBER (Group_ID, Name) VALUES (" + m.GroupId + ", \"" + m.Name + "\");";
+            string commandText = "INSERT INTO MEMBER (Group_ID, Event_ID, Name) VALUES (" + m.GroupId + ", " + m.EventId+ ", \"" + m.Name + "\");";
             ExecuteCommand(commandText);
         }
         public static void CreateDebt(UDebt d)
@@ -609,10 +624,21 @@ namespace share
 
             if(eventId != 0)
             {
-                List<UMember> members = LoadMemberList(groupId);
-                List<UBill> bills = LoadBillList(eventId);
-                List<UPayment> payments = LoadPaymentList(eventId);
-                result = Algorithm.RecountEventTotalDebtList(eventId, members, bills, payments);
+                UEvent e = LoadEventDetails(eventId);
+                if(e.GroupId == 0)
+                {
+                    List<UMember> members = LoadMemberList(eventId: eventId);
+                    List<UBill> bills = LoadBillList(eventId);
+                    List<UPayment> payments = LoadPaymentList(eventId);
+                    result = Algorithm.RecountEventTotalDebtList(eventId, members, bills, payments);
+                }
+                else
+                {
+                    List<UMember> members = LoadMemberList(groupId);
+                    List<UBill> bills = LoadBillList(eventId);
+                    List<UPayment> payments = LoadPaymentList(eventId);
+                    result = Algorithm.RecountEventTotalDebtList(eventId, members, bills, payments);
+                }
             }
             else
             {

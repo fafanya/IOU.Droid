@@ -99,10 +99,11 @@
     <Compile Include="EditEventActivity.cs" />
     <Compile Include="EditGroupActivity.cs" />
     <Compile Include="EventActivity.cs" />
-    <Compile Include="EventFragments.cs" />
     <Compile Include="EventListFragment.cs" />
     <Compile Include="GroupActivity.cs" />
     <Compile Include="GroupListActivity.cs" />
+    <Compile Include="GroupListFragment.cs" />
+    <Compile Include="MainActivity.cs" />
     <Compile Include="MemberListFragment.cs" />
     <Compile Include="PaymentListFragment.cs" />
     <Compile Include="Resources\Resource.Designer.cs" />
@@ -158,6 +159,12 @@
       <SubType>AndroidResource</SubType>
     </AndroidResource>
     <AndroidResource Include="Resources\layout\SpinnerItem.axml">
+      <SubType>AndroidResource</SubType>
+    </AndroidResource>
+    <AndroidResource Include="Resources\layout\MainActivity.axml">
+      <SubType>AndroidResource</SubType>
+    </AndroidResource>
+    <AndroidResource Include="Resources\layout\GroupListFragment.axml">
       <SubType>AndroidResource</SubType>
     </AndroidResource>
   </ItemGroup>

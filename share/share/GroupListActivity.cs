@@ -13,7 +13,7 @@ using Android.Support.Design.Widget;
 
 namespace share
 {
-    [Activity(Label = "Менеджер\nДолгов", MainLauncher = true, Icon = "@drawable/icon", Theme = "@style/MyTheme")]
+    [Activity(Label = "Менеджер\nДолгов", Theme = "@style/MyTheme")]
     public class GroupListActivity : AppCompatActivity
     {
         ListView ListView { get; set; }
@@ -31,8 +31,6 @@ namespace share
             toolbar = FindViewById<Android.Support.V7.Widget.Toolbar>(Resource.Id.toolbarGroupListActivity);
             SetSupportActionBar(toolbar);
             SupportActionBar.Title = "Менеджер долгов | Группы";
-            //SupportActionBar.SetDisplayHomeAsUpEnabled(true);
-            //SupportActionBar.SetDisplayShowHomeEnabled(true);
 
             InitializeApp();
             InitializeList();

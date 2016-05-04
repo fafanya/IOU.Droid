@@ -36,6 +36,7 @@ namespace share
             Table = "MEMBER";
         }
         public int GroupId { get; set; }
+        public int EventId { get; set; }
         public string Name { get; set; }
     }
 
