@@ -12,11 +12,11 @@ using Android.Widget;
 
 namespace share
 {
-    public class DebtListAdapter : BaseAdapter<UDebt>
+    public class EventTypeListAdapter : BaseAdapter<UEventType>
     {
-        UDebt[] items;
+        UEventType[] items;
         Activity context;
-        public DebtListAdapter(Activity context, UDebt[] items) : base()
+        public EventTypeListAdapter(Activity context, UEventType[] items) : base()
         {
             this.context = context;
             this.items = items;
@@ -27,7 +27,7 @@ namespace share
             return items[position].Id;
         }
 
-        public override UDebt this[int position]
+        public override UEventType this[int position]
         {
             get { return items[position]; }
         }
@@ -42,11 +42,9 @@ namespace share
             View view = convertView;
             if (view == null)
             {
-                view = context.LayoutInflater.Inflate(Android.Resource.Layout.SimpleListItem1, null);
+                view = context.LayoutInflater.Inflate(Resource.Layout.SpinnerItem, null);
             }
-            view.FindViewById<TextView>(Android.Resource.Id.Text1).Text
-                = items[position].DebtorName + " -> " + items[position].LenderName + ": " 
-                + items[position].Amount + " [ " + items[position].Name + " ]";
+            view.FindViewById<TextView>(Resource.Id.SpinnerItemText).Text = items[position].Name;
             return view;
         }
     }

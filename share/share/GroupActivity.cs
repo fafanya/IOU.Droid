@@ -85,8 +85,8 @@ namespace share
             debtListFragment.Arguments = args;
             totalDebtListFragment.Arguments = args;
 
-            adapter.addFragment(eventListFragment, new Java.Lang.String("Мер-ия"));
-            adapter.addFragment(memberListFragment, new Java.Lang.String("Учт-ки"));
+            adapter.addFragment(memberListFragment, new Java.Lang.String("Челы"));
+            adapter.addFragment(eventListFragment, new Java.Lang.String("События"));
             adapter.addFragment(debtListFragment, new Java.Lang.String("Долги"));
             adapter.addFragment(totalDebtListFragment, new Java.Lang.String("Итог"));
 

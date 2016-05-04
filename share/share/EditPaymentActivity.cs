@@ -68,13 +68,12 @@ namespace share
             {
                 m_Payment = new UPayment();
                 m_Payment.Id = -1;
+                m_Payment.Amount = 0.0;
                 m_Payment.EventId = eventId;
             }
             else
             {
                 m_Payment = Controller.LoadPaymentDetails(m_ID);
-                m_etPaymentAmount.Text = m_Payment.Amount.ToString();
-
                 for (int position = 0; position < m_MemberAdapter.Count; position++)
                 {
                     if (m_MemberAdapter.GetItemId(position) == m_Payment.MemberId)
@@ -84,6 +83,7 @@ namespace share
                     }
                 }
             }
+            m_etPaymentAmount.Text = m_Payment.Amount.ToString();
         }
 
         private void BtnCancel_Click(object sender, EventArgs e)

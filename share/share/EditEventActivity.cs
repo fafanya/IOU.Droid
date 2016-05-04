@@ -19,7 +19,9 @@ namespace share
         UEvent m_Event;
         private Android.Support.V7.Widget.Toolbar toolbar;
         EditText m_etName;
+        Spinner m_spEventType;
 
+        EventTypeListAdapter m_EventTypeListAdapter;
         protected override void OnCreate(Bundle savedInstanceState)
         {
             base.OnCreate(savedInstanceState);
@@ -33,6 +35,7 @@ namespace share
             m_etName = FindViewById<EditText>(Resource.Id.etEventName);
             Button btnOK = FindViewById<Button>(Resource.Id.btnEventOK);
             Button btnCancel = FindViewById<Button>(Resource.Id.btnEventCancel);
+            m_spEventType = FindViewById<Spinner>(Resource.Id.spEventType);
 
             btnOK.Click += BtnOK_Click;
             btnCancel.Click += BtnCancel_Click;
@@ -52,11 +55,17 @@ namespace share
         {
             m_ID = Intent.GetIntExtra("ID", -2);
             int groupId = Intent.GetIntExtra("Group_ID", -2);
+
+            List<UEventType> items = Controller.LoadEventTypeList();
+            m_EventTypeListAdapter = new EventTypeListAdapter(this, items.ToArray());
+            m_spEventType.Adapter = m_EventTypeListAdapter;
+
             if (m_ID < 0)
             {
                 m_Event = new UEvent();
                 m_Event.Id = -1;
                 m_Event.GroupId = groupId;
+                m_Event.EventTypeId = 1;
                 SupportActionBar.Title = "Новое событие";
             }
             else
@@ -64,6 +73,15 @@ namespace share
                 m_Event = Controller.LoadEventDetails(m_ID);
                 m_etName.Text = m_Event.Name;
                 SupportActionBar.Title = m_Event.Name;
+            }
+
+            for (int position = 0; position < m_EventTypeListAdapter.Count; position++)
+            {
+                if (m_EventTypeListAdapter.GetItemId(position) == m_Event.EventTypeId)
+                {
+                    m_spEventType.SetSelection(position);
+                    break;
+                }
             }
         }
 
@@ -76,6 +94,8 @@ namespace share
         private void BtnOK_Click(object sender, EventArgs e)
         {
             m_Event.Name = m_etName.Text;
+            m_Event.EventTypeId = (int)(m_spEventType.SelectedItemId);
+
             if (m_Event.Id < 0)
             {
                 Controller.CreateEvent(m_Event);

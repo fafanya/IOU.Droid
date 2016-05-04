@@ -22,6 +22,8 @@ namespace share
         private int m_ID;
         private int m_GroupId;
 
+
+        UEvent m_Event;
         protected override void OnCreate(Bundle savedInstanceState)
         {
             base.OnCreate(savedInstanceState);
@@ -31,8 +33,8 @@ namespace share
             SetSupportActionBar(toolbar);
 
             m_ID = Intent.GetIntExtra("ID", -2);
-            UEvent e = Controller.LoadEventDetails(m_ID);
-            SupportActionBar.Title = e.Name;
+            m_Event = Controller.LoadEventDetails(m_ID);
+            SupportActionBar.Title = m_Event.Name + " (—чЄт: " + m_Event.EventTypeName + ")";
 
             SupportActionBar.SetDisplayHomeAsUpEnabled(true);
             SupportActionBar.SetDisplayShowHomeEnabled(true);
@@ -70,17 +72,21 @@ namespace share
 
             Bundle args = new Bundle();
             args.PutInt("Event_ID", m_ID);
-            args.PutInt("Group_ID", m_ID);
+            args.PutInt("Group_ID", m_GroupId);
+
+            if (m_Event.EventTypeId == UEventType.tOwn)
+            {
+                BillListFragment billListFragment = new BillListFragment();
+                billListFragment.Arguments = args;
+                adapter.addFragment(billListFragment, new Java.Lang.String("—чета"));
+            }
 
             TotalDebtListFragment totalDebtListFragment = new TotalDebtListFragment();
             PaymentListFragment paymentListFragment = new PaymentListFragment();
-            BillListFragment billListFragment = new BillListFragment();
-
+            
             totalDebtListFragment.Arguments = args;
             paymentListFragment.Arguments = args;
-            billListFragment.Arguments = args;
-
-            adapter.addFragment(billListFragment, new Java.Lang.String("—чета"));
+            
             adapter.addFragment(paymentListFragment, new Java.Lang.String("ќплаты"));
             adapter.addFragment(totalDebtListFragment, new Java.Lang.String("»тог"));
 

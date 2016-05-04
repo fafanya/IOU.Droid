@@ -82,6 +82,7 @@
     <Compile Include="Adapters\DebtListAdapter.cs" />
     <Compile Include="Adapters\DebtorListAdapter.cs" />
     <Compile Include="Adapters\EventListAdapter.cs" />
+    <Compile Include="Adapters\EventTypeListAdapter.cs" />
     <Compile Include="Adapters\GroupListAdapter.cs" />
     <Compile Include="Adapters\LenderListAdapter.cs" />
     <Compile Include="Adapters\MemberListAdapter.cs" />
@@ -154,6 +155,9 @@
       <SubType>AndroidResource</SubType>
     </AndroidResource>
     <AndroidResource Include="Resources\layout\EditDebtActivity.axml">
+      <SubType>AndroidResource</SubType>
+    </AndroidResource>
+    <AndroidResource Include="Resources\layout\SpinnerItem.axml">
       <SubType>AndroidResource</SubType>
     </AndroidResource>
   </ItemGroup>

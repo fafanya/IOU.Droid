@@ -13,7 +13,7 @@ using Android.Support.Design.Widget;
 
 namespace share
 {
-    [Activity(Label = "Debt Manager", MainLauncher = true, Icon = "@drawable/icon", Theme = "@style/MyTheme")]
+    [Activity(Label = "Менеджер\nДолгов", MainLauncher = true, Icon = "@drawable/icon", Theme = "@style/MyTheme")]
     public class GroupListActivity : AppCompatActivity
     {
         ListView ListView { get; set; }
@@ -30,7 +30,7 @@ namespace share
 
             toolbar = FindViewById<Android.Support.V7.Widget.Toolbar>(Resource.Id.toolbarGroupListActivity);
             SetSupportActionBar(toolbar);
-            SupportActionBar.Title = "Менеджер долгов";
+            SupportActionBar.Title = "Менеджер долгов | Группы";
             //SupportActionBar.SetDisplayHomeAsUpEnabled(true);
             //SupportActionBar.SetDisplayShowHomeEnabled(true);
 
@@ -85,9 +85,9 @@ namespace share
         public override void OnCreateContextMenu(IContextMenu menu, View v, IContextMenuContextMenuInfo menuInfo)
         {
             base.OnCreateContextMenu(menu, v, menuInfo);
-            menu.SetHeaderTitle("Menu");
-            menu.Add(0, 1, 0, "Edit");
-            menu.Add(0, 2, 0, "Delete");
+            menu.SetHeaderTitle("Меню");
+            menu.Add(0, 1, 0, "Изменить");
+            menu.Add(0, 2, 0, "Удалить");
         }
         public override bool OnContextItemSelected(IMenuItem item)
         {

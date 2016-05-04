@@ -58,7 +58,6 @@ namespace share
             int groupId = Intent.GetIntExtra("Group_ID", -2);
 
             var memberItems = Controller.LoadMemberList(groupId);
-
             m_MemberAdapter = new DebtorListAdapter(this, memberItems.ToArray());
 
             m_spMember.Adapter = m_MemberAdapter;

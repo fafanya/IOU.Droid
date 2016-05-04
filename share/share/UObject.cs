@@ -24,7 +24,9 @@ namespace share
             Table = "EVENT";
         }
         public int GroupId { get; set; }
+        public int EventTypeId { get; set; }
         public string Name { get; set; }
+        public string EventTypeName { get; set; }
     }
 
     public class UMember : UObject
@@ -77,6 +79,14 @@ namespace share
         public double Amount { get; set; }
 
         public string MemberName { get; set; }
+    }
+
+    public class UEventType : UObject
+    {
+        public static int tOwn = 1;
+        public static int tCommon = 2;
+
+        public string Name { get; set; }
     }
 
     public class UObject

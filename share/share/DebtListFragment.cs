@@ -63,7 +63,7 @@ namespace share
             var intent = new Intent(Activity, typeof(EditDebtActivity));
             intent.PutExtra("ID", (int)id);
             intent.PutExtra("Group_ID", m_GroupId);
-            StartActivity(intent);
+            StartActivityForResult(intent, 0);
         }
 
         private void InitializeConextMenu()
@@ -80,9 +80,9 @@ namespace share
         public override void OnCreateContextMenu(IContextMenu menu, View v, IContextMenuContextMenuInfo menuInfo)
         {
             base.OnCreateContextMenu(menu, v, menuInfo);
-            menu.SetHeaderTitle("Menu");
-            menu.Add(2, 1, 0, "Edit");
-            menu.Add(2, 2, 0, "Delete");
+            menu.SetHeaderTitle("Меню");
+            menu.Add(2, 1, 0, "Изменить");
+            menu.Add(2, 2, 0, "Удалить");
         }
         public override bool OnContextItemSelected(IMenuItem item)
         {

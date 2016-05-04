@@ -17,7 +17,7 @@ namespace share
 {
     public class Controller
     {
-        private static string m_DBName = "udb7.db";
+        private static string m_DBName = "udb11.db";
 
         public static void Initialize()
         {
@@ -36,7 +36,12 @@ namespace share
                     command.ExecuteNonQueryAsync();
 
                     command.CommandText = "CREATE TABLE IF NOT EXISTS EVENT (ID INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE, " +
-                        "Group_ID INTEGER NOT NULL, Name TEXT NOT NULL);";
+                        "Group_ID INTEGER NOT NULL, EventType_ID INTEGER NOT NULL, Name TEXT NOT NULL);";
+                    command.CommandType = CommandType.Text;
+                    command.ExecuteNonQueryAsync();
+
+                    command.CommandText = "CREATE TABLE IF NOT EXISTS EVENTTYPE (ID INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE, " +
+                        "Name TEXT NOT NULL);";
                     command.CommandType = CommandType.Text;
                     command.ExecuteNonQueryAsync();
 
@@ -60,32 +65,40 @@ namespace share
                     command.CommandType = CommandType.Text;
                     command.ExecuteNonQueryAsync();
 
-                    command.CommandText = "INSERT INTO GROUPS (ID, Name) VALUES (1, \"Friends\");";
+                    command.CommandText = "INSERT INTO GROUPS (ID, Name) VALUES (1, \"Друзья\");";
                     command.CommandType = CommandType.Text;
                     command.ExecuteNonQueryAsync();
 
-                    command.CommandText = "INSERT INTO EVENT (ID, Group_ID, Name) VALUES (1, 1, \"Cafe\");";
+                    command.CommandText = "INSERT INTO EVENT (ID, Group_ID, EventType_ID, Name) VALUES (1, 1, 1, \"Поход\");";
                     command.CommandType = CommandType.Text;
                     command.ExecuteNonQueryAsync();
 
-                    command.CommandText = "INSERT INTO MEMBER (ID, Group_ID, Name) VALUES (1, 1, \"Eugene\");";
+                    command.CommandText = "INSERT INTO EVENTTYPE (ID, Name) VALUES (1, \"Раздельный\");";
                     command.CommandType = CommandType.Text;
                     command.ExecuteNonQueryAsync();
 
-                    command.CommandText = "INSERT INTO MEMBER (ID, Group_ID, Name) VALUES (2, 1, \"Alex\");";
+                    command.CommandText = "INSERT INTO EVENTTYPE (ID, Name) VALUES (2, \"Общий\");";
+                    command.CommandType = CommandType.Text;
+                    command.ExecuteNonQueryAsync();
+
+                    command.CommandText = "INSERT INTO MEMBER (ID, Group_ID, Name) VALUES (1, 1, \"Витя\");";
+                    command.CommandType = CommandType.Text;
+                    command.ExecuteNonQueryAsync();
+
+                    command.CommandText = "INSERT INTO MEMBER (ID, Group_ID, Name) VALUES (2, 1, \"Петя\");";
                     command.CommandType = CommandType.Text;
                     command.ExecuteNonQueryAsync();
 
                     command.CommandText = "INSERT INTO DEBT (ID, Group_ID, Name, Debtor_ID, Lender_ID, Amount) VALUES " +
-                        "(1, 1, \"Beer\", 2, 1, 20000);";
+                        "(1, 1, \"Пиво\", 2, 1, 20000);";
                     command.CommandType = CommandType.Text;
                     command.ExecuteNonQueryAsync();
 
-                    command.CommandText = "INSERT INTO BILL (ID, Event_ID, Member_ID, Amount) VALUES (1, 1, 1, 12000);";
+                    command.CommandText = "INSERT INTO BILL (ID, Event_ID, Member_ID, Amount) VALUES (1, 1, 1, 14000);";
                     command.CommandType = CommandType.Text;
                     command.ExecuteNonQueryAsync();
 
-                    command.CommandText = "INSERT INTO PAYMENT (ID, Event_ID, Member_ID, Amount) VALUES (1, 1, 1, 14000);";
+                    command.CommandText = "INSERT INTO PAYMENT (ID, Event_ID, Member_ID, Amount) VALUES (1, 1, 2, 14000);";
                     command.CommandType = CommandType.Text;
                     command.ExecuteNonQueryAsync();
                 }
@@ -147,7 +160,7 @@ namespace share
         }
         public static List<UEvent> LoadEventList(int groupId)
         {
-            SqliteDataReader reader = GetReader("SELECT * FROM EVENT E WHERE E.Group_ID = " + groupId + ";");
+            SqliteDataReader reader = GetReader("SELECT E.*, ET.Name as EventTypeName FROM EVENT E, EVENTTYPE ET WHERE E.EventType_ID = ET.ID AND E.Group_ID = " + groupId + ";");
 
             List<UEvent> result = new List<UEvent>();
             while (reader.Read())
@@ -157,9 +170,13 @@ namespace share
                 var id = reader["ID"];
                 var name = reader["Name"];
                 var groupid = reader["Group_ID"];
+                var eventypeid = reader["EventType_ID"];
+                var eventtypename = reader["EventTypeName"];
                 item.Id = int.Parse(id.ToString());
                 item.GroupId = int.Parse(groupid.ToString());
                 item.Name = (string)name;
+                item.EventTypeName = (string)eventtypename;
+                item.EventTypeId = int.Parse(eventypeid.ToString());
 
                 result.Add(item);
             }
@@ -337,6 +354,26 @@ namespace share
 
             return result;
         }
+        public static List<UEventType> LoadEventTypeList()
+        {
+            string commandText = "SELECT * FROM EVENTTYPE;";
+            SqliteDataReader reader = GetReader(commandText);
+
+            List<UEventType> result = new List<UEventType>();
+            while (reader.Read())
+            {
+                UEventType item = new UEventType();
+
+                var id = reader["ID"];
+                var name = reader["Name"];
+                item.Id = int.Parse(id.ToString());
+                item.Name = (string)name;
+
+                result.Add(item);
+            }
+
+            return result;
+        }
 
         public static UGroup LoadGroupDetails(int groupId)
         {
@@ -355,7 +392,7 @@ namespace share
         }
         public static UEvent LoadEventDetails(int eventId)
         {
-            SqliteDataReader reader = GetReader("SELECT * FROM EVENT E WHERE E.ID = " + eventId + ";");
+            SqliteDataReader reader = GetReader("SELECT E.*, ET.Name as EventTypeName FROM EVENT E, EVENTTYPE ET WHERE E.EventType_ID = ET.ID AND E.ID = " + eventId + ";");
 
             UEvent item = new UEvent();
             while (reader.Read())
@@ -363,9 +400,13 @@ namespace share
                 var id = reader["ID"];
                 var name = reader["Name"];
                 var groupid = reader["Group_ID"];
+                var eventypeid = reader["EventType_ID"];
+                var eventtypename = reader["EventTypeName"];
                 item.Id = int.Parse(id.ToString());
                 item.GroupId = int.Parse(groupid.ToString());
                 item.Name = (string)name;
+                item.EventTypeName = (string)eventtypename;
+                item.EventTypeId = int.Parse(eventypeid.ToString());
             }
 
             return item;
@@ -465,7 +506,7 @@ namespace share
         }
         public static void CreateEvent(UEvent e)
         {
-            string commandText = "INSERT INTO EVENT (Group_ID, Name) VALUES (" + e.GroupId + ", \"" + e.Name + "\");";
+            string commandText = "INSERT INTO EVENT (Group_ID, EventType_ID, Name) VALUES (" + e.GroupId + ", " + e.EventTypeId + ", \"" + e.Name + "\");";
             ExecuteCommand(commandText);
         }
         public static void CreateMember(UMember m)
@@ -526,6 +567,7 @@ namespace share
             {
                 UEvent i = uobject as UEvent;
                 result += "Group_ID=" + i.GroupId + ", ";
+                result += "EventType_ID=" + i.EventTypeId + ", ";
                 result += "Name = \"" + i.Name + "\"";
             }
             else if (uobject is UMember)

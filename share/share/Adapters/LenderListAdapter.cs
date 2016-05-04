@@ -42,9 +42,9 @@ namespace share
             View view = convertView;
             if (view == null)
             {
-                view = context.LayoutInflater.Inflate(Android.Resource.Layout.SimpleSpinnerItem, null);
+                view = context.LayoutInflater.Inflate(Resource.Layout.SpinnerItem, null);
             }
-            view.FindViewById<TextView>(Android.Resource.Id.Text1).Text = items[position].Name;
+            view.FindViewById<TextView>(Resource.Id.SpinnerItemText).Text = items[position].Name;
             return view;
         }
     }
