@@ -7,7 +7,7 @@ using Android.Util;
 
 namespace share
 {
-    [Activity(Theme = "@style/MyTheme.Splash", MainLauncher = true, NoHistory = true, Label = "Менеджер\nДолгов", Icon = "@drawable/icon")]
+    [Activity(Theme = "@style/MyTheme.Splash", MainLauncher = true, NoHistory = true, Label = "Долги", Icon = "@drawable/icon")]
     public class SplashActivity : AppCompatActivity
     {
         public override void OnCreate(Bundle savedInstanceState, PersistableBundle persistentState)
@@ -21,7 +21,6 @@ namespace share
 
             Task startupWork = new Task(() =>
             {
-                Task.Delay(5000);
                 Controller.Initialize();
             });
 

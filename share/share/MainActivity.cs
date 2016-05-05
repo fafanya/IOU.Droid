@@ -12,7 +12,7 @@ using Android.Views;
 
 namespace share
 {
-    [Android.App.Activity(Label = "Менеджер\nДолгов", Theme = "@style/MyTheme")]
+    [Android.App.Activity(Label = "Менеджер долгов", Theme = "@style/MyTheme")]
     public class MainActivity : AppCompatActivity
     {
         private Toolbar toolbar;
