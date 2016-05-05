@@ -18,6 +18,8 @@ namespace share
         private Toolbar toolbar;
         private TabLayout tabLayout;
         private ViewPager viewPager;
+        private Android.Support.V4.Widget.DrawerLayout m_DrawerLayout;
+        NavigationView m_NavigationView;
 
         protected override void OnCreate(Bundle savedInstanceState)
         {
@@ -26,7 +28,26 @@ namespace share
 
             toolbar = FindViewById<Toolbar>(Resource.Id.toolbarMainActivity);
             SetSupportActionBar(toolbar);
+
+            SupportActionBar.SetHomeAsUpIndicator(Resource.Drawable.ic_menu);
+            SupportActionBar.SetDisplayHomeAsUpEnabled(true);
+
             SupportActionBar.Title = "Менеджер долгов";
+
+            m_DrawerLayout = FindViewById<Android.Support.V4.Widget.DrawerLayout>(Resource.Id.drawer_layout);
+
+            m_NavigationView = FindViewById<NavigationView>(Resource.Id.nav_view);
+
+            m_NavigationView.NavigationItemSelected += (sender, e) => {
+
+                if(e.MenuItem.ItemId == Resource.Id.nav_about)
+                {
+                    var intent = new Intent(this, typeof(AboutActivity));
+                    StartActivity(intent);
+                }
+                //react to click here and swap fragments or navigate
+                m_DrawerLayout.CloseDrawers();
+            };
 
             InitializeApp();
 
@@ -44,11 +65,12 @@ namespace share
 
         public override bool OnOptionsItemSelected(IMenuItem item)
         {
-            if (item.ItemId == Android.Resource.Id.Home)
+            switch (item.ItemId)
             {
-                Finish();
+                case Android.Resource.Id.Home:
+                    m_DrawerLayout.OpenDrawer(Android.Support.V4.View.GravityCompat.Start);
+                    return true;
             }
-
             return base.OnOptionsItemSelected(item);
         }
 
