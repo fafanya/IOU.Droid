@@ -12,7 +12,7 @@ using Android.Views;
 
 namespace share
 {
-    [Android.App.Activity(Label = "Менеджер\nДолгов", MainLauncher = true, Icon = "@drawable/icon", Theme = "@style/MyTheme")]
+    [Android.App.Activity(Label = "Менеджер\nДолгов", Theme = "@style/MyTheme")]
     public class MainActivity : AppCompatActivity
     {
         private Toolbar toolbar;
@@ -49,7 +49,7 @@ namespace share
                 m_DrawerLayout.CloseDrawers();
             };
 
-            InitializeApp();
+            //InitializeApp();
 
             viewPager = FindViewById<ViewPager>(Resource.Id.viewpagerMainActivity);
             setupViewPager(viewPager);
