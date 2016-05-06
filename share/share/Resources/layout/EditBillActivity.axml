@@ -32,7 +32,7 @@
                 android:layout_weight="1"
                 android:textSize="20sp"
                 android:textStyle="bold"
-                android:text="Плательщик: " />
+                android:text="Участник: " />
             <Spinner
                 android:id="@+id/spBillMember"
                 android:layout_height="wrap_content"
@@ -41,6 +41,7 @@
                 android:layout_marginLeft="10dp" />
         </LinearLayout>
         <LinearLayout
+            android:id="@+id/llEditBillActivity"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"

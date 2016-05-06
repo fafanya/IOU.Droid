@@ -18,6 +18,7 @@ namespace share
     {
         private int m_GroupId;
         private int m_EventId;
+        private UEvent m_Event;
 
         FloatingActionButton Fab { get; set; }
 
@@ -34,8 +35,11 @@ namespace share
         {
             m_GroupId = Arguments.GetInt("Group_ID", -2);
             m_EventId = Arguments.GetInt("Event_ID", -2);
+
+            m_Event = Controller.LoadEventDetails(m_EventId);
+
             var items = Controller.LoadBillList(m_EventId);
-            m_ListAdapter = new BillListAdapter(Activity, items.ToArray());
+            m_ListAdapter = new BillListAdapter(Activity, items.ToArray(), m_Event.EventTypeId != UEventType.tPartly);
             ListAdapter = m_ListAdapter;
         }
 

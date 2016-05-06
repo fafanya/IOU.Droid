@@ -86,6 +86,7 @@ namespace share
     {
         public static int tOwn = 1;
         public static int tCommon = 2;
+        public static int tPartly = 3;
 
         public string Name { get; set; }
     }

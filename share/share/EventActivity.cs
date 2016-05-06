@@ -87,6 +87,12 @@ namespace share
                 billListFragment.Arguments = args;
                 adapter.addFragment(billListFragment, new Java.Lang.String("Счета"));
             }
+            if (m_Event.EventTypeId == UEventType.tPartly)
+            {
+                BillListFragment billListFragment = new BillListFragment();
+                billListFragment.Arguments = args;
+                adapter.addFragment(billListFragment, new Java.Lang.String("Участники"));
+            }
 
             TotalDebtListFragment totalDebtListFragment = new TotalDebtListFragment();
             PaymentListFragment paymentListFragment = new PaymentListFragment();

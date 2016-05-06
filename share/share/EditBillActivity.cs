@@ -20,6 +20,8 @@ namespace share
         private Android.Support.V7.Widget.Toolbar toolbar;
         EditText m_etBillAmount;
         Spinner m_spMember;
+        LinearLayout m_ll;
+        UEvent m_Event;
 
         DebtorListAdapter m_MemberAdapter;
 
@@ -35,6 +37,7 @@ namespace share
 
             m_etBillAmount = FindViewById<EditText>(Resource.Id.etBillAmount);
             m_spMember = FindViewById<Spinner>(Resource.Id.spBillMember);
+            m_ll = FindViewById<LinearLayout>(Resource.Id.llEditBillActivity);
             Button btnOK = FindViewById<Button>(Resource.Id.btnBillOK);
             Button btnCancel = FindViewById<Button>(Resource.Id.btnBillCancel);
 
@@ -57,6 +60,8 @@ namespace share
             int eventId = Intent.GetIntExtra("Event_ID", -2);
             int groupId = Intent.GetIntExtra("Group_ID", -2);
 
+            m_Event = Controller.LoadEventDetails(eventId);
+
             List<UMember> memberItems;
 
             if (groupId != 0)
@@ -78,12 +83,11 @@ namespace share
                 m_Bill = new UBill();
                 m_Bill.Id = -1;
                 m_Bill.EventId = eventId;
+                m_Bill.Amount = 0.0;
             }
             else
             {
                 m_Bill = Controller.LoadBillDetails(m_ID);
-                m_etBillAmount.Text = m_Bill.Amount.ToString();
-
                 for (int position = 0; position < m_MemberAdapter.Count; position++)
                 {
                     if (m_MemberAdapter.GetItemId(position) == m_Bill.MemberId)
@@ -92,6 +96,16 @@ namespace share
                         break;
                     }
                 }
+            }
+
+            if(m_Event.EventTypeId == UEventType.tOwn)
+            {
+                m_etBillAmount.Text = m_Bill.Amount.ToString();
+            }
+            else
+            {
+                SupportActionBar.Title = "Участник";
+                m_ll.Visibility = ViewStates.Gone;
             }
         }
 
@@ -103,7 +117,10 @@ namespace share
 
         private void BtnOK_Click(object sender, EventArgs e)
         {
-            m_Bill.Amount = int.Parse(m_etBillAmount.Text);
+            if (m_Event.EventTypeId == UEventType.tOwn)
+            {
+                m_Bill.Amount = int.Parse(m_etBillAmount.Text);
+            }
             m_Bill.MemberId = (int)(m_spMember.SelectedItemId);
 
             if (m_Bill.Id < 0)

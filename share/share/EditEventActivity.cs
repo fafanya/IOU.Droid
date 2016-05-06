@@ -57,6 +57,12 @@ namespace share
             int groupId = Intent.GetIntExtra("Group_ID", -2);
 
             List<UEventType> items = Controller.LoadEventTypeList();
+
+            if (groupId == 0)
+            {
+                items.RemoveAll(x => x.Id == 3);
+            }
+
             m_EventTypeListAdapter = new EventTypeListAdapter(this, items.ToArray());
             m_spEventType.Adapter = m_EventTypeListAdapter;
 

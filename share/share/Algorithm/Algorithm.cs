@@ -78,6 +78,29 @@ namespace share
                         m.Balance += avg;
                     }
                 }
+                else if(e.EventTypeId == UEventType.tPartly)
+                {
+                    double summa = 0.0;
+                    foreach (UPayment p in payments.Where(x => x.EventId == e.Id))
+                    {
+                        summa += p.Amount;
+                        foreach (CustomMember m in cMembers.Where(x => x.Member.Id == p.MemberId))
+                        {
+                            m.Balance -= p.Amount;
+                        }
+                    }
+
+                    int count = bills.Where(x=>x.EventId == e.Id).GroupBy(y=>y.MemberId).Count();
+
+                    double avg = summa / count;
+                    foreach (UBill b in bills.Where(x => x.EventId == e.Id))
+                    {
+                        foreach (CustomMember m in cMembers.Where(x => x.Member.Id == b.MemberId))
+                        {
+                            m.Balance += avg;
+                        }
+                    }
+                }
             }
 
             return RecountTotalDebtList(cMembers);
@@ -133,6 +156,29 @@ namespace share
                 foreach (CustomMember m in cMembers)
                 {
                     m.Balance += avg;
+                }
+            }
+            else if (e.EventTypeId == UEventType.tPartly)
+            {
+                double summa = 0.0;
+                foreach (UPayment p in payments.Where(x => x.EventId == e.Id))
+                {
+                    summa += p.Amount;
+                    foreach (CustomMember m in cMembers.Where(x => x.Member.Id == p.MemberId))
+                    {
+                        m.Balance -= p.Amount;
+                    }
+                }
+
+                int count = bills.Where(x => x.EventId == e.Id).GroupBy(y => y.MemberId).Count();
+
+                double avg = summa / count;
+                foreach (UBill b in bills.Where(x => x.EventId == e.Id))
+                {
+                    foreach (CustomMember m in cMembers.Where(x => x.Member.Id == b.MemberId))
+                    {
+                        m.Balance += avg;
+                    }
                 }
             }
             return RecountTotalDebtList(cMembers);

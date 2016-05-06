@@ -17,7 +17,7 @@ namespace share
 {
     public class Controller
     {
-        private static string m_DBName = "udb14.db";
+        private static string m_DBName = "udb15.db";
 
         public static void Initialize()
         {
@@ -56,7 +56,7 @@ namespace share
                     command.ExecuteNonQueryAsync();
 
                     command.CommandText = "CREATE TABLE IF NOT EXISTS BILL (ID INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE," +
-                        "Event_ID INTEGER NOT NULL, Member_ID INTEGER NOT NULL, Amount REAL NOT NULL);";
+                        "Event_ID INTEGER NOT NULL, Member_ID INTEGER NOT NULL, Amount REAL);";
                     command.CommandType = CommandType.Text;
                     command.ExecuteNonQueryAsync();
 
@@ -78,6 +78,10 @@ namespace share
                     command.ExecuteNonQueryAsync();
 
                     command.CommandText = "INSERT INTO EVENTTYPE (ID, Name) VALUES (2, \"Общий\");";
+                    command.CommandType = CommandType.Text;
+                    command.ExecuteNonQueryAsync();
+
+                    command.CommandText = "INSERT INTO EVENTTYPE (ID, Name) VALUES (3, \"Полуобщий\");";
                     command.CommandType = CommandType.Text;
                     command.ExecuteNonQueryAsync();
 
@@ -315,8 +319,13 @@ namespace share
                 item.Id = int.Parse(id.ToString());
                 item.EventId = int.Parse(eventid.ToString());
                 item.MemberId = int.Parse(memberid.ToString());
-                item.Amount = double.Parse(amount.ToString());
                 item.MemberName = (string)memberName;
+
+                double itemAmount;
+                if(double.TryParse(amount.ToString(), out itemAmount))
+                {
+                    item.Amount = itemAmount;
+                }
 
                 result.Add(item);
             }
@@ -488,7 +497,12 @@ namespace share
                 item.Id = int.Parse(id.ToString());
                 item.EventId = int.Parse(eventid.ToString());
                 item.MemberId = int.Parse(memberid.ToString());
-                item.Amount = double.Parse(amount.ToString());
+
+                double itemAmount;
+                if (double.TryParse(amount.ToString(), out itemAmount))
+                {
+                    item.Amount = itemAmount;
+                }
             }
 
             return item;

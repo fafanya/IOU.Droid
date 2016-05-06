@@ -16,8 +16,12 @@ namespace share
     {
         UBill[] items;
         Activity context;
-        public BillListAdapter(Activity context, UBill[] items) : base()
+
+        bool m_ShowAmount = true;
+
+        public BillListAdapter(Activity context, UBill[] items, bool showAmount) : base()
         {
+            m_ShowAmount = showAmount;
             this.context = context;
             this.items = items;
         }
@@ -44,8 +48,17 @@ namespace share
             {
                 view = context.LayoutInflater.Inflate(Android.Resource.Layout.SimpleListItem1, null);
             }
-            view.FindViewById<TextView>(Android.Resource.Id.Text1).Text
-                = items[position].MemberName + ": " + items[position].Amount;
+
+            if (m_ShowAmount)
+            {
+                view.FindViewById<TextView>(Android.Resource.Id.Text1).Text
+                    = items[position].MemberName + ": " + items[position].Amount;
+            }
+            else
+            {
+                view.FindViewById<TextView>(Android.Resource.Id.Text1).Text
+                    = items[position].MemberName;
+            }
             return view;
         }
     }
