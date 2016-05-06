@@ -70,10 +70,10 @@ namespace share
             debtListFragment.Arguments = args;
             totalDebtListFragment.Arguments = args;
 
-            adapter.addFragment(memberListFragment, new Java.Lang.String("Челы"));
+            adapter.addFragment(memberListFragment, new Java.Lang.String("Люди"));
             adapter.addFragment(eventListFragment, new Java.Lang.String("События"));
             adapter.addFragment(debtListFragment, new Java.Lang.String("Долги"));
-            adapter.addFragment(totalDebtListFragment, new Java.Lang.String("Итог"));
+            adapter.addFragment(totalDebtListFragment, new Java.Lang.String("Итого"));
 
             viewPager.Adapter = adapter;
         }

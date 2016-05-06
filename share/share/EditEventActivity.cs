@@ -20,6 +20,7 @@ namespace share
         private Android.Support.V7.Widget.Toolbar toolbar;
         EditText m_etName;
         Spinner m_spEventType;
+        TextView m_twHalfCommon;
 
         EventTypeListAdapter m_EventTypeListAdapter;
         protected override void OnCreate(Bundle savedInstanceState)
@@ -36,6 +37,7 @@ namespace share
             Button btnOK = FindViewById<Button>(Resource.Id.btnEventOK);
             Button btnCancel = FindViewById<Button>(Resource.Id.btnEventCancel);
             m_spEventType = FindViewById<Spinner>(Resource.Id.spEventType);
+            m_twHalfCommon = FindViewById<TextView>(Resource.Id.twHalfCommon);
 
             btnOK.Click += BtnOK_Click;
             btnCancel.Click += BtnCancel_Click;
@@ -61,6 +63,7 @@ namespace share
             if (groupId == 0)
             {
                 items.RemoveAll(x => x.Id == 3);
+                m_twHalfCommon.Visibility = ViewStates.Gone;
             }
 
             m_EventTypeListAdapter = new EventTypeListAdapter(this, items.ToArray());

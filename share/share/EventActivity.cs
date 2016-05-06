@@ -78,7 +78,7 @@ namespace share
             {
                 MemberListFragment memberListFragment = new MemberListFragment();
                 memberListFragment.Arguments = args;
-                adapter.addFragment(memberListFragment, new Java.Lang.String("Челы"));
+                adapter.addFragment(memberListFragment, new Java.Lang.String("Люди"));
             }
 
             if (m_Event.EventTypeId == UEventType.tOwn)
@@ -91,7 +91,7 @@ namespace share
             {
                 BillListFragment billListFragment = new BillListFragment();
                 billListFragment.Arguments = args;
-                adapter.addFragment(billListFragment, new Java.Lang.String("Участники"));
+                adapter.addFragment(billListFragment, new Java.Lang.String("Состав\nУчастников"));
             }
 
             TotalDebtListFragment totalDebtListFragment = new TotalDebtListFragment();
@@ -101,7 +101,7 @@ namespace share
             paymentListFragment.Arguments = args;
             
             adapter.addFragment(paymentListFragment, new Java.Lang.String("Оплаты"));
-            adapter.addFragment(totalDebtListFragment, new Java.Lang.String("Итог"));
+            adapter.addFragment(totalDebtListFragment, new Java.Lang.String("Итого"));
 
             viewPager.Adapter = adapter;
         }

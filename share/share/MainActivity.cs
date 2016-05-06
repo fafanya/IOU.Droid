@@ -87,8 +87,8 @@ namespace share
             eventListFragment.Arguments = args;
             groupListFragment.Arguments = args;
 
-            adapter.addFragment(eventListFragment, new Java.Lang.String("События"));
-            adapter.addFragment(groupListFragment, new Java.Lang.String("Группы"));
+            adapter.addFragment(eventListFragment, new Java.Lang.String("Отдельные\nМероприятия"));
+            adapter.addFragment(groupListFragment, new Java.Lang.String("Группы\nМероприятий"));
 
             viewPager.Adapter = adapter;
         }

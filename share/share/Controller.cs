@@ -17,7 +17,7 @@ namespace share
 {
     public class Controller
     {
-        private static string m_DBName = "udb15.db";
+        private static string m_DBName = "udb20.db";
 
         public static void Initialize()
         {
@@ -65,13 +65,14 @@ namespace share
                     command.CommandType = CommandType.Text;
                     command.ExecuteNonQueryAsync();
 
-                    command.CommandText = "INSERT INTO GROUPS (ID, Name) VALUES (1, \"Друзья\");";
+                    command.CommandText = "INSERT INTO GROUPS (ID, Name) VALUES (1, \"Исландия\");";
                     command.CommandType = CommandType.Text;
                     command.ExecuteNonQueryAsync();
 
-                    command.CommandText = "INSERT INTO EVENT (ID, Group_ID, EventType_ID, Name) VALUES (1, 1, 1, \"Поход\");";
+                    command.CommandText = "INSERT INTO EVENT (ID, Group_ID, EventType_ID, Name) VALUES (1, 1, 1, \"Магазин\");";
                     command.CommandType = CommandType.Text;
                     command.ExecuteNonQueryAsync();
+
 
                     command.CommandText = "INSERT INTO EVENTTYPE (ID, Name) VALUES (1, \"Раздельный\");";
                     command.CommandType = CommandType.Text;
@@ -85,11 +86,15 @@ namespace share
                     command.CommandType = CommandType.Text;
                     command.ExecuteNonQueryAsync();
 
-                    command.CommandText = "INSERT INTO MEMBER (ID, Group_ID, Name) VALUES (1, 1, \"Витя\");";
+                    command.CommandText = "INSERT INTO MEMBER (ID, Group_ID, Name) VALUES (1, 1, \"Женя\");";
                     command.CommandType = CommandType.Text;
                     command.ExecuteNonQueryAsync();
 
-                    command.CommandText = "INSERT INTO MEMBER (ID, Group_ID, Name) VALUES (2, 1, \"Петя\");";
+                    command.CommandText = "INSERT INTO MEMBER (ID, Group_ID, Name) VALUES (2, 1, \"Паша\");";
+                    command.CommandType = CommandType.Text;
+                    command.ExecuteNonQueryAsync();
+
+                    command.CommandText = "INSERT INTO MEMBER (ID, Group_ID, Name) VALUES (3, 1, \"Денис\");";
                     command.CommandType = CommandType.Text;
                     command.ExecuteNonQueryAsync();
 
@@ -103,6 +108,124 @@ namespace share
                     command.ExecuteNonQueryAsync();
 
                     command.CommandText = "INSERT INTO PAYMENT (ID, Event_ID, Member_ID, Amount) VALUES (1, 1, 2, 14000);";
+                    command.CommandType = CommandType.Text;
+                    command.ExecuteNonQueryAsync();
+
+                    
+
+
+
+
+
+                    command.CommandText = "INSERT INTO EVENT (ID, Group_ID, EventType_ID, Name) VALUES (2, 0, 1, \"Пиццерия\");";
+                    command.CommandType = CommandType.Text;
+                    command.ExecuteNonQueryAsync();
+
+                    command.CommandText = "INSERT INTO MEMBER (ID, Group_ID, Event_Id, Name) VALUES (4, 0, 2, \"Женя\");";
+                    command.CommandType = CommandType.Text;
+                    command.ExecuteNonQueryAsync();
+
+                    command.CommandText = "INSERT INTO MEMBER (ID, Group_ID, Event_Id, Name) VALUES (5, 0, 2, \"Паша\");";
+                    command.CommandType = CommandType.Text;
+                    command.ExecuteNonQueryAsync();
+
+                    command.CommandText = "INSERT INTO MEMBER (ID, Group_ID, Event_Id, Name) VALUES (6, 0, 2, \"Денис\");";
+                    command.CommandType = CommandType.Text;
+                    command.ExecuteNonQueryAsync();
+
+                    command.CommandText = "INSERT INTO MEMBER (ID, Group_ID, Event_Id, Name) VALUES (7, 0, 2, \"Жора\");";
+                    command.CommandType = CommandType.Text;
+                    command.ExecuteNonQueryAsync();
+
+                    command.CommandText = "INSERT INTO BILL (ID, Event_ID, Member_ID, Amount) VALUES (2, 2, 4, 14000);";
+                    command.CommandType = CommandType.Text;
+                    command.ExecuteNonQueryAsync();
+
+                    command.CommandText = "INSERT INTO BILL (ID, Event_ID, Member_ID, Amount) VALUES (3, 2, 5, 11000);";
+                    command.CommandType = CommandType.Text;
+                    command.ExecuteNonQueryAsync();
+
+                    command.CommandText = "INSERT INTO BILL (ID, Event_ID, Member_ID, Amount) VALUES (4, 2, 6, 10000);";
+                    command.CommandType = CommandType.Text;
+                    command.ExecuteNonQueryAsync();
+
+                    command.CommandText = "INSERT INTO BILL (ID, Event_ID, Member_ID, Amount) VALUES (5, 2, 7, 15000);";
+                    command.CommandType = CommandType.Text;
+                    command.ExecuteNonQueryAsync();
+
+                    command.CommandText = "INSERT INTO PAYMENT (ID, Event_ID, Member_ID, Amount) VALUES (2, 2, 7, 50000);";
+                    command.CommandType = CommandType.Text;
+                    command.ExecuteNonQueryAsync();
+
+
+
+                    command.CommandText = "INSERT INTO EVENT (ID, Group_ID, EventType_ID, Name) VALUES (3, 0, 2, \"Бар\");";
+                    command.CommandType = CommandType.Text;
+                    command.ExecuteNonQueryAsync();
+
+                    command.CommandText = "INSERT INTO MEMBER (ID, Group_ID, Event_Id, Name) VALUES (8, 0, 3, \"Женя\");";
+                    command.CommandType = CommandType.Text;
+                    command.ExecuteNonQueryAsync();
+
+                    command.CommandText = "INSERT INTO MEMBER (ID, Group_ID, Event_Id, Name) VALUES (9, 0, 3, \"Паша\");";
+                    command.CommandType = CommandType.Text;
+                    command.ExecuteNonQueryAsync();
+
+                    command.CommandText = "INSERT INTO MEMBER (ID, Group_ID, Event_Id, Name) VALUES (10, 0, 3, \"Денис\");";
+                    command.CommandType = CommandType.Text;
+                    command.ExecuteNonQueryAsync();
+
+                    command.CommandText = "INSERT INTO MEMBER (ID, Group_ID, Event_Id, Name) VALUES (11, 0, 3, \"Жора\");";
+                    command.CommandType = CommandType.Text;
+                    command.ExecuteNonQueryAsync();
+
+                    command.CommandText = "INSERT INTO BILL (ID, Event_ID, Member_ID) VALUES (6, 3, 8);";
+                    command.CommandType = CommandType.Text;
+                    command.ExecuteNonQueryAsync();
+
+                    command.CommandText = "INSERT INTO BILL (ID, Event_ID, Member_ID) VALUES (7, 3, 9);";
+                    command.CommandType = CommandType.Text;
+                    command.ExecuteNonQueryAsync();
+
+                    command.CommandText = "INSERT INTO BILL (ID, Event_ID, Member_ID) VALUES (8, 3, 10);";
+                    command.CommandType = CommandType.Text;
+                    command.ExecuteNonQueryAsync();
+
+                    command.CommandText = "INSERT INTO BILL (ID, Event_ID, Member_ID) VALUES (9, 3, 11);";
+                    command.CommandType = CommandType.Text;
+                    command.ExecuteNonQueryAsync();
+
+                    command.CommandText = "INSERT INTO PAYMENT (ID, Event_ID, Member_ID, Amount) VALUES (3, 3, 11, 40000);";
+                    command.CommandType = CommandType.Text;
+                    command.ExecuteNonQueryAsync();
+
+
+                    command.CommandText = "INSERT INTO EVENT (ID, Group_ID, EventType_ID, Name) VALUES (4, 1, 3, \"Такси\");";
+                    command.CommandType = CommandType.Text;
+                    command.ExecuteNonQueryAsync();
+
+                    command.CommandText = "INSERT INTO BILL (ID, Event_ID, Member_ID) VALUES (10, 4, 1);";
+                    command.CommandType = CommandType.Text;
+                    command.ExecuteNonQueryAsync();
+
+                    command.CommandText = "INSERT INTO BILL (ID, Event_ID, Member_ID) VALUES (11, 4, 2);";
+                    command.CommandType = CommandType.Text;
+                    command.ExecuteNonQueryAsync();
+
+                    command.CommandText = "INSERT INTO PAYMENT (ID, Event_ID, Member_ID, Amount) VALUES (4, 4, 1, 7000);";
+                    command.CommandType = CommandType.Text;
+                    command.ExecuteNonQueryAsync();
+
+                    command.CommandText = "INSERT INTO PAYMENT (ID, Event_ID, Member_ID, Amount) VALUES (5, 4, 2, 38000);";
+                    command.CommandType = CommandType.Text;
+                    command.ExecuteNonQueryAsync();
+
+
+                    command.CommandText = "INSERT INTO EVENT (ID, Group_ID, EventType_ID, Name) VALUES (5, 1, 2, \"Экскурсия\");";
+                    command.CommandType = CommandType.Text;
+                    command.ExecuteNonQueryAsync();
+
+                    command.CommandText = "INSERT INTO PAYMENT (ID, Event_ID, Member_ID, Amount) VALUES (6, 5, 1, 100000);";
                     command.CommandType = CommandType.Text;
                     command.ExecuteNonQueryAsync();
                 }

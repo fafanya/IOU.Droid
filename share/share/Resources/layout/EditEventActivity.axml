@@ -32,7 +32,7 @@
                 android:layout_weight="1"
                 android:textStyle="bold"
                 android:textSize="20sp"
-                android:text="Счёт: " />
+                android:text="Счёт*: " />
             <Spinner
                 android:id="@+id/spEventType"
                 android:layout_height="wrap_content"
@@ -75,6 +75,40 @@
                 android:layout_width="0dp"
                 android:layout_weight="1"
                 android:text="@string/cancel" />
+        </LinearLayout>
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:layout_marginLeft="10dp">
+            <TextView
+                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:textStyle="bold"
+                android:textSize="15sp"
+                android:text="*" />
+            <TextView
+                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:textStyle="bold"
+                android:textSize="15sp"
+                android:text="Раздельный - участвует кто хочет. У каждого свой счёт. Оплачивает кто хочет" />
+            <TextView
+                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:layout_marginTop="15dp"
+                android:textStyle="bold"
+                android:textSize="15sp"
+                android:text="Общий - участвуют все люди. Счёт делится на всех поровну. Оплачивает кто хочет." />
+            <TextView
+                android:id="@+id/twHalfCommon"
+                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:layout_marginTop="15dp"
+                android:textStyle="bold"
+                android:textSize="15sp"
+                android:text="Полуобщий - участвует кто хочет. Счёт делится на участников поровну. Оплачивает кто хочет." />
         </LinearLayout>
     </LinearLayout>
 </android.support.design.widget.CoordinatorLayout>
