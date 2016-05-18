@@ -16,8 +16,6 @@ namespace share
 {
     public class GroupListFragment : ListFragment
     {
-        private int m_GroupId;
-
         FloatingActionButton Fab { get; set; }
 
         Type m_ListItemActivity = typeof(GroupActivity);
@@ -87,6 +85,7 @@ namespace share
             menu.SetHeaderTitle("Меню");
             menu.Add(4, 1, 0, "Изменить");
             menu.Add(4, 2, 0, "Удалить");
+            menu.Add(4, 3, 0, "В облако");
         }
 
         public override bool OnContextItemSelected(IMenuItem item)
@@ -103,13 +102,16 @@ namespace share
                 {
                     var intent = new Intent(Activity, m_EditItemActivity);
                     intent.PutExtra("ID", id);
-                    intent.PutExtra("Group_ID", m_GroupId);
                     StartActivityForResult(intent, 1);
                 }
                 else if (item.ItemId == 2)
                 {
                     Controller.DeleteObject(i);
                     Refresh();
+                }
+                else if(item.ItemId == 3)
+                {
+                    Client.Connect();
                 }
                 return true;
             }
