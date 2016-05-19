@@ -12,6 +12,11 @@ using Android.Widget;
 using Android.Support.Design.Widget;
 using Android.Support.V4.App;
 
+using System.Net;
+using System.IO;
+using System.Json;
+using System.Threading.Tasks;
+
 namespace share
 {
     public class GroupListFragment : ListFragment
@@ -111,11 +116,34 @@ namespace share
                 }
                 else if(item.ItemId == 3)
                 {
-                    Client.Connect();
+                    Client client = new Client();
+                    client.GetSynchronizeGroups();
                 }
                 return true;
             }
             return false;
+        }
+
+        private async void FetchWeatherAsync(string url)
+        {
+            try {
+                HttpWebRequest request = (HttpWebRequest)HttpWebRequest.Create(new Uri(url));
+                request.ContentType = "application/json";
+                request.Method = "GET";
+
+                using (WebResponse response = await request.GetResponseAsync())
+                {
+                    using (Stream stream = response.GetResponseStream())
+                    {
+                        JsonValue jsonDoc = await Task.Run(() => JsonObject.Load(stream));
+                        var a = jsonDoc;
+                    }
+                }
+            }
+            catch(Exception e)
+            {
+                var fff = e;
+            }
         }
 
         public override void OnActivityResult(int requestCode, int resultCode, Intent data)

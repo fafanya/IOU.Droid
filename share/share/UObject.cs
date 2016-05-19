@@ -94,6 +94,7 @@ namespace share
     public class UObject
     {
         public int Id { get; set; }
+        public int GlobalId { get; set; }
         public string Table { get; set; }
     }
 }
