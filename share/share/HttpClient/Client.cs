@@ -22,7 +22,7 @@ namespace share
     {
         public async void GetSynchronizeGroups()
         {
-            string url = "http://192.168.0.73:2562/api/UGroupsControllerApi";
+            string url = "http://192.168.1.4:2562/api/UGroupsControllerApi";
             try
             {
                 HttpWebRequest request = (HttpWebRequest)HttpWebRequest.Create(new Uri(url));
@@ -56,7 +56,7 @@ namespace share
 
         public async void PostSynchronizeGroups()
         {
-            string url = "http://192.168.0.73:2562/api/UGroupsControllerApi";
+            string url = "http://192.168.1.4:2562/api/UGroupsControllerApi";
             try
             {
                 HttpWebRequest request = (HttpWebRequest)HttpWebRequest.Create(new Uri(url));
