@@ -60,11 +60,10 @@ namespace share
             try
             {
                 HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
-                request.Accept = "application/x-www-form-urlencoded";
                 request.Method = "POST";
-                string postData = "={\"employees\":[{ \"firstName\":\"Peter\", \"lastName\":\"Jones\"}]}";
+                string postData = "\"={\"e\": \"l\"}\"";
                 byte[] byteArray = Encoding.UTF8.GetBytes(postData);
-                request.ContentType = "application/x-www-form-urlencoded";
+                request.ContentType = "application/json";
                 request.ContentLength = byteArray.Length;
                 Stream dataStream = request.GetRequestStream();
                 dataStream.Write(byteArray, 0, byteArray.Length);
