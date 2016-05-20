@@ -90,7 +90,8 @@ namespace share
             menu.SetHeaderTitle("Меню");
             menu.Add(4, 1, 0, "Изменить");
             menu.Add(4, 2, 0, "Удалить");
-            menu.Add(4, 3, 0, "В облако");
+            menu.Add(4, 3, 0, "Из облака");
+            menu.Add(4, 4, 0, "В облако");
         }
 
         public override bool OnContextItemSelected(IMenuItem item)
@@ -119,31 +120,14 @@ namespace share
                     Client client = new Client();
                     client.GetSynchronizeGroups();
                 }
+                else if (item.ItemId == 4)
+                {
+                    Client client = new Client();
+                    client.PostSynchronizeGroups();
+                }
                 return true;
             }
             return false;
-        }
-
-        private async void FetchWeatherAsync(string url)
-        {
-            try {
-                HttpWebRequest request = (HttpWebRequest)HttpWebRequest.Create(new Uri(url));
-                request.ContentType = "application/json";
-                request.Method = "GET";
-
-                using (WebResponse response = await request.GetResponseAsync())
-                {
-                    using (Stream stream = response.GetResponseStream())
-                    {
-                        JsonValue jsonDoc = await Task.Run(() => JsonObject.Load(stream));
-                        var a = jsonDoc;
-                    }
-                }
-            }
-            catch(Exception e)
-            {
-                var fff = e;
-            }
         }
 
         public override void OnActivityResult(int requestCode, int resultCode, Intent data)
