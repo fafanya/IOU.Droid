@@ -22,7 +22,7 @@ namespace share
     {
         public async void GetSynchronizeGroups()
         {
-            string url = "http://192.168.1.4:2562/api/UGroupsControllerApi";
+            string url = "http://192.168.0.73:2562/api/UGroupsControllerApi";
             try
             {
                 HttpWebRequest request = (HttpWebRequest)HttpWebRequest.Create(new Uri(url));
@@ -54,33 +54,31 @@ namespace share
             }
         }
 
-        public async void PostSynchronizeGroups()
+        public void PostSynchronizeGroups()
         {
-            string url = "http://192.168.1.4:2562/api/UGroupsControllerApi";
+            string url = "http://192.168.0.73:2562/api/UGroupsControllerApi/PostSynch";
             try
             {
-                HttpWebRequest request = (HttpWebRequest)HttpWebRequest.Create(new Uri(url));
+                HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
+                request.Method = "POST";
+                string postData = "\"={\"e\": \"l\"}\"";
+                byte[] byteArray = Encoding.UTF8.GetBytes(postData);
                 request.ContentType = "application/json";
-                request.Method = "GET";
+                request.ContentLength = byteArray.Length;
+                Stream dataStream = request.GetRequestStream();
+                dataStream.Write(byteArray, 0, byteArray.Length);
+                dataStream.Close();
 
-                using (WebResponse response = await request.GetResponseAsync())
-                {
-                    using (Stream stream = response.GetResponseStream())
-                    {
-                        JsonValue json = await Task.Run(() => JsonObject.Load(stream));
-                        foreach (var item in json)
-                        {
-                            JsonValue value = item as JsonValue;
+                WebResponse response = request.GetResponse();
 
-                            int id = value["Id"];
-                            string name = value["Name"];
-
-                            object uevents = value["UEvents"];
-                            object umembers = value["UMembers"];
-                            object udebts = value["UDebts"];
-                        }
-                    }
-                }
+                Console.WriteLine(((HttpWebResponse)response).StatusDescription);
+                dataStream = response.GetResponseStream();
+                StreamReader reader = new StreamReader(dataStream);
+                string responseFromServer = reader.ReadToEnd();
+                Console.WriteLine(responseFromServer);
+                reader.Close();
+                dataStream.Close();
+                response.Close();
             }
             catch (Exception e)
             {
