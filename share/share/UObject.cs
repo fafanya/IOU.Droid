@@ -5,16 +5,30 @@ using System.Text;
 using System.Data;
 using Mono.Data.Sqlite;
 using System.IO;
+using System.Runtime.Serialization.Json;
+using System.Runtime.Serialization;
 
 namespace share
 {
+    [DataContract]
     public class UGroup : UObject
     {
         public UGroup()
         {
             Table = "GROUPS";
         }
+
+        [DataMember]
         public string Name { get; set; }
+
+        [DataMember]
+        public List<UEvent> UEvents { get; set; }
+
+        [DataMember]
+        public List<UMember> UMembers { get; set; }
+
+        [DataMember]
+        public List<UDebt> UDebts { get; set; }
     }
 
     public class UEvent : UObject
@@ -91,8 +105,10 @@ namespace share
         public string Name { get; set; }
     }
 
+    [DataContract]
     public class UObject
     {
+        [DataMember]
         public int Id { get; set; }
         public int GlobalId { get; set; }
         public string Table { get; set; }

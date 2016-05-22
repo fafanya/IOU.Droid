@@ -14,5 +14,30 @@ namespace share
 {
     public class UGObject
     {
+        
+    }
+
+    public class UGGroup
+    {
+        public int Id { get; set; }
+        public int Name { get; set; }
+
+        public List<UEvent> UEvents { get; set; }
+        public List<UMember> UMembers { get; set; }
+        public List<UDebt> UDebts { get; set; }
+    }
+
+    public class UGEvent
+    {
+    }
+
+    public class UGMember
+    {
+
+    }
+
+    public class UGDebt
+    {
+
     }
 }

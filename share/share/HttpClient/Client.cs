@@ -15,6 +15,7 @@ using Android.Widget;
 using System.Net;
 using System.IO;
 using System.Json;
+using System.Runtime.Serialization.Json;
 
 namespace share
 {
@@ -22,7 +23,7 @@ namespace share
     {
         public async void GetSynchronizeGroups()
         {
-            string url = "http://192.168.0.73:2562/api/UGroupsControllerApi";
+            string url = "http://192.168.1.4:2562/api/UGroupsControllerApi";
             try
             {
                 HttpWebRequest request = (HttpWebRequest)HttpWebRequest.Create(new Uri(url));
@@ -44,6 +45,10 @@ namespace share
                             object uevents = value["UEvents"];
                             object umembers = value["UMembers"];
                             object udebts = value["UDebts"];
+
+                            UGroup ugroup = new UGroup();
+                            ugroup.Name = name;
+                            Controller.CreateGroup(ugroup);
                         }
                     }
                 }
@@ -54,14 +59,26 @@ namespace share
             }
         }
 
-        public void PostSynchronizeGroups()
+        public void PostSynchronizeGroups(int id)
         {
-            string url = "http://192.168.0.73:2562/api/UGroupsControllerApi/PostSynch";
+            //string url = "http://192.168.1.4:2562/api/UGroupsControllerApi/PostSynch";
+            string url = "http://192.168.1.4:2562/api/UGroupsControllerApi";
             try
             {
                 HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
                 request.Method = "POST";
-                string postData = "\"={\"e\": \"l\"}\"";
+
+                UGroup ugroup = Controller.LoadGroupDetails(id);
+
+                MemoryStream stream = new MemoryStream();
+                DataContractJsonSerializer serializer = new DataContractJsonSerializer(typeof(UGroup));
+                serializer.WriteObject(stream, ugroup);
+                stream.Position = 0;
+                StreamReader sr = new StreamReader(stream);
+                string postData = sr.ReadToEnd();
+
+                //string postData = "{\"Id\": 1, \"Name\": \"Elephants\", \"UDebts\": null, \"UEvents\": null, \"UMembers\": null}";
+
                 byte[] byteArray = Encoding.UTF8.GetBytes(postData);
                 request.ContentType = "application/json";
                 request.ContentLength = byteArray.Length;

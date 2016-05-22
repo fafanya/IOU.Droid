@@ -119,11 +119,12 @@ namespace share
                 {
                     Client client = new Client();
                     client.GetSynchronizeGroups();
+                    Refresh();
                 }
                 else if (item.ItemId == 4)
                 {
                     Client client = new Client();
-                    client.PostSynchronizeGroups();
+                    client.PostSynchronizeGroups(id);
                 }
                 return true;
             }
