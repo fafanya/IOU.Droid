@@ -90,8 +90,8 @@ namespace share
             menu.SetHeaderTitle("Меню");
             menu.Add(4, 1, 0, "Изменить");
             menu.Add(4, 2, 0, "Удалить");
-            menu.Add(4, 3, 0, "Из облака");
-            menu.Add(4, 4, 0, "В облако");
+            /*menu.Add(4, 3, 0, "Из облака");
+            menu.Add(4, 4, 0, "В облако");*/
         }
 
         public override bool OnContextItemSelected(IMenuItem item)
