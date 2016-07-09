@@ -75,7 +75,7 @@ namespace share
             {
                 m_Debt = new UDebt();
                 m_Debt.Id = -1;
-                m_Debt.GroupId = groupId;
+                m_Debt.UGroupId = groupId;
                 SupportActionBar.Title = "Добавить долг";
             }
             else
@@ -87,7 +87,7 @@ namespace share
 
                 for (int position = 0; position < m_DebtorAdapter.Count; position++)
                 {
-                    if (m_DebtorAdapter.GetItemId(position) == m_Debt.DebtorId)
+                    if (m_DebtorAdapter.GetItemId(position) == m_Debt.DebtorUMemberId)
                     {
                         m_spDebtor.SetSelection(position);
                         break;
@@ -96,7 +96,7 @@ namespace share
 
                 for (int position = 0; position < m_LenderAdapter.Count; position++)
                 {
-                    if (m_LenderAdapter.GetItemId(position) == m_Debt.LenderId)
+                    if (m_LenderAdapter.GetItemId(position) == m_Debt.LenderUMemberId)
                     {
                         m_spLender.SetSelection(position);
                         break;
@@ -115,8 +115,8 @@ namespace share
         {
             m_Debt.Name = m_etName.Text;
             m_Debt.Amount = int.Parse(m_etDebtAmount.Text);
-            m_Debt.DebtorId = (int)(m_spDebtor.SelectedItemId);
-            m_Debt.LenderId = (int)(m_spLender.SelectedItemId);
+            m_Debt.DebtorUMemberId = (int)(m_spDebtor.SelectedItemId);
+            m_Debt.LenderUMemberId = (int)(m_spLender.SelectedItemId);
 
             if (m_Debt.Id < 0)
             {

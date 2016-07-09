@@ -57,8 +57,8 @@ namespace share
             {
                 m_Member = new UMember();
                 m_Member.Id = -1;
-                m_Member.GroupId = groupId;
-                m_Member.EventId = eventId;
+                m_Member.UGroupId = groupId;
+                m_Member.UEventId = eventId;
                 SupportActionBar.Title = "Новый участник";
             }
             else

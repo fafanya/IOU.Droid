@@ -81,13 +81,13 @@ namespace share
                 adapter.addFragment(memberListFragment, new Java.Lang.String("Ћюди"));
             }
 
-            if (m_Event.EventTypeId == UEventType.tOwn)
+            if (m_Event.UEventTypeId == UEventType.tOwn)
             {
                 BillListFragment billListFragment = new BillListFragment();
                 billListFragment.Arguments = args;
                 adapter.addFragment(billListFragment, new Java.Lang.String("—чета"));
             }
-            if (m_Event.EventTypeId == UEventType.tPartly)
+            if (m_Event.UEventTypeId == UEventType.tPartly)
             {
                 BillListFragment billListFragment = new BillListFragment();
                 billListFragment.Arguments = args;

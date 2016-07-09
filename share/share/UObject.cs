@@ -37,60 +37,103 @@ namespace share
         {
             Table = "EVENT";
         }
-        public int GroupId { get; set; }
-        public int EventTypeId { get; set; }
+
+        [DataMember]
+        public int UGroupId { get; set; }
+
+        [DataMember]
+        public int UEventTypeId { get; set; }
+
+        [DataMember]
         public string Name { get; set; }
+
         public string EventTypeName { get; set; }
+
+        [DataMember]
+        public List<UBill> UBills { get; set; }
+
+        [DataMember]
+        public List<UPayment> UPayments { get; set; }
+
+        [DataMember]
+        public List<UMember> UMembers { get; set; }
     }
 
+    [DataContract]
     public class UMember : UObject
     {
         public UMember()
         {
             Table = "MEMBER";
         }
-        public int GroupId { get; set; }
-        public int EventId { get; set; }
+        [DataMember]
+        public int UGroupId { get; set; }
+        [DataMember]
+        public int UEventId { get; set; }
+        [DataMember]
         public string Name { get; set; }
+
+        [DataMember]
+        public List<UBill> UBills { get; set; }
+        [DataMember]
+        public List<UPayment> UPayments { get; set; }
+        [DataMember]
+        public List<UDebt> LenderUDebts { get; set; }
+        [DataMember]
+        public List<UDebt> DebtorUDebts { get; set; }
     }
 
+    [DataContract]
     public class UDebt : UObject
     {
         public UDebt()
         {
             Table = "DEBT";
         }
-        public int GroupId { get; set; }
+        [DataMember]
+        public int UGroupId { get; set; }
+        [DataMember]
         public string Name { get; set; }
-        public int DebtorId { get; set; }
-        public int LenderId { get; set; }
+        [DataMember]
+        public int DebtorUMemberId { get; set; }
+        [DataMember]
+        public int LenderUMemberId { get; set; }
+        [DataMember]
         public double Amount { get; set; }
 
         public string LenderName { get; set; }
         public string DebtorName { get; set; }
     }
 
+    [DataContract]
     public class UBill : UObject
     {
         public UBill()
         {
             Table = "BILL";
         }
-        public int EventId { get; set; }
-        public int MemberId { get; set; }
+        [DataMember]
+        public int UEventId { get; set; }
+        [DataMember]
+        public int UMemberId { get; set; }
+        [DataMember]
         public double Amount { get; set; }
 
         public string MemberName { get; set; }
     }
 
+    [DataContract]
     public class UPayment : UObject
     {
         public UPayment()
         {
             Table = "PAYMENT";
         }
-        public int EventId { get; set; }
-        public int MemberId { get; set; }
+        [DataMember]
+        public int UEventId { get; set; }
+        [DataMember]
+        public int UMemberId { get; set; }
+        [DataMember]
         public double Amount { get; set; }
 
         public string MemberName { get; set; }
@@ -110,7 +153,7 @@ namespace share
     {
         [DataMember]
         public int Id { get; set; }
-        public int GlobalId { get; set; }
+        public int? GlobalId { get; set; }
         public string Table { get; set; }
     }
 }

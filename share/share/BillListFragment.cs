@@ -39,7 +39,7 @@ namespace share
             m_Event = Controller.LoadEventDetails(m_EventId);
 
             var items = Controller.LoadBillList(m_EventId);
-            m_ListAdapter = new BillListAdapter(Activity, items.ToArray(), m_Event.EventTypeId != UEventType.tPartly);
+            m_ListAdapter = new BillListAdapter(Activity, items.ToArray(), m_Event.UEventTypeId != UEventType.tPartly);
             ListAdapter = m_ListAdapter;
         }
 

@@ -73,8 +73,8 @@ namespace share
             {
                 m_Event = new UEvent();
                 m_Event.Id = -1;
-                m_Event.GroupId = groupId;
-                m_Event.EventTypeId = 1;
+                m_Event.UGroupId = groupId;
+                m_Event.UEventTypeId = 1;
                 SupportActionBar.Title = "Новое событие";
             }
             else
@@ -86,7 +86,7 @@ namespace share
 
             for (int position = 0; position < m_EventTypeListAdapter.Count; position++)
             {
-                if (m_EventTypeListAdapter.GetItemId(position) == m_Event.EventTypeId)
+                if (m_EventTypeListAdapter.GetItemId(position) == m_Event.UEventTypeId)
                 {
                     m_spEventType.SetSelection(position);
                     break;
@@ -103,7 +103,7 @@ namespace share
         private void BtnOK_Click(object sender, EventArgs e)
         {
             m_Event.Name = m_etName.Text;
-            m_Event.EventTypeId = (int)(m_spEventType.SelectedItemId);
+            m_Event.UEventTypeId = (int)(m_spEventType.SelectedItemId);
 
             if (m_Event.Id < 0)
             {

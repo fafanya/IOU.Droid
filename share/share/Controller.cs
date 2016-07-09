@@ -17,7 +17,7 @@ namespace share
 {
     public class Controller
     {
-        private static string m_DBName = "udb20.db";
+        private static string m_DBName = "udb22.db";
 
         public static void Initialize()
         {
@@ -31,7 +31,8 @@ namespace share
                 connection.Open();
                 using (var command = connection.CreateCommand())
                 {
-                    command.CommandText = "CREATE TABLE GROUPS (ID INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE, Name TEXT NOT NULL);";
+                    command.CommandText = "CREATE TABLE GROUPS (ID INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE, " +
+                        "Global_ID INTEGER, Name TEXT NOT NULL);";
                     command.CommandType = CommandType.Text;
                     command.ExecuteNonQueryAsync();
 
@@ -248,7 +249,7 @@ namespace share
             SqliteDataReader reader = command.ExecuteReader();
             return reader;
         }
-        private static void ExecuteCommand(string commandText)
+        private static int ExecuteCommand(string commandText)
         {
             string folder = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
             string path = Path.Combine(folder, m_DBName);
@@ -260,9 +261,17 @@ namespace share
             SqliteCommand command = connection.CreateCommand();
             command.CommandText = commandText;
             command.CommandType = CommandType.Text;
-            command.ExecuteNonQueryAsync();
+            //command.ExecuteNonQueryAsync();
+            command.ExecuteNonQuery();
+
+            SqliteCommand commandLastID = connection.CreateCommand();
+            commandLastID.CommandText = "select last_insert_rowid()";
+            commandLastID.CommandType = CommandType.Text;
+            long lastId = (long)commandLastID.ExecuteScalar();
 
             connection.Close();
+
+            return (int)lastId;
         }
 
         public static List<UGroup> LoadGroupList()
@@ -277,15 +286,22 @@ namespace share
 
                 var id = reader["ID"];
                 var name = reader["Name"];
+                var globalid = reader["Global_ID"];
                 item.Id = int.Parse(id.ToString());
                 item.Name= (string)name;
+
+                int tempGlobalId;
+                if (int.TryParse(globalid.ToString(), out tempGlobalId))
+                {
+                    item.GlobalId = tempGlobalId;
+                }
 
                 result.Add(item);
             }
 
             return result;
         }
-        public static List<UEvent> LoadEventList(int groupId = 0)
+        public static List<UEvent> LoadEventList(int groupId = 0, bool isFull = false)
         {
             SqliteDataReader reader = GetReader("SELECT E.*, ET.Name as EventTypeName FROM EVENT E, EVENTTYPE ET WHERE E.EventType_ID = ET.ID AND E.Group_ID = " + groupId + ";");
 
@@ -300,17 +316,24 @@ namespace share
                 var eventypeid = reader["EventType_ID"];
                 var eventtypename = reader["EventTypeName"];
                 item.Id = int.Parse(id.ToString());
-                item.GroupId = int.Parse(groupid.ToString());
+                item.UGroupId = int.Parse(groupid.ToString());
                 item.Name = (string)name;
                 item.EventTypeName = (string)eventtypename;
-                item.EventTypeId = int.Parse(eventypeid.ToString());
+                item.UEventTypeId = int.Parse(eventypeid.ToString());
+
+                if (isFull)
+                {
+                    item.UBills = LoadBillList(item.Id, isFull: isFull);
+                    item.UPayments = LoadPaymentList(item.Id, isFull: isFull);
+                    item.UMembers = LoadMemberList(eventId: item.Id, isFull: isFull);
+                }
 
                 result.Add(item);
             }
 
             return result;
         }
-        public static List<UMember> LoadMemberList(int groupId = 0, int eventId = 0)
+        public static List<UMember> LoadMemberList(int groupId = 0, int eventId = 0, bool isFull = false)
         {
             SqliteDataReader reader;
             if (eventId != 0)
@@ -332,13 +355,21 @@ namespace share
                 var groupid = reader["Group_ID"];
                 var eventid = reader["Event_ID"];
                 item.Id = int.Parse(id.ToString());
-                item.GroupId = int.Parse(groupid.ToString());
+                item.UGroupId = int.Parse(groupid.ToString());
                 item.Name = (string)name;
 
                 int tempEventId;
                 if(int.TryParse(eventid.ToString(), out tempEventId))
                 {
-                    item.EventId = tempEventId;
+                    item.UEventId = tempEventId;
+                }
+
+                if (isFull)
+                {
+                    item.UBills = LoadBillList(memberId: item.Id);
+                    item.UPayments = LoadPaymentList(memberId: item.Id);
+                    item.LenderUDebts = LoadDebtList(lenderId: item.Id);
+                    item.DebtorUDebts = LoadDebtList(debtorId: item.Id);
                 }
 
                 result.Add(item);
@@ -346,7 +377,7 @@ namespace share
 
             return result;
         }
-        public static List<UDebt> LoadDebtList(int groupId = 0, int debtorId = 0, int lenderId = 0)
+        public static List<UDebt> LoadDebtList(int groupId = 0, int debtorId = 0, int lenderId = 0, bool isFull = false)
         {
             SqliteDataReader reader;
             string commandText;
@@ -390,9 +421,9 @@ namespace share
                 var lenderName = reader["LenderName"];
 
                 item.Id = int.Parse(id.ToString());
-                item.GroupId = int.Parse(groupid.ToString());
-                item.DebtorId = int.Parse(debtorid.ToString());
-                item.LenderId = int.Parse(lenderid.ToString());
+                item.UGroupId = int.Parse(groupid.ToString());
+                item.DebtorUMemberId = int.Parse(debtorid.ToString());
+                item.LenderUMemberId = int.Parse(lenderid.ToString());
                 item.Name = (string)name;
                 item.DebtorName = (string)debtorName;
                 item.LenderName = (string)lenderName;
@@ -403,7 +434,7 @@ namespace share
 
             return result;
         }
-        public static List<UBill> LoadBillList(int eventId = 0, int memberId = 0, int groupId = 0)
+        public static List<UBill> LoadBillList(int eventId = 0, int memberId = 0, int groupId = 0, bool isFull = false)
         {
             SqliteDataReader reader;
             string commandText;
@@ -440,8 +471,8 @@ namespace share
                 var memberName = reader["Name"];
 
                 item.Id = int.Parse(id.ToString());
-                item.EventId = int.Parse(eventid.ToString());
-                item.MemberId = int.Parse(memberid.ToString());
+                item.UEventId = int.Parse(eventid.ToString());
+                item.UMemberId = int.Parse(memberid.ToString());
                 item.MemberName = (string)memberName;
 
                 double itemAmount;
@@ -455,7 +486,7 @@ namespace share
 
             return result;
         }
-        public static List<UPayment> LoadPaymentList(int eventId = 0, int memberId = 0, int groupId = 0)
+        public static List<UPayment> LoadPaymentList(int eventId = 0, int memberId = 0, int groupId = 0, bool isFull = false)
         {
             SqliteDataReader reader;
             string commandText;
@@ -492,8 +523,8 @@ namespace share
                 var memberName = reader["Name"];
 
                 item.Id = int.Parse(id.ToString());
-                item.EventId = int.Parse(eventid.ToString());
-                item.MemberId = int.Parse(memberid.ToString());
+                item.UEventId = int.Parse(eventid.ToString());
+                item.UMemberId = int.Parse(memberid.ToString());
                 item.Amount = double.Parse(amount.ToString());
                 item.MemberName = (string)memberName;
                 result.Add(item);
@@ -522,7 +553,7 @@ namespace share
             return result;
         }
 
-        public static UGroup LoadGroupDetails(int groupId)
+        public static UGroup LoadGroupDetails(int groupId, bool isFull = false)
         {
             SqliteDataReader reader = GetReader("SELECT * FROM GROUPS G WHERE G.ID = " + groupId + ";");
 
@@ -531,8 +562,22 @@ namespace share
             {
                 var id = reader["ID"];
                 var name = reader["Name"];
+                var globalid = reader["Global_ID"];
                 item.Id = int.Parse(id.ToString());
                 item.Name = (string)name;
+
+                int tempGlobalId;
+                if (int.TryParse(globalid.ToString(), out tempGlobalId))
+                {
+                    item.GlobalId = tempGlobalId;
+                }
+            }
+
+            if (isFull)
+            {
+                item.UDebts = LoadDebtList(item.Id, isFull: isFull);
+                item.UEvents = LoadEventList(item.Id, isFull: isFull);
+                item.UMembers = LoadMemberList(item.Id, isFull: isFull);
             }
 
             return item;
@@ -550,10 +595,10 @@ namespace share
                 var eventypeid = reader["EventType_ID"];
                 var eventtypename = reader["EventTypeName"];
                 item.Id = int.Parse(id.ToString());
-                item.GroupId = int.Parse(groupid.ToString());
+                item.UGroupId = int.Parse(groupid.ToString());
                 item.Name = (string)name;
                 item.EventTypeName = (string)eventtypename;
-                item.EventTypeId = int.Parse(eventypeid.ToString());
+                item.UEventTypeId = int.Parse(eventypeid.ToString());
             }
 
             return item;
@@ -569,7 +614,7 @@ namespace share
                 var name = reader["Name"];
                 var groupid = reader["Group_ID"];
                 item.Id = int.Parse(id.ToString());
-                item.GroupId = int.Parse(groupid.ToString());
+                item.UGroupId = int.Parse(groupid.ToString());
                 item.Name = (string)name;
             }
 
@@ -594,9 +639,9 @@ namespace share
                 var lenderName = reader["LenderName"];
 
                 item.Id = int.Parse(id.ToString());
-                item.GroupId = int.Parse(groupid.ToString());
-                item.DebtorId = int.Parse(debtorid.ToString());
-                item.LenderId = int.Parse(lenderid.ToString());
+                item.UGroupId = int.Parse(groupid.ToString());
+                item.DebtorUMemberId = int.Parse(debtorid.ToString());
+                item.LenderUMemberId = int.Parse(lenderid.ToString());
                 item.Name = (string)name;
                 item.DebtorName = (string)debtorName;
                 item.LenderName = (string)lenderName;
@@ -618,8 +663,8 @@ namespace share
                 var amount = reader["Amount"];
 
                 item.Id = int.Parse(id.ToString());
-                item.EventId = int.Parse(eventid.ToString());
-                item.MemberId = int.Parse(memberid.ToString());
+                item.UEventId = int.Parse(eventid.ToString());
+                item.UMemberId = int.Parse(memberid.ToString());
 
                 double itemAmount;
                 if (double.TryParse(amount.ToString(), out itemAmount))
@@ -643,44 +688,54 @@ namespace share
                 var amount = reader["Amount"];
 
                 item.Id = int.Parse(id.ToString());
-                item.EventId = int.Parse(eventid.ToString());
-                item.MemberId = int.Parse(memberid.ToString());
+                item.UEventId = int.Parse(eventid.ToString());
+                item.UMemberId = int.Parse(memberid.ToString());
                 item.Amount = double.Parse(amount.ToString());
             }
 
             return item;
         }
 
-        public static void CreateGroup(UGroup g)
+        public static int CreateGroup(UGroup g)
         {
-            string commandText = "INSERT INTO GROUPS (Name) VALUES (\""+g.Name+"\");";
-            ExecuteCommand(commandText);
+            string globalId;
+            if(g.GlobalId == null)
+            {
+                globalId = "NULL";
+            }
+            else
+            {
+                globalId = g.GlobalId.ToString();
+            }
+
+            string commandText = "INSERT INTO GROUPS (Global_ID, Name) VALUES (" + globalId + ",  \"" +g.Name +"\");";
+            return ExecuteCommand(commandText);
         }
-        public static void CreateEvent(UEvent e)
+        public static int CreateEvent(UEvent e)
         {
-            string commandText = "INSERT INTO EVENT (Group_ID, EventType_ID, Name) VALUES (" + e.GroupId + ", " + e.EventTypeId + ", \"" + e.Name + "\");";
-            ExecuteCommand(commandText);
+            string commandText = "INSERT INTO EVENT (Group_ID, EventType_ID, Name) VALUES (" + e.UGroupId + ", " + e.UEventTypeId + ", \"" + e.Name + "\");";
+            return ExecuteCommand(commandText);
         }
-        public static void CreateMember(UMember m)
+        public static int CreateMember(UMember m)
         {
-            string commandText = "INSERT INTO MEMBER (Group_ID, Event_ID, Name) VALUES (" + m.GroupId + ", " + m.EventId+ ", \"" + m.Name + "\");";
-            ExecuteCommand(commandText);
+            string commandText = "INSERT INTO MEMBER (Group_ID, Event_ID, Name) VALUES (" + m.UGroupId + ", " + m.UEventId+ ", \"" + m.Name + "\");";
+            return ExecuteCommand(commandText);
         }
-        public static void CreateDebt(UDebt d)
+        public static int CreateDebt(UDebt d)
         {
             string commandText = "INSERT INTO DEBT (Group_ID, Name, Debtor_ID, Lender_ID, Amount) VALUES " +
-                        "("+d.GroupId+", \""+d.Name+"\", "+d.DebtorId+", "+d.LenderId+", "+d.Amount+");";
-            ExecuteCommand(commandText);
+                        "("+d.UGroupId+", \""+d.Name+"\", "+d.DebtorUMemberId+", "+d.LenderUMemberId+", "+d.Amount+");";
+            return ExecuteCommand(commandText);
         }
-        public static void CreateBill(UBill b)
+        public static int CreateBill(UBill b)
         {
-            string commandText = "INSERT INTO BILL (Event_ID, Member_ID, Amount) VALUES ("+b.EventId+", "+b.MemberId+", "+b.Amount+");";
-            ExecuteCommand(commandText);
+            string commandText = "INSERT INTO BILL (Event_ID, Member_ID, Amount) VALUES ("+b.UEventId+", "+b.UMemberId+", "+b.Amount+");";
+            return ExecuteCommand(commandText);
         }
-        public static void CreatePayment(UPayment p)
+        public static int CreatePayment(UPayment p)
         {
-            string commandText = "INSERT INTO PAYMENT (Event_ID, Member_ID, Amount) VALUES (" + p.EventId + ", " + p.MemberId + ", " + p.Amount + ");";
-            ExecuteCommand(commandText);
+            string commandText = "INSERT INTO PAYMENT (Event_ID, Member_ID, Amount) VALUES (" + p.UEventId + ", " + p.UMemberId + ", " + p.Amount + ");";
+            return ExecuteCommand(commandText);
         }
 
         public static void DeleteObject(UObject uobject)
@@ -713,42 +768,43 @@ namespace share
             if (uobject is UGroup)
             {
                 UGroup i = uobject as UGroup;
+                result += "Global_ID = " + i.GlobalId + ", ";
                 result += "Name = \"" + i.Name +"\"";
             }
             else if (uobject is UEvent)
             {
                 UEvent i = uobject as UEvent;
-                result += "Group_ID=" + i.GroupId + ", ";
-                result += "EventType_ID=" + i.EventTypeId + ", ";
+                result += "Group_ID=" + i.UGroupId + ", ";
+                result += "EventType_ID=" + i.UEventTypeId + ", ";
                 result += "Name = \"" + i.Name + "\"";
             }
             else if (uobject is UMember)
             {
                 UMember i = uobject as UMember;
-                result += "Group_ID=" + i.GroupId + ", ";
+                result += "Group_ID=" + i.UGroupId + ", ";
                 result += "Name = \"" + i.Name + "\"";
             }
             else if (uobject is UDebt)
             {
                 UDebt i = uobject as UDebt;
-                result += "Group_ID=" + i.GroupId + ", ";
+                result += "Group_ID=" + i.UGroupId + ", ";
                 result += "Name = \"" + i.Name + "\", ";
-                result += "Debtor_ID=" + i.DebtorId + ", ";
-                result += "Lender_ID=" + i.LenderId + ", ";
+                result += "Debtor_ID=" + i.DebtorUMemberId + ", ";
+                result += "Lender_ID=" + i.LenderUMemberId + ", ";
                 result += "Amount=" + i.Amount;
             }
             else if (uobject is UBill)
             {
                 UBill i = uobject as UBill;
-                result += "Event_ID=" + i.EventId + ", ";
-                result += "Member_ID=" + i.MemberId + ", ";
+                result += "Event_ID=" + i.UEventId + ", ";
+                result += "Member_ID=" + i.UMemberId + ", ";
                 result += "Amount=" + i.Amount;
             }
             else if (uobject is UPayment)
             {
                 UPayment i = uobject as UPayment;
-                result += "Event_ID=" + i.EventId + ", ";
-                result += "Member_ID=" + i.MemberId + ", ";
+                result += "Event_ID=" + i.UEventId + ", ";
+                result += "Member_ID=" + i.UMemberId + ", ";
                 result += "Amount=" + i.Amount;
             }
 
@@ -762,7 +818,7 @@ namespace share
             if(eventId != 0)
             {
                 UEvent e = LoadEventDetails(eventId);
-                if(e.GroupId == 0)
+                if(e.UGroupId == 0)
                 {
                     List<UMember> members = LoadMemberList(eventId: eventId);
                     List<UBill> bills = LoadBillList(eventId);
@@ -788,6 +844,80 @@ namespace share
             }
 
             return result;
+        }
+        private static void DeleteGroupByGlobalId(int globalId)
+        {
+            string commandText = "DELETE FROM GROUPS WHERE GROUPS.Global_ID = " + globalId + " ;";
+            ExecuteCommand(commandText);
+        }
+
+        public void ExecuteInTransaction(string commandText)
+        {
+            string folder = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
+            string path = Path.Combine(folder, m_DBName);
+            string connectionString = string.Format("Data Source={0};Version=3;", path);
+
+            SqliteConnection connection = new SqliteConnection(connectionString);
+            connection.Open();
+
+            SqliteTransaction t = connection.BeginTransaction();
+
+            SqliteCommand command = connection.CreateCommand();
+            command.CommandText = commandText;
+            command.CommandType = CommandType.Text;
+            command.ExecuteNonQueryAsync();
+
+            t.Commit();
+
+            connection.Close();
+        }
+
+        public static bool UploadGroup(UGroup uGroup)
+        {
+            if (uGroup.GlobalId == null)
+                return false;
+
+            DeleteGroupByGlobalId(uGroup.GlobalId.Value);
+            int groupId = CreateGroup(uGroup);
+
+            Dictionary<int, int> mp = new Dictionary<int, int>();
+            foreach (UMember m in uGroup.UMembers)
+            {
+                m.UGroupId = groupId;
+                mp.Add(m.Id, CreateMember(m));
+            }
+
+            Dictionary<int, int> ep = new Dictionary<int, int>();
+            foreach (UEvent e in uGroup.UEvents)
+            {
+                e.UGroupId = groupId;
+                ep.Add(e.Id, CreateEvent(e));
+
+                Dictionary<int, int> bp = new Dictionary<int, int>();
+                foreach(UBill b in e.UBills)
+                {
+                    b.UEventId = ep[b.UEventId];
+                    b.UMemberId = mp[b.UMemberId];
+                    CreateBill(b);
+                }
+
+                Dictionary<int, int> pp = new Dictionary<int, int>();
+                foreach(UPayment p in e.UPayments)
+                {
+                    p.UEventId = ep[p.UEventId];
+                    p.UMemberId = mp[p.UMemberId];
+                    CreatePayment(p);
+                }
+            }
+
+            foreach (UDebt d in uGroup.UDebts)
+            {
+                d.UGroupId = groupId;
+                d.LenderUMemberId = mp[d.LenderUMemberId];
+                d.DebtorUMemberId = mp[d.DebtorUMemberId];
+                CreateDebt(d);
+            }
+            return true;
         }
     }
 }

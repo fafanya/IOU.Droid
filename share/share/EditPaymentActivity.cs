@@ -77,14 +77,14 @@ namespace share
                 m_Payment = new UPayment();
                 m_Payment.Id = -1;
                 m_Payment.Amount = 0.0;
-                m_Payment.EventId = eventId;
+                m_Payment.UEventId = eventId;
             }
             else
             {
                 m_Payment = Controller.LoadPaymentDetails(m_ID);
                 for (int position = 0; position < m_MemberAdapter.Count; position++)
                 {
-                    if (m_MemberAdapter.GetItemId(position) == m_Payment.MemberId)
+                    if (m_MemberAdapter.GetItemId(position) == m_Payment.UMemberId)
                     {
                         m_spMember.SetSelection(position);
                         break;
@@ -103,7 +103,7 @@ namespace share
         private void BtnOK_Click(object sender, EventArgs e)
         {
             m_Payment.Amount = int.Parse(m_etPaymentAmount.Text);
-            m_Payment.MemberId = (int)(m_spMember.SelectedItemId);
+            m_Payment.UMemberId = (int)(m_spMember.SelectedItemId);
 
             if (m_Payment.Id < 0)
             {

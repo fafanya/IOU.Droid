@@ -90,8 +90,8 @@ namespace share
             menu.SetHeaderTitle("Меню");
             menu.Add(4, 1, 0, "Изменить");
             menu.Add(4, 2, 0, "Удалить");
-            /*menu.Add(4, 3, 0, "Из облака");
-            menu.Add(4, 4, 0, "В облако");*/
+            menu.Add(4, 3, 0, "Импорт");
+            menu.Add(4, 4, 0, "Экспорт");
         }
 
         public override bool OnContextItemSelected(IMenuItem item)
@@ -103,6 +103,8 @@ namespace share
                 int id = (int)(ListView.Adapter.GetItemId(info.Position));
 
                 UObject i = m_ListAdapter[info.Position];
+                UGroup g = i as UGroup;
+                int? globalId = g.GlobalId;
 
                 if (item.ItemId == 1)
                 {
@@ -115,20 +117,31 @@ namespace share
                     Controller.DeleteObject(i);
                     Refresh();
                 }
-                else if(item.ItemId == 3)
+                else if (item.ItemId == 3)
                 {
-                    Client client = new Client();
-                    client.GetSynchronizeGroups();
-                    Refresh();
+                    if (globalId != null)
+                    {
+                        GetGroupFromCloud(globalId.Value);
+                    }
                 }
                 else if (item.ItemId == 4)
                 {
                     Client client = new Client();
                     client.PostSynchronizeGroups(id);
+                    Refresh();
                 }
                 return true;
             }
             return false;
+        }
+
+        private async void GetGroupFromCloud(int globalId)
+        {
+            Client client = new Client();
+            if (await Task.Run(() => client.GetSynchronizeGroups(globalId)))
+            {
+                Refresh();
+            }
         }
 
         public override void OnActivityResult(int requestCode, int resultCode, Intent data)

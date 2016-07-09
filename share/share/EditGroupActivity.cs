@@ -19,6 +19,7 @@ namespace share
         UGroup m_Group;
         private Android.Support.V7.Widget.Toolbar toolbar;
         EditText m_etName;
+        EditText m_etGlobal;
 
         protected override void OnCreate(Bundle savedInstanceState)
         {
@@ -31,6 +32,7 @@ namespace share
             SupportActionBar.SetDisplayShowHomeEnabled(true);
 
             m_etName = FindViewById<EditText>(Resource.Id.etGroupName);
+            m_etGlobal = FindViewById<EditText>(Resource.Id.etGlobalId);
             Button btnOK = FindViewById<Button>(Resource.Id.btnGroupOK);
             Button btnCancel = FindViewById<Button>(Resource.Id.btnGroupCancel);
 
@@ -76,7 +78,16 @@ namespace share
             m_Group.Name = m_etName.Text;
             if (m_Group.Id < 0)
             {
-                Controller.CreateGroup(m_Group);
+                int globalId;
+                if(int.TryParse(m_etGlobal.Text, out globalId))
+                {
+                    Client client = new Client();
+                    client.GetSynchronizeGroups(globalId);
+                }
+                else
+                {
+                    Controller.CreateGroup(m_Group);
+                }
             }
             else
             {

@@ -39,7 +39,15 @@ namespace share
             {
                 view = context.LayoutInflater.Inflate(Android.Resource.Layout.SimpleListItem1, null);
             }
-            view.FindViewById<TextView>(Android.Resource.Id.Text1).Text = items[position].Name;
+
+            UGroup group = items[position];
+            TextView textView = view.FindViewById<TextView>(Android.Resource.Id.Text1);
+
+            textView.Text = group.Name;
+            if (group.GlobalId != null)
+            {
+                textView.Text += " [ID:" + group.GlobalId + "]";
+            }
             return view;
         }
     }

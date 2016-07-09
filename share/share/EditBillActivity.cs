@@ -82,7 +82,7 @@ namespace share
             {
                 m_Bill = new UBill();
                 m_Bill.Id = -1;
-                m_Bill.EventId = eventId;
+                m_Bill.UEventId = eventId;
                 m_Bill.Amount = 0.0;
             }
             else
@@ -90,7 +90,7 @@ namespace share
                 m_Bill = Controller.LoadBillDetails(m_ID);
                 for (int position = 0; position < m_MemberAdapter.Count; position++)
                 {
-                    if (m_MemberAdapter.GetItemId(position) == m_Bill.MemberId)
+                    if (m_MemberAdapter.GetItemId(position) == m_Bill.UMemberId)
                     {
                         m_spMember.SetSelection(position);
                         break;
@@ -98,7 +98,7 @@ namespace share
                 }
             }
 
-            if(m_Event.EventTypeId == UEventType.tOwn)
+            if(m_Event.UEventTypeId == UEventType.tOwn)
             {
                 m_etBillAmount.Text = m_Bill.Amount.ToString();
             }
@@ -117,11 +117,11 @@ namespace share
 
         private void BtnOK_Click(object sender, EventArgs e)
         {
-            if (m_Event.EventTypeId == UEventType.tOwn)
+            if (m_Event.UEventTypeId == UEventType.tOwn)
             {
                 m_Bill.Amount = int.Parse(m_etBillAmount.Text);
             }
-            m_Bill.MemberId = (int)(m_spMember.SelectedItemId);
+            m_Bill.UMemberId = (int)(m_spMember.SelectedItemId);
 
             if (m_Bill.Id < 0)
             {

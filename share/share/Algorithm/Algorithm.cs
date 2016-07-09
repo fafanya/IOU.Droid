@@ -22,11 +22,11 @@ namespace share
             {
                 foreach (UDebt d in debts)
                 {
-                    if (d.DebtorId == m.Member.Id)
+                    if (d.DebtorUMemberId == m.Member.Id)
                     {
                         m.Balance += d.Amount;
                     }
-                    if (d.LenderId == m.Member.Id)
+                    if (d.LenderUMemberId == m.Member.Id)
                     {
                         m.Balance -= d.Amount;
                     }
@@ -35,32 +35,32 @@ namespace share
 
             foreach (UEvent e in events)
             {
-                if (e.EventTypeId == UEventType.tOwn)
+                if (e.UEventTypeId == UEventType.tOwn)
                 {
-                    foreach (UPayment p in payments.Where(x => x.EventId == e.Id))
+                    foreach (UPayment p in payments.Where(x => x.UEventId == e.Id))
                     {
-                        foreach (CustomMember m in cMembers.Where(x => x.Member.Id == p.MemberId))
+                        foreach (CustomMember m in cMembers.Where(x => x.Member.Id == p.UMemberId))
                         {
                             m.Balance -= p.Amount;
                         }
                     }
 
-                    foreach (UBill b in bills.Where(x => x.EventId == e.Id))
+                    foreach (UBill b in bills.Where(x => x.UEventId == e.Id))
                     {
-                        foreach (CustomMember m in cMembers.Where(x => x.Member.Id == b.MemberId))
+                        foreach (CustomMember m in cMembers.Where(x => x.Member.Id == b.UMemberId))
                         {
                             m.Balance += b.Amount;
                         }
                     }
                 }
-                else if(e.EventTypeId == UEventType.tCommon)
+                else if(e.UEventTypeId == UEventType.tCommon)
                 {
                     double summa = 0.0;
 
-                    foreach (UPayment p in payments.Where(x => x.EventId == e.Id))
+                    foreach (UPayment p in payments.Where(x => x.UEventId == e.Id))
                     {
                         summa += p.Amount;
-                        foreach (CustomMember m in cMembers.Where(x => x.Member.Id == p.MemberId))
+                        foreach (CustomMember m in cMembers.Where(x => x.Member.Id == p.UMemberId))
                         {
                             m.Balance -= p.Amount;
                         }
@@ -73,24 +73,24 @@ namespace share
                         m.Balance += avg;
                     }
                 }
-                else if(e.EventTypeId == UEventType.tPartly)
+                else if(e.UEventTypeId == UEventType.tPartly)
                 {
                     double summa = 0.0;
-                    foreach (UPayment p in payments.Where(x => x.EventId == e.Id))
+                    foreach (UPayment p in payments.Where(x => x.UEventId == e.Id))
                     {
                         summa += p.Amount;
-                        foreach (CustomMember m in cMembers.Where(x => x.Member.Id == p.MemberId))
+                        foreach (CustomMember m in cMembers.Where(x => x.Member.Id == p.UMemberId))
                         {
                             m.Balance -= p.Amount;
                         }
                     }
 
-                    int count = bills.Where(x=>x.EventId == e.Id).GroupBy(y=>y.MemberId).Count();
+                    int count = bills.Where(x=>x.UEventId == e.Id).GroupBy(y=>y.UMemberId).Count();
 
                     double avg = summa / count;
-                    foreach (UBill b in bills.Where(x => x.EventId == e.Id))
+                    foreach (UBill b in bills.Where(x => x.UEventId == e.Id))
                     {
-                        foreach (CustomMember m in cMembers.Where(x => x.Member.Id == b.MemberId))
+                        foreach (CustomMember m in cMembers.Where(x => x.Member.Id == b.UMemberId))
                         {
                             m.Balance += avg;
                         }
@@ -116,31 +116,31 @@ namespace share
                 cMembers.Add(cm);
             }
 
-            if (e.EventTypeId == UEventType.tOwn)
+            if (e.UEventTypeId == UEventType.tOwn)
             {
-                foreach (UPayment p in payments.Where(x => x.EventId == eventId))
+                foreach (UPayment p in payments.Where(x => x.UEventId == eventId))
                 {
-                    foreach (CustomMember m in cMembers.Where(x => x.Member.Id == p.MemberId))
+                    foreach (CustomMember m in cMembers.Where(x => x.Member.Id == p.UMemberId))
                     {
                         m.Balance -= p.Amount;
                     }
                 }
 
-                foreach (UBill b in bills.Where(x => x.EventId == eventId))
+                foreach (UBill b in bills.Where(x => x.UEventId == eventId))
                 {
-                    foreach (CustomMember m in cMembers.Where(x => x.Member.Id == b.MemberId))
+                    foreach (CustomMember m in cMembers.Where(x => x.Member.Id == b.UMemberId))
                     {
                         m.Balance += b.Amount;
                     }
                 }
             }
-            else if (e.EventTypeId == UEventType.tCommon)
+            else if (e.UEventTypeId == UEventType.tCommon)
             {
                 double summa = 0.0;
-                foreach (UPayment p in payments.Where(x => x.EventId == e.Id))
+                foreach (UPayment p in payments.Where(x => x.UEventId == e.Id))
                 {
                     summa += p.Amount;
-                    foreach (CustomMember m in cMembers.Where(x => x.Member.Id == p.MemberId))
+                    foreach (CustomMember m in cMembers.Where(x => x.Member.Id == p.UMemberId))
                     {
                         m.Balance -= p.Amount;
                     }
@@ -153,24 +153,24 @@ namespace share
                     m.Balance += avg;
                 }
             }
-            else if (e.EventTypeId == UEventType.tPartly)
+            else if (e.UEventTypeId == UEventType.tPartly)
             {
                 double summa = 0.0;
-                foreach (UPayment p in payments.Where(x => x.EventId == e.Id))
+                foreach (UPayment p in payments.Where(x => x.UEventId == e.Id))
                 {
                     summa += p.Amount;
-                    foreach (CustomMember m in cMembers.Where(x => x.Member.Id == p.MemberId))
+                    foreach (CustomMember m in cMembers.Where(x => x.Member.Id == p.UMemberId))
                     {
                         m.Balance -= p.Amount;
                     }
                 }
 
-                int count = bills.Where(x => x.EventId == e.Id).GroupBy(y => y.MemberId).Count();
+                int count = bills.Where(x => x.UEventId == e.Id).GroupBy(y => y.UMemberId).Count();
 
                 double avg = summa / count;
-                foreach (UBill b in bills.Where(x => x.EventId == e.Id))
+                foreach (UBill b in bills.Where(x => x.UEventId == e.Id))
                 {
-                    foreach (CustomMember m in cMembers.Where(x => x.Member.Id == b.MemberId))
+                    foreach (CustomMember m in cMembers.Where(x => x.Member.Id == b.UMemberId))
                     {
                         m.Balance += avg;
                     }
