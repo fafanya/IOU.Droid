@@ -19,7 +19,7 @@ namespace share
 
         public override long GetItemId(int position)
         {
-            return items[position].Id;
+            return items[position].LocalId;
         }
 
         public override UGroup this[int position]
@@ -32,7 +32,7 @@ namespace share
             get { return items.Length; }
         }
 
-        public override View GetView(int position, View convertView, ViewGroup parent)
+        /*public override View GetView(int position, View convertView, ViewGroup parent)
         {
             View view = convertView;
             if (view == null)
@@ -44,10 +44,41 @@ namespace share
             TextView textView = view.FindViewById<TextView>(Android.Resource.Id.Text1);
 
             textView.Text = group.Name;
-            if (group.GlobalId != null)
+            if (group.Id != 0)
             {
-                textView.Text += " [ID:" + group.GlobalId + "]";
+                textView.Text += " [ID:" + group.Id + "]";
             }
+            return view;
+        }*/
+
+        public override View GetView(int position, View convertView, ViewGroup parent)
+        {
+            UGroup group = items[position];
+
+            View view = convertView;
+            if (view == null)
+            {
+                view = context.LayoutInflater.Inflate(Resource.Drawable.group_item, null, false);
+            }
+
+            ImageView image = view.FindViewById<ImageView>(Resource.Id.result_icon);
+            TextView title = view.FindViewById<TextView>(Resource.Id.result_name);
+            TextView name = view.FindViewById<TextView>(Resource.Id.result_second_line);
+
+            name.Text = group.Name;
+
+            if (group.Id != 0)
+            {
+                title.Text = "в интернете";
+                name.Text += " [ID:" + group.Id + "]";
+                image.SetImageResource(Resource.Drawable.internet);
+            }
+            else
+            {
+                title.Text = "в телефоне";
+                image.SetImageResource(Resource.Drawable.smartphone);
+            }
+
             return view;
         }
     }

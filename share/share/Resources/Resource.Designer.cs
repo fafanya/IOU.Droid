@@ -1828,25 +1828,34 @@ namespace share
 			public const int design_snackbar_background = 2130837580;
 			
 			// aapt resource value: 0x7f02004d
-			public const int ic_menu = 2130837581;
+			public const int group_item = 2130837581;
 			
 			// aapt resource value: 0x7f02004e
-			public const int ic_menu_pig = 2130837582;
+			public const int ic_menu = 2130837582;
 			
 			// aapt resource value: 0x7f02004f
-			public const int Icon = 2130837583;
+			public const int ic_menu_pig = 2130837583;
 			
 			// aapt resource value: 0x7f020050
-			public const int image = 2130837584;
-			
-			// aapt resource value: 0x7f020053
-			public const int notification_template_icon_bg = 2130837587;
+			public const int Icon = 2130837584;
 			
 			// aapt resource value: 0x7f020051
-			public const int plus = 2130837585;
+			public const int image = 2130837585;
 			
 			// aapt resource value: 0x7f020052
-			public const int splash_screen = 2130837586;
+			public const int internet = 2130837586;
+			
+			// aapt resource value: 0x7f020056
+			public const int notification_template_icon_bg = 2130837590;
+			
+			// aapt resource value: 0x7f020053
+			public const int plus = 2130837587;
+			
+			// aapt resource value: 0x7f020054
+			public const int smartphone = 2130837588;
+			
+			// aapt resource value: 0x7f020055
+			public const int splash_screen = 2130837589;
 			
 			static Drawable()
 			{
@@ -1861,11 +1870,11 @@ namespace share
 		public partial class Id
 		{
 			
-			// aapt resource value: 0x7f0600b4
-			public const int SpinnerItemText = 2131099828;
+			// aapt resource value: 0x7f0600ba
+			public const int SpinnerItemText = 2131099834;
 			
-			// aapt resource value: 0x7f0600a6
-			public const int action0 = 2131099814;
+			// aapt resource value: 0x7f0600a8
+			public const int action0 = 2131099816;
 			
 			// aapt resource value: 0x7f06005a
 			public const int action_bar = 2131099738;
@@ -1891,8 +1900,8 @@ namespace share
 			// aapt resource value: 0x7f06005b
 			public const int action_context_bar = 2131099739;
 			
-			// aapt resource value: 0x7f0600aa
-			public const int action_divider = 2131099818;
+			// aapt resource value: 0x7f0600ac
+			public const int action_divider = 2131099820;
 			
 			// aapt resource value: 0x7f060003
 			public const int action_menu_divider = 2131099651;
@@ -1942,29 +1951,38 @@ namespace share
 			// aapt resource value: 0x7f060085
 			public const int btnEventOK = 2131099781;
 			
-			// aapt resource value: 0x7f06008b
-			public const int btnGroupCancel = 2131099787;
+			// aapt resource value: 0x7f06008d
+			public const int btnGroupCancel = 2131099789;
 			
-			// aapt resource value: 0x7f06008a
-			public const int btnGroupOK = 2131099786;
+			// aapt resource value: 0x7f06008c
+			public const int btnGroupOK = 2131099788;
 			
-			// aapt resource value: 0x7f06008f
-			public const int btnMemberCancel = 2131099791;
+			// aapt resource value: 0x7f060091
+			public const int btnMemberCancel = 2131099793;
 			
-			// aapt resource value: 0x7f06008e
-			public const int btnMemberOK = 2131099790;
+			// aapt resource value: 0x7f060090
+			public const int btnMemberOK = 2131099792;
 			
-			// aapt resource value: 0x7f060094
-			public const int btnPaymentCancel = 2131099796;
+			// aapt resource value: 0x7f060096
+			public const int btnPaymentCancel = 2131099798;
 			
-			// aapt resource value: 0x7f060093
-			public const int btnPaymentOK = 2131099795;
+			// aapt resource value: 0x7f060095
+			public const int btnPaymentOK = 2131099797;
+			
+			// aapt resource value: 0x7f0600b7
+			public const int btnSelectCreateGroup = 2131099831;
+			
+			// aapt resource value: 0x7f0600b9
+			public const int btnSelectImportGroup = 2131099833;
+			
+			// aapt resource value: 0x7f0600b8
+			public const int btnSelectInternetGroup = 2131099832;
 			
 			// aapt resource value: 0x7f060044
 			public const int buttonPanel = 2131099716;
 			
-			// aapt resource value: 0x7f0600a7
-			public const int cancel_action = 2131099815;
+			// aapt resource value: 0x7f0600a9
+			public const int cancel_action = 2131099817;
 			
 			// aapt resource value: 0x7f06002b
 			public const int center = 2131099691;
@@ -1978,8 +1996,8 @@ namespace share
 			// aapt resource value: 0x7f060052
 			public const int checkbox = 2131099730;
 			
-			// aapt resource value: 0x7f0600ad
-			public const int chronometer = 2131099821;
+			// aapt resource value: 0x7f0600af
+			public const int chronometer = 2131099823;
 			
 			// aapt resource value: 0x7f060033
 			public const int clip_horizontal = 2131099699;
@@ -2023,8 +2041,8 @@ namespace share
 			// aapt resource value: 0x7f06000e
 			public const int disableHome = 2131099662;
 			
-			// aapt resource value: 0x7f0600a0
-			public const int drawer_layout = 2131099808;
+			// aapt resource value: 0x7f0600a2
+			public const int drawer_layout = 2131099810;
 			
 			// aapt resource value: 0x7f06005c
 			public const int edit_query = 2131099740;
@@ -2032,8 +2050,8 @@ namespace share
 			// aapt resource value: 0x7f06001c
 			public const int end = 2131099676;
 			
-			// aapt resource value: 0x7f0600b2
-			public const int end_padder = 2131099826;
+			// aapt resource value: 0x7f0600b4
+			public const int end_padder = 2131099828;
 			
 			// aapt resource value: 0x7f060023
 			public const int enterAlways = 2131099683;
@@ -2053,17 +2071,17 @@ namespace share
 			// aapt resource value: 0x7f060084
 			public const int etEventName = 2131099780;
 			
+			// aapt resource value: 0x7f06008b
+			public const int etGlobalId = 2131099787;
+			
 			// aapt resource value: 0x7f060089
-			public const int etGlobalId = 2131099785;
+			public const int etGroupName = 2131099785;
 			
-			// aapt resource value: 0x7f060088
-			public const int etGroupName = 2131099784;
+			// aapt resource value: 0x7f06008f
+			public const int etMemberName = 2131099791;
 			
-			// aapt resource value: 0x7f06008d
-			public const int etMemberName = 2131099789;
-			
-			// aapt resource value: 0x7f060092
-			public const int etPaymentAmount = 2131099794;
+			// aapt resource value: 0x7f060094
+			public const int etPaymentAmount = 2131099796;
 			
 			// aapt resource value: 0x7f060025
 			public const int exitUntilCollapsed = 2131099685;
@@ -2080,20 +2098,20 @@ namespace share
 			// aapt resource value: 0x7f06006b
 			public const int fabDebtListFragment = 2131099755;
 			
-			// aapt resource value: 0x7f060098
-			public const int fabEventListFragment = 2131099800;
+			// aapt resource value: 0x7f06009a
+			public const int fabEventListFragment = 2131099802;
 			
-			// aapt resource value: 0x7f06009f
-			public const int fabGroupListFragment = 2131099807;
+			// aapt resource value: 0x7f0600a1
+			public const int fabGroupListFragment = 2131099809;
 			
-			// aapt resource value: 0x7f06009e
-			public const int fabMainActivity = 2131099806;
+			// aapt resource value: 0x7f0600a0
+			public const int fabMainActivity = 2131099808;
 			
-			// aapt resource value: 0x7f0600a5
-			public const int fabMemberListFragment = 2131099813;
+			// aapt resource value: 0x7f0600a7
+			public const int fabMemberListFragment = 2131099815;
 			
-			// aapt resource value: 0x7f0600b3
-			public const int fabPaymentListFragment = 2131099827;
+			// aapt resource value: 0x7f0600b5
+			public const int fabPaymentListFragment = 2131099829;
 			
 			// aapt resource value: 0x7f060035
 			public const int fill = 2131099701;
@@ -2106,6 +2124,9 @@ namespace share
 			
 			// aapt resource value: 0x7f060038
 			public const int @fixed = 2131099704;
+			
+			// aapt resource value: 0x7f0600bb
+			public const int group_ll = 2131099835;
 			
 			// aapt resource value: 0x7f060005
 			public const int home = 2131099653;
@@ -2122,8 +2143,8 @@ namespace share
 			// aapt resource value: 0x7f06003f
 			public const int image = 2131099711;
 			
-			// aapt resource value: 0x7f0600b1
-			public const int info = 2131099825;
+			// aapt resource value: 0x7f0600b3
+			public const int info = 2131099827;
 			
 			// aapt resource value: 0x7f060000
 			public const int item_touch_helper_previous_elevation = 2131099648;
@@ -2131,11 +2152,11 @@ namespace share
 			// aapt resource value: 0x7f06002f
 			public const int left = 2131099695;
 			
-			// aapt resource value: 0x7f0600ab
-			public const int line1 = 2131099819;
+			// aapt resource value: 0x7f0600ad
+			public const int line1 = 2131099821;
 			
-			// aapt resource value: 0x7f0600af
-			public const int line3 = 2131099823;
+			// aapt resource value: 0x7f0600b1
+			public const int line3 = 2131099825;
 			
 			// aapt resource value: 0x7f06000b
 			public const int listMode = 2131099659;
@@ -2143,14 +2164,20 @@ namespace share
 			// aapt resource value: 0x7f060041
 			public const int list_item = 2131099713;
 			
+			// aapt resource value: 0x7f060088
+			public const int llCreate = 2131099784;
+			
 			// aapt resource value: 0x7f060077
 			public const int llEditBillActivity = 2131099767;
 			
-			// aapt resource value: 0x7f06009d
-			public const int lvMainActivity = 2131099805;
+			// aapt resource value: 0x7f06008a
+			public const int llImport = 2131099786;
 			
-			// aapt resource value: 0x7f0600a9
-			public const int media_actions = 2131099817;
+			// aapt resource value: 0x7f06009f
+			public const int lvMainActivity = 2131099807;
+			
+			// aapt resource value: 0x7f0600ab
+			public const int media_actions = 2131099819;
 			
 			// aapt resource value: 0x7f06001d
 			public const int middle = 2131099677;
@@ -2161,11 +2188,11 @@ namespace share
 			// aapt resource value: 0x7f060016
 			public const int multiply = 2131099670;
 			
-			// aapt resource value: 0x7f0600b5
-			public const int nav_about = 2131099829;
+			// aapt resource value: 0x7f0600bf
+			public const int nav_about = 2131099839;
 			
-			// aapt resource value: 0x7f0600a4
-			public const int nav_view = 2131099812;
+			// aapt resource value: 0x7f0600a6
+			public const int nav_view = 2131099814;
 			
 			// aapt resource value: 0x7f060070
 			public const int navigation_header_container = 2131099760;
@@ -2196,6 +2223,15 @@ namespace share
 			
 			// aapt resource value: 0x7f060054
 			public const int radio = 2131099732;
+			
+			// aapt resource value: 0x7f0600bd
+			public const int result_icon = 2131099837;
+			
+			// aapt resource value: 0x7f0600bc
+			public const int result_name = 2131099836;
+			
+			// aapt resource value: 0x7f0600be
+			public const int result_second_line = 2131099838;
 			
 			// aapt resource value: 0x7f060030
 			public const int right = 2131099696;
@@ -2284,8 +2320,8 @@ namespace share
 			// aapt resource value: 0x7f06007e
 			public const int spLender = 2131099774;
 			
-			// aapt resource value: 0x7f060091
-			public const int spPaymentMember = 2131099793;
+			// aapt resource value: 0x7f060093
+			public const int spPaymentMember = 2131099795;
 			
 			// aapt resource value: 0x7f060045
 			public const int spacer = 2131099717;
@@ -2305,8 +2341,8 @@ namespace share
 			// aapt resource value: 0x7f060031
 			public const int start = 2131099697;
 			
-			// aapt resource value: 0x7f0600a8
-			public const int status_bar_latest_event_content = 2131099816;
+			// aapt resource value: 0x7f0600aa
+			public const int status_bar_latest_event_content = 2131099818;
 			
 			// aapt resource value: 0x7f060065
 			public const int submit_area = 2131099749;
@@ -2314,26 +2350,26 @@ namespace share
 			// aapt resource value: 0x7f06000d
 			public const int tabMode = 2131099661;
 			
-			// aapt resource value: 0x7f06009a
-			public const int tabs = 2131099802;
+			// aapt resource value: 0x7f06009c
+			public const int tabs = 2131099804;
 			
-			// aapt resource value: 0x7f060096
-			public const int tabsEventActivity = 2131099798;
+			// aapt resource value: 0x7f060098
+			public const int tabsEventActivity = 2131099800;
 			
-			// aapt resource value: 0x7f0600a2
-			public const int tabsMainActivity = 2131099810;
+			// aapt resource value: 0x7f0600a4
+			public const int tabsMainActivity = 2131099812;
+			
+			// aapt resource value: 0x7f0600b2
+			public const int text = 2131099826;
 			
 			// aapt resource value: 0x7f0600b0
-			public const int text = 2131099824;
-			
-			// aapt resource value: 0x7f0600ae
-			public const int text2 = 2131099822;
+			public const int text2 = 2131099824;
 			
 			// aapt resource value: 0x7f06004d
 			public const int textSpacerNoButtons = 2131099725;
 			
-			// aapt resource value: 0x7f0600ac
-			public const int time = 2131099820;
+			// aapt resource value: 0x7f0600ae
+			public const int time = 2131099822;
 			
 			// aapt resource value: 0x7f060043
 			public const int title = 2131099715;
@@ -2353,23 +2389,26 @@ namespace share
 			// aapt resource value: 0x7f060069
 			public const int toolbarEditGroupActivity = 2131099753;
 			
-			// aapt resource value: 0x7f06008c
-			public const int toolbarEditMemberActivity = 2131099788;
+			// aapt resource value: 0x7f06008e
+			public const int toolbarEditMemberActivity = 2131099790;
 			
-			// aapt resource value: 0x7f060090
-			public const int toolbarEditPaymentActivity = 2131099792;
+			// aapt resource value: 0x7f060092
+			public const int toolbarEditPaymentActivity = 2131099794;
 			
-			// aapt resource value: 0x7f060095
-			public const int toolbarEventActivity = 2131099797;
+			// aapt resource value: 0x7f060097
+			public const int toolbarEventActivity = 2131099799;
 			
-			// aapt resource value: 0x7f060099
-			public const int toolbarGroupActivity = 2131099801;
+			// aapt resource value: 0x7f06009b
+			public const int toolbarGroupActivity = 2131099803;
 			
-			// aapt resource value: 0x7f06009c
-			public const int toolbarGroupListActivity = 2131099804;
+			// aapt resource value: 0x7f06009e
+			public const int toolbarGroupListActivity = 2131099806;
 			
-			// aapt resource value: 0x7f0600a1
-			public const int toolbarMainActivity = 2131099809;
+			// aapt resource value: 0x7f0600a3
+			public const int toolbarMainActivity = 2131099811;
+			
+			// aapt resource value: 0x7f0600b6
+			public const int toolbarSelectEditGroupActivity = 2131099830;
 			
 			// aapt resource value: 0x7f060032
 			public const int top = 2131099698;
@@ -2392,14 +2431,14 @@ namespace share
 			// aapt resource value: 0x7f06000a
 			public const int view_offset_helper = 2131099658;
 			
-			// aapt resource value: 0x7f06009b
-			public const int viewpager = 2131099803;
+			// aapt resource value: 0x7f06009d
+			public const int viewpager = 2131099805;
 			
-			// aapt resource value: 0x7f060097
-			public const int viewpagerEventActivity = 2131099799;
+			// aapt resource value: 0x7f060099
+			public const int viewpagerEventActivity = 2131099801;
 			
-			// aapt resource value: 0x7f0600a3
-			public const int viewpagerMainActivity = 2131099811;
+			// aapt resource value: 0x7f0600a5
+			public const int viewpagerMainActivity = 2131099813;
 			
 			// aapt resource value: 0x7f060022
 			public const int withText = 2131099682;
@@ -2650,13 +2689,16 @@ namespace share
 			public const int select_dialog_singlechoice_material = 2130903104;
 			
 			// aapt resource value: 0x7f030041
-			public const int SpinnerItem = 2130903105;
+			public const int SelectEditGroupActivity = 2130903105;
 			
 			// aapt resource value: 0x7f030042
-			public const int support_simple_spinner_dropdown_item = 2130903106;
+			public const int SpinnerItem = 2130903106;
 			
 			// aapt resource value: 0x7f030043
-			public const int TotalDebtListFragment = 2130903107;
+			public const int support_simple_spinner_dropdown_item = 2130903107;
+			
+			// aapt resource value: 0x7f030044
+			public const int TotalDebtListFragment = 2130903108;
 			
 			static Layout()
 			{

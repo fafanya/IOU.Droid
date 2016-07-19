@@ -21,85 +21,60 @@ namespace share
 {
     public class Client
     {
-        private string m_URL = "http://46.101.214.70/";
+        private bool m_IsHome = !false;
+        private string m_HostURL = "http://46.101.214.70/";
         private string m_HomeURL = "http://192.168.1.4:2562/";
 
-        private bool m_IsHome = false;
-
-        public bool GetSynchronizeGroups(int groupId)
+        public bool ImportGroup(int id)
         {
-            string url = (m_IsHome ? m_HomeURL: m_URL) + "api/UGroups/"+ groupId.ToString();
+            string url = (m_IsHome ? m_HomeURL: m_HostURL) + "api/UGroups/"+ id.ToString();
             try
             {
                 HttpWebRequest request = (HttpWebRequest)HttpWebRequest.Create(new Uri(url));
                 request.ContentType = "application/json";
                 request.Method = "GET";
-
-                //using (WebResponse response = await request.GetResponseAsync())
                 using (WebResponse response = request.GetResponse())
                 {
                     using (Stream stream = response.GetResponseStream())
                     {
-                        //JsonValue json = await Task.Run(() => JsonObject.Load(stream));
-                        JsonValue value = JsonObject.Load(stream);
-
-                        int id = value["Id"];
-                        string name = value["Name"];
+                        JsonValue g = JsonValue.Load(stream);
 
                         UGroup ugroup = new UGroup();
-                        ugroup.Name = name;
-                        ugroup.GlobalId = id;
+                        ugroup.Id = g["Id"];
+                        ugroup.Name = g["Name"];
 
-                        if (value.ContainsKey("UEvents"))
+                        if (g.ContainsKey("UEvents"))
                         {
                             ugroup.UEvents = new List<UEvent>();
-                            JsonValue uevents = value["UEvents"];
-                            foreach (JsonValue item in uevents)
+                            foreach (JsonValue e in g["UEvents"])
                             {
                                 UEvent uevent = new UEvent();
+                                uevent.Id = e["Id"];
+                                uevent.Name = e["Name"];
+                                uevent.UGroupId = e["UGroupId"];
+                                uevent.UEventTypeId = e["UEventTypeId"];
 
-                                int sid = item["Id"];
-                                string sname = item["Name"];
-                                int sgroupid = item["UGroupId"];
-                                int seventtypeid = item["UEventTypeId"];
-
-                                uevent.Id = sid;
-                                uevent.Name = sname;
-                                uevent.UGroupId = sgroupid;
-                                uevent.UEventTypeId = seventtypeid;
-
-                                if (item.ContainsKey("UBills"))
+                                if (e.ContainsKey("UBills"))
                                 {
                                     uevent.UBills = new List<UBill>();
-                                    JsonValue sbills = item["UBills"];
-                                    foreach (JsonValue sitem in sbills)
+                                    foreach (JsonValue b in e["UBills"])
                                     {
                                         UBill ubill = new UBill();
-                                        int ssid = sitem["Id"];
-                                        int seventid = sitem["UEventId"];
-                                        int smemberis = sitem["UMemberId"];
-
-                                        ubill.UEventId = seventid;
-                                        ubill.UMemberId = smemberis;
-
+                                        ubill.Id = b["Id"];
+                                        ubill.UEventId = b["UEventId"];
+                                        ubill.UMemberId = b["UMemberId"];
                                         uevent.UBills.Add(ubill);
                                     }
                                 }
-
-                                if (item.ContainsKey("UPayments"))
+                                if (e.ContainsKey("UPayments"))
                                 {
                                     uevent.UPayments = new List<UPayment>();
-                                    JsonValue spayment = item["UPayments"];
-                                    foreach (JsonValue sitem in spayment)
+                                    foreach (JsonValue p in e["UPayments"])
                                     {
                                         UPayment upayment = new UPayment();
-                                        int ssid = sitem["Id"];
-                                        int seventid = sitem["UEventId"];
-                                        int smemberis = sitem["UMemberId"];
-
-                                        upayment.UEventId = seventid;
-                                        upayment.UMemberId = smemberis;
-
+                                        upayment.Id = p["Id"];
+                                        upayment.UEventId = p["UEventId"];
+                                        upayment.UMemberId = p["UMemberId"];
                                         uevent.UPayments.Add(upayment);
                                     }
                                 }
@@ -107,51 +82,35 @@ namespace share
                             }
                         }
 
-                        if (value.ContainsKey("UMembers"))
+                        if (g.ContainsKey("UMembers"))
                         {
                             ugroup.UMembers = new List<UMember>();
-                            JsonValue umembers = value["UMembers"];
-                            foreach (JsonValue item in umembers)
+                            foreach (JsonValue m in g["UMembers"])
                             {
                                 UMember umember = new UMember();
-
-                                int sid = item["Id"];
-                                string sname = item["Name"];
-                                int sgroupid = item["UGroupId"];
-
-                                umember.Id = sid;
-                                umember.Name = sname;
-                                umember.UGroupId = sgroupid;
-
+                                umember.Id = m["Id"];
+                                umember.Name = m["Name"];
+                                umember.UGroupId = m["UGroupId"];
                                 ugroup.UMembers.Add(umember);
                             }
                         }
 
-                        if (value.ContainsKey("UDebts"))
+                        if (g.ContainsKey("UDebts"))
                         {
                             ugroup.UDebts = new List<UDebt>();
-                            JsonValue udebts = value["UDebts"];
-                            foreach (JsonValue item in udebts)
+                            foreach (JsonValue d in g["UDebts"])
                             {
                                 UDebt udebt = new UDebt();
-                                int sid = item["Id"];
-                                string sname = item["Name"];
-                                double samount = item["Amount"];
-                                int sgroupid = item["UGroupId"];
-                                int slender = item["LenderUMemberId"];
-                                int sdebtor = item["DebtorUMemberId"];
-
-                                udebt.Name = sname;
-                                udebt.Amount = samount;
-                                udebt.UGroupId = sgroupid;
-                                udebt.LenderUMemberId = slender;
-                                udebt.DebtorUMemberId = sdebtor;
-
+                                udebt.Id = d["Id"];
+                                udebt.Name = d["Name"];
+                                udebt.Amount = d["Amount"];
+                                udebt.UGroupId = d["UGroupId"];
+                                udebt.LenderUMemberId = d["LenderUMemberId"];
+                                udebt.DebtorUMemberId = d["DebtorUMemberId"];
                                 ugroup.UDebts.Add(udebt);
                             }
                         }
-                        
-                        return Controller.UploadGroup(ugroup);
+                        return Controller.UploadNewGroup(ugroup);
                     }
                 }
             }
@@ -161,18 +120,11 @@ namespace share
             }
             return false;
         }
-
-        public void PostSynchronizeGroups(int id)
+        public bool ExportGroup(int localId)
         {
-            string url = (m_IsHome ? m_HomeURL : m_URL) + "api/UGroups";
             try
             {
-                HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
-                request.Method = "POST";
-
-                UGroup ugroup = Controller.LoadGroupDetails(id, true);
-                int currentID = ugroup.Id;
-                ugroup.Id = ugroup.GlobalId ?? 0;
+                UGroup ugroup = Controller.LoadFullGroupDetails(localId);
 
                 MemoryStream stream = new MemoryStream();
                 DataContractJsonSerializer serializer = new DataContractJsonSerializer(typeof(UGroup));
@@ -181,6 +133,53 @@ namespace share
                 StreamReader sr = new StreamReader(stream);
                 string postData = sr.ReadToEnd();
 
+                string url = (m_IsHome ? m_HomeURL : m_HostURL) + "api/UGroups";
+                HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
+                request.Method = "POST";
+                byte[] byteArray = Encoding.UTF8.GetBytes(postData);
+                request.ContentType = "application/json";
+                request.ContentLength = byteArray.Length;
+                Stream dataStream = request.GetRequestStream();
+                dataStream.Write(byteArray, 0, byteArray.Length);
+                dataStream.Close();
+                
+                WebResponse response = request.GetResponse();
+                dataStream = response.GetResponseStream();
+                StreamReader reader = new StreamReader(dataStream);
+                string result = reader.ReadToEnd();
+                reader.Close();
+                dataStream.Close();
+                response.Close();
+
+                int id;
+                if(int.TryParse(result, out id))
+                {
+                    ugroup.Id = id;
+                    Controller.UpdateObject(ugroup);
+                    return true;
+                }
+            }
+            catch (Exception e)
+            {
+                var error = e;
+            }
+            return false;
+        }
+
+        public bool PostGroup(UGroup g)
+        {
+            try
+            {
+                MemoryStream stream = new MemoryStream();
+                DataContractJsonSerializer serializer = new DataContractJsonSerializer(typeof(UGroup));
+                serializer.WriteObject(stream, g);
+                stream.Position = 0;
+                StreamReader sr = new StreamReader(stream);
+                string postData = sr.ReadToEnd();
+
+                string url = (m_IsHome ? m_HomeURL : m_HostURL) + "api/UGroups";
+                HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
+                request.Method = "POST";
                 byte[] byteArray = Encoding.UTF8.GetBytes(postData);
                 request.ContentType = "application/json";
                 request.ContentLength = byteArray.Length;
@@ -189,28 +188,231 @@ namespace share
                 dataStream.Close();
 
                 WebResponse response = request.GetResponse();
-
-                Console.WriteLine(((HttpWebResponse)response).StatusDescription);
                 dataStream = response.GetResponseStream();
                 StreamReader reader = new StreamReader(dataStream);
-                string responseFromServer = reader.ReadToEnd();
-                Console.WriteLine(responseFromServer);
+                string result = reader.ReadToEnd();
                 reader.Close();
                 dataStream.Close();
                 response.Close();
 
-                int newID;
-                if(Int32.TryParse(responseFromServer, out newID))
+                int id;
+                if (int.TryParse(result, out id))
                 {
-                    ugroup.Id = currentID;
-                    ugroup.GlobalId = newID;
-                    Controller.UpdateObject(ugroup);
+                    g.Id = id;
+                    Controller.UpdateObject(g);
+                    return true;
                 }
             }
             catch (Exception e)
             {
                 var error = e;
             }
+            return false;
+        }
+        public bool PostEvent(UEvent e)
+        {
+            try
+            {
+                MemoryStream stream = new MemoryStream();
+                DataContractJsonSerializer serializer = new DataContractJsonSerializer(typeof(UEvent));
+                serializer.WriteObject(stream, e);
+                stream.Position = 0;
+                StreamReader sr = new StreamReader(stream);
+                string postData = sr.ReadToEnd();
+
+                string url = (m_IsHome ? m_HomeURL : m_HostURL) + "api/UEvents";
+                HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
+                request.Method = "POST";
+                byte[] byteArray = Encoding.UTF8.GetBytes(postData);
+                request.ContentType = "application/json";
+                request.ContentLength = byteArray.Length;
+                Stream dataStream = request.GetRequestStream();
+                dataStream.Write(byteArray, 0, byteArray.Length);
+                dataStream.Close();
+
+                WebResponse response = request.GetResponse();
+                dataStream = response.GetResponseStream();
+                StreamReader reader = new StreamReader(dataStream);
+                string result = reader.ReadToEnd();
+                reader.Close();
+                dataStream.Close();
+                response.Close();
+
+                int id;
+                if (int.TryParse(result, out id))
+                {
+                    return true;
+                }
+            }
+            catch (Exception ex)
+            {
+                var error = ex;
+            }
+            return false;
+        }
+        public bool PostMember(UMember m)
+        {
+            try
+            {
+                MemoryStream stream = new MemoryStream();
+                DataContractJsonSerializer serializer = new DataContractJsonSerializer(typeof(UMember));
+                serializer.WriteObject(stream, m);
+                stream.Position = 0;
+                StreamReader sr = new StreamReader(stream);
+                string postData = sr.ReadToEnd();
+
+                string url = (m_IsHome ? m_HomeURL : m_HostURL) + "api/UMembers";
+                HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
+                request.Method = "POST";
+                byte[] byteArray = Encoding.UTF8.GetBytes(postData);
+                request.ContentType = "application/json";
+                request.ContentLength = byteArray.Length;
+                Stream dataStream = request.GetRequestStream();
+                dataStream.Write(byteArray, 0, byteArray.Length);
+                dataStream.Close();
+
+                WebResponse response = request.GetResponse();
+                dataStream = response.GetResponseStream();
+                StreamReader reader = new StreamReader(dataStream);
+                string result = reader.ReadToEnd();
+                reader.Close();
+                dataStream.Close();
+                response.Close();
+
+                int id;
+                if (int.TryParse(result, out id))
+                {
+                    return true;
+                }
+            }
+            catch (Exception e)
+            {
+                var error = e;
+            }
+            return false;
+        }
+        public bool PostDebt(UDebt d)
+        {
+            try
+            {
+                MemoryStream stream = new MemoryStream();
+                DataContractJsonSerializer serializer = new DataContractJsonSerializer(typeof(UDebt));
+                serializer.WriteObject(stream, d);
+                stream.Position = 0;
+                StreamReader sr = new StreamReader(stream);
+                string postData = sr.ReadToEnd();
+
+                string url = (m_IsHome ? m_HomeURL : m_HostURL) + "api/UDebts";
+                HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
+                request.Method = "POST";
+                byte[] byteArray = Encoding.UTF8.GetBytes(postData);
+                request.ContentType = "application/json";
+                request.ContentLength = byteArray.Length;
+                Stream dataStream = request.GetRequestStream();
+                dataStream.Write(byteArray, 0, byteArray.Length);
+                dataStream.Close();
+
+                WebResponse response = request.GetResponse();
+                dataStream = response.GetResponseStream();
+                StreamReader reader = new StreamReader(dataStream);
+                string result = reader.ReadToEnd();
+                reader.Close();
+                dataStream.Close();
+                response.Close();
+
+                int id;
+                if (int.TryParse(result, out id))
+                {
+                    return true;
+                }
+            }
+            catch (Exception e)
+            {
+                var error = e;
+            }
+            return false;
+        }
+        public bool PostBill(UBill b)
+        {
+            try
+            {
+                MemoryStream stream = new MemoryStream();
+                DataContractJsonSerializer serializer = new DataContractJsonSerializer(typeof(UBill));
+                serializer.WriteObject(stream, b);
+                stream.Position = 0;
+                StreamReader sr = new StreamReader(stream);
+                string postData = sr.ReadToEnd();
+
+                string url = (m_IsHome ? m_HomeURL : m_HostURL) + "api/UBills";
+                HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
+                request.Method = "POST";
+                byte[] byteArray = Encoding.UTF8.GetBytes(postData);
+                request.ContentType = "application/json";
+                request.ContentLength = byteArray.Length;
+                Stream dataStream = request.GetRequestStream();
+                dataStream.Write(byteArray, 0, byteArray.Length);
+                dataStream.Close();
+
+                WebResponse response = request.GetResponse();
+                dataStream = response.GetResponseStream();
+                StreamReader reader = new StreamReader(dataStream);
+                string result = reader.ReadToEnd();
+                reader.Close();
+                dataStream.Close();
+                response.Close();
+
+                int id;
+                if (int.TryParse(result, out id))
+                {
+                    return true;
+                }
+            }
+            catch (Exception e)
+            {
+                var error = e;
+            }
+            return false;
+        }
+        public bool PostPayment(UPayment p)
+        {
+            try
+            {
+                MemoryStream stream = new MemoryStream();
+                DataContractJsonSerializer serializer = new DataContractJsonSerializer(typeof(UPayment));
+                serializer.WriteObject(stream, p);
+                stream.Position = 0;
+                StreamReader sr = new StreamReader(stream);
+                string postData = sr.ReadToEnd();
+
+                string url = (m_IsHome ? m_HomeURL : m_HostURL) + "api/UPayments";
+                HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
+                request.Method = "POST";
+                byte[] byteArray = Encoding.UTF8.GetBytes(postData);
+                request.ContentType = "application/json";
+                request.ContentLength = byteArray.Length;
+                Stream dataStream = request.GetRequestStream();
+                dataStream.Write(byteArray, 0, byteArray.Length);
+                dataStream.Close();
+
+                WebResponse response = request.GetResponse();
+                dataStream = response.GetResponseStream();
+                StreamReader reader = new StreamReader(dataStream);
+                string result = reader.ReadToEnd();
+                reader.Close();
+                dataStream.Close();
+                response.Close();
+
+                int id;
+                if (int.TryParse(result, out id))
+                {
+                    return true;
+                }
+            }
+            catch (Exception e)
+            {
+                var error = e;
+            }
+            return false;
         }
     }
 }
