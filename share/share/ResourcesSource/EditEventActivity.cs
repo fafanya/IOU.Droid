@@ -50,9 +50,14 @@ namespace share
             {
                 Finish();
             }
-
             return base.OnOptionsItemSelected(item);
         }
+        private void BtnCancel_Click(object sender, EventArgs e)
+        {
+            SetResult(Android.App.Result.Canceled);
+            Finish();
+        }
+
         private void InitializeUObject()
         {
             m_ID = Intent.GetIntExtra("ID", -2);
@@ -94,11 +99,7 @@ namespace share
             }
         }
 
-        private void BtnCancel_Click(object sender, EventArgs e)
-        {
-            SetResult(Android.App.Result.Canceled);
-            Finish();
-        }
+        
 
         private void BtnOK_Click(object sender, EventArgs e)
         {

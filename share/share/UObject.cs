@@ -10,6 +10,7 @@ namespace share
         public UGroup()
         {
             Table = "GROUPS";
+            Controller = "UGroups";
             EditableFields.Add("Name", null);
             EditableFields.Add("Password", null);
         }
@@ -506,6 +507,7 @@ namespace share
             }
         }
         public string Table { get; set; }
+        public string Controller { get; set; }
         public virtual string DetailsQuery
         {
             get

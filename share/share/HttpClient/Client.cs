@@ -122,9 +122,39 @@ namespace share
             return false;
         }
 
-        public void UpdateObject<T>(T m_Bill) where T : UObject
+        public void UpdateObject<T>(T o) where T : UObject
         {
-            throw new NotImplementedException();
+            try
+            {
+                MemoryStream stream = new MemoryStream();
+                DataContractJsonSerializer serializer = new DataContractJsonSerializer(typeof(T));
+                serializer.WriteObject(stream, o);
+                stream.Position = 0;
+                StreamReader sr = new StreamReader(stream);
+                string postData = sr.ReadToEnd();
+
+                string url = (m_IsHome ? m_HomeURL : m_HostURL) + "api/" + o.Controller + "/" + o.Id;
+                HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
+                request.Method = "PUT";
+                byte[] byteArray = Encoding.UTF8.GetBytes(postData);
+                request.ContentType = "application/json";
+                request.ContentLength = byteArray.Length;
+                Stream dataStream = request.GetRequestStream();
+                dataStream.Write(byteArray, 0, byteArray.Length);
+                dataStream.Close();
+
+                WebResponse response = request.GetResponse();
+                dataStream = response.GetResponseStream();
+                StreamReader reader = new StreamReader(dataStream);
+                string result = reader.ReadToEnd();
+                reader.Close();
+                dataStream.Close();
+                response.Close();
+            }
+            catch (Exception e)
+            {
+                var error = e;
+            }
         }
 
         public T LoadObject<T>(int billGlobalId) where T : UObject

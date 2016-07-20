@@ -24,7 +24,6 @@ namespace share
         LinearLayout m_llImport;
         string m_Add;
 
-
         protected override void OnCreate(Bundle savedInstanceState)
         {
             base.OnCreate(savedInstanceState);
@@ -53,63 +52,86 @@ namespace share
             {
                 Finish();
             }
-
             return base.OnOptionsItemSelected(item);
         }
-        private void InitializeUObject()
-        {
-            m_ID = Intent.GetIntExtra("ID", -2);
-            if(m_ID < 0)
-            {
-                m_Add = Intent.GetStringExtra("add");
-                if (m_Add == "create")
-                {
-                    m_Group = new UGroup();
-                    m_Group.LocalId = -1;
-                    SupportActionBar.Title = "Создание группы";
-                    m_llImport.Visibility = ViewStates.Gone;
-                }
-                else if(m_Add == "import")
-                {
-                    SupportActionBar.Title = "Импорт группы";
-                    m_llCreate.Visibility = ViewStates.Gone;
-                }
-            }
-            else
-            {
-                m_Group = Controller.LoadObjectDetails<UGroup>(m_ID);
-                m_etName.Text = m_Group.Name;
-                SupportActionBar.Title = m_Group.Name;
-            }
-        }
-
         private void BtnCancel_Click(object sender, EventArgs e)
         {
             SetResult(Android.App.Result.Canceled);
             Finish();
         }
 
+        private void InitializeUObject()
+        {
+            m_ID = Intent.GetIntExtra("ID", 0);
+            if(m_ID == 0)
+            {
+                m_Group = new UGroup();
+                m_Group.LocalId = -1;
+                SupportActionBar.Title = "Создание группы";
+                m_llImport.Visibility = ViewStates.Gone;
+            }
+            else if(m_ID == -1)
+            {
+                m_Group = new UGroup();
+                m_Group.LocalId = -1;
+                SupportActionBar.Title = "Создание группы";
+                m_llImport.Visibility = ViewStates.Gone;
+            }
+            else if(m_ID == -2)
+            {
+                SupportActionBar.Title = "Импорт группы";
+                m_llCreate.Visibility = ViewStates.Gone;
+            }
+            else if(m_ID > 0)
+            {
+                m_Group = Controller.LoadObjectDetails<UGroup>(m_ID);
+                m_etName.Text = m_Group.Name;
+                SupportActionBar.Title = m_Group.Name;
+                m_llImport.Visibility = ViewStates.Gone;
+            }
+            else
+            {
+                throw new Exception("Неподдерживаемый тип создания группы");
+            }
+        }
+
         private void BtnOK_Click(object sender, EventArgs e)
         {
-            m_Group.Name = m_etName.Text;
-            if (m_Group.LocalId < 0)
+            if(m_ID == 0)
             {
+                m_Group.Name = m_etName.Text;
+                Controller.CreateObject(m_Group);
+            }
+            else if(m_ID == -1)
+            {
+                m_Group.Name = m_etName.Text;
+                Controller.CreateObject(m_Group);
+                Client client = new Client();
+                client.PostGroup(m_Group);
+            }
+            else if(m_ID == -2)
+            {
+                m_Group.Name = m_etName.Text;
                 int globalId;
-                if(int.TryParse(m_etGlobal.Text, out globalId))
+                if (int.TryParse(m_etGlobal.Text, out globalId))
                 {
                     Client client = new Client();
                     client.ImportGroup(globalId);
                 }
-                else
+            }
+            else if(m_ID > 0)
+            {
+                m_Group.Name = m_etName.Text;
+                if (m_Group.Id > 0)
                 {
-                    Controller.CreateObject(m_Group);
                     Client client = new Client();
-                    client.PostGroup(m_Group);
+                    client.UpdateObject<UGroup>(m_Group);
                 }
+                Controller.UpdateObject(m_Group);
             }
             else
             {
-                Controller.UpdateObject(m_Group);
+                throw new Exception("Неподдерживаемый тип создания группы");
             }
             SetResult(Android.App.Result.Ok);
             Finish();

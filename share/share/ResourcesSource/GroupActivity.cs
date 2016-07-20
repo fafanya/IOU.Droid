@@ -57,7 +57,6 @@ namespace share
 
             Bundle args = new Bundle();
             args.PutInt("Group_ID", m_Group.LocalId);
-            args.PutInt("Global_ID", m_Group.Id);
 
             EventListFragment eventListFragment = new EventListFragment();
             MemberListFragment memberListFragment = new MemberListFragment();

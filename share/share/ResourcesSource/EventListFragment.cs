@@ -16,8 +16,7 @@ namespace share
 {
     public class EventListFragment : ListFragment
     {
-        private int m_GroupId;
-        private int m_GlobalId;
+        UGroup m_Group;
 
         FloatingActionButton Fab { get; set; }
 
@@ -36,18 +35,24 @@ namespace share
 
         private void Refresh()
         {
-            m_GroupId = Arguments.GetInt("Group_ID", -2);
-            m_GlobalId = Arguments.GetInt("Global_ID", -2);
-
             List<UEvent> items;
-            if(m_GlobalId > 0)
+            int groupId = Arguments.GetInt("Group_ID", 0);
+            if(groupId != 0)
             {
-                Client client = new Client();
-                items = client.LoadEventList(m_GroupId);
+                m_Group = Controller.LoadObjectDetails<UGroup>(groupId);
+                if (m_Group.Id > 0)
+                {
+                    Client client = new Client();
+                    items = client.LoadEventList(m_Group.Id);
+                }
+                else
+                {
+                    items = Controller.LoadEventList(m_Group.LocalId);
+                }
             }
             else
             {
-                items = Controller.LoadEventList(m_GroupId);
+                items = Controller.LoadEventList(0);
             }
 
             m_ListAdapter = new EventListAdapter(Activity, items.ToArray());
@@ -75,7 +80,8 @@ namespace share
         {
             var intent = new Intent(Activity, typeof(EventActivity));
             intent.PutExtra("ID", (int)id);
-            intent.PutExtra("Group_ID", m_GroupId);
+            if (m_Group != null)
+                intent.PutExtra("Group_ID", m_Group.Id);
             StartActivity(intent);
         }
 
@@ -87,7 +93,8 @@ namespace share
         {
             Intent intent = new Intent(Activity, m_EditItemActivity);
             intent.PutExtra("ID", -1);
-            intent.PutExtra("Group_ID", m_GroupId);
+            if (m_Group != null)
+                intent.PutExtra("Group_ID", m_Group.Id);
             StartActivityForResult(intent, 0);
         }
         public override void OnCreateContextMenu(IContextMenu menu, View v, IContextMenuContextMenuInfo menuInfo)
@@ -112,7 +119,8 @@ namespace share
                 {
                     var intent = new Intent(Activity, m_EditItemActivity);
                     intent.PutExtra("ID", id);
-                    intent.PutExtra("Group_ID", m_GroupId);
+                    if (m_Group != null)
+                        intent.PutExtra("Group_ID", m_Group.Id);
                     StartActivityForResult(intent, 1);
                 }
                 else if (item.ItemId == 2)

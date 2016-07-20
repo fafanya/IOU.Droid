@@ -32,6 +32,8 @@ namespace share
             Button btnImport = FindViewById<Button>(Resource.Id.btnSelectImportGroup);
             Button btnInternet = FindViewById<Button>(Resource.Id.btnSelectInternetGroup);
 
+            btnImport.Visibility = ViewStates.Gone;
+
             btnCreate.Click += BtnCreate_Click;
             btnImport.Click += BtnImport_Click;
             btnInternet.Click += BtnInternet_Click;
@@ -49,16 +51,7 @@ namespace share
         private void BtnCreate_Click(object sender, EventArgs e)
         {
             var intent = new Intent(this, typeof(EditGroupActivity));
-            intent.PutExtra("ID", -1);
-            intent.PutExtra("add", "create");
-            StartActivityForResult(intent, 1);
-        }
-
-        private void BtnImport_Click(object sender, EventArgs e)
-        {
-            var intent = new Intent(this, typeof(EditGroupActivity));
-            intent.PutExtra("ID", -1);
-            intent.PutExtra("add", "import");
+            intent.PutExtra("ID", 0);
             StartActivityForResult(intent, 1);
         }
 
@@ -66,7 +59,13 @@ namespace share
         {
             var intent = new Intent(this, typeof(EditGroupActivity));
             intent.PutExtra("ID", -1);
-            intent.PutExtra("add", "internet");
+            StartActivityForResult(intent, 1);
+        }
+
+        private void BtnImport_Click(object sender, EventArgs e)
+        {
+            var intent = new Intent(this, typeof(EditGroupActivity));
+            intent.PutExtra("ID", -2);
             StartActivityForResult(intent, 1);
         }
 
