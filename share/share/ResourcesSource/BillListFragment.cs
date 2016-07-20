@@ -18,6 +18,7 @@ namespace share
     {
         private int m_GroupId;
         private int m_EventId;
+        private int m_GlobalId;
         private UEvent m_Event;
 
         FloatingActionButton Fab { get; set; }
@@ -35,10 +36,21 @@ namespace share
         {
             m_GroupId = Arguments.GetInt("Group_ID", -2);
             m_EventId = Arguments.GetInt("Event_ID", -2);
+            m_GlobalId = Arguments.GetInt("Global_ID", -2);
 
             m_Event = Controller.LoadObjectDetails<UEvent>(m_EventId);
 
-            var items = Controller.LoadBillList(m_EventId);
+            List<UBill> items;
+            if (m_GlobalId > 0)
+            {
+                Client client = new Client();
+                items = client.LoadBillList(m_GlobalId);
+            }
+            else
+            {
+                items = Controller.LoadBillList(m_EventId);
+            }
+
             m_ListAdapter = new BillListAdapter(Activity, items.ToArray(), m_Event.UEventTypeId != UEventType.tPartly);
             ListAdapter = m_ListAdapter;
         }

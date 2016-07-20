@@ -17,6 +17,7 @@ namespace share
     public class DebtListFragment : ListFragment
     {
         private int m_GroupId;
+        private int m_GlobalId;
 
         FloatingActionButton Fab { get; set; }
 
@@ -36,7 +37,20 @@ namespace share
         private void Refresh()
         {
             m_GroupId = Arguments.GetInt("Group_ID", -2);
-            var items = Controller.LoadDebtList(m_GroupId);
+            m_GlobalId = Arguments.GetInt("Global_ID", -2);
+
+            List<UDebt> items;
+
+            if (m_GlobalId > 0)
+            {
+                Client client = new Client();
+                items = client.LoadDebtList(m_GroupId);
+            }
+            else
+            {
+                items = Controller.LoadDebtList(m_GroupId);
+            }
+
             m_ListAdapter = new DebtListAdapter(Activity, items.ToArray());
             ListAdapter = m_ListAdapter;
         }

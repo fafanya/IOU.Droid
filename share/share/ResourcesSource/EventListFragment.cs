@@ -17,6 +17,7 @@ namespace share
     public class EventListFragment : ListFragment
     {
         private int m_GroupId;
+        private int m_GlobalId;
 
         FloatingActionButton Fab { get; set; }
 
@@ -36,7 +37,19 @@ namespace share
         private void Refresh()
         {
             m_GroupId = Arguments.GetInt("Group_ID", -2);
-            var items = Controller.LoadEventList(m_GroupId);
+            m_GlobalId = Arguments.GetInt("Global_ID", -2);
+
+            List<UEvent> items;
+            if(m_GlobalId > 0)
+            {
+                Client client = new Client();
+                items = client.LoadEventList(m_GroupId);
+            }
+            else
+            {
+                items = Controller.LoadEventList(m_GroupId);
+            }
+
             m_ListAdapter = new EventListAdapter(Activity, items.ToArray());
             ListAdapter = m_ListAdapter;
         }

@@ -18,6 +18,7 @@ namespace share
     {
         private int m_GroupId;
         private int m_EventId;
+        private int m_GlobalId;
 
         FloatingActionButton Fab { get; set; }
 
@@ -39,8 +40,15 @@ namespace share
         {
             m_GroupId = Arguments.GetInt("Group_ID", -2);
             m_EventId = Arguments.GetInt("Event_ID", -2);
+            m_GlobalId = Arguments.GetInt("Global_ID", -2);
+
             List<UMember> items;
-            if (m_EventId > 0)
+            if(m_GlobalId > 0)
+            {
+                Client client = new Client();
+                items = client.LoadMemberList(m_GlobalId);
+            }
+            else if (m_EventId > 0)
             {
                 items = Controller.LoadMemberList(eventId: m_EventId);
             }

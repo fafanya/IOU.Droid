@@ -24,6 +24,7 @@ namespace share
         private bool m_IsHome = !false;
         private string m_HostURL = "http://46.101.214.70/";
         private string m_HomeURL = "http://192.168.1.4:2562/";
+        private string m_WorkURL = "http://192.168.0.73:2562/";
 
         public bool ImportGroup(int id)
         {
@@ -120,6 +121,42 @@ namespace share
             }
             return false;
         }
+
+        public void UpdateObject<T>(T m_Bill) where T : UObject
+        {
+            throw new NotImplementedException();
+        }
+
+        public T LoadObject<T>(int billGlobalId) where T : UObject
+        {
+            throw new NotImplementedException();
+        }
+
+        internal List<UEvent> LoadEventList(int m_GroupId)
+        {
+            throw new NotImplementedException();
+        }
+
+        internal List<UMember> LoadMemberList(int m_GlobalId)
+        {
+            throw new NotImplementedException();
+        }
+
+        internal List<UPayment> LoadPaymentList(int m_GlobalId)
+        {
+            throw new NotImplementedException();
+        }
+
+        internal List<UBill> LoadBillList(int m_GlobalId)
+        {
+            throw new NotImplementedException();
+        }
+
+        internal List<UDebt> LoadDebtList(int m_GroupId)
+        {
+            throw new NotImplementedException();
+        }
+
         public bool ExportGroup(int localId)
         {
             try

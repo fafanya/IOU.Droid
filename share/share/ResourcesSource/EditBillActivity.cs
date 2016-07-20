@@ -60,6 +60,9 @@ namespace share
             int eventId = Intent.GetIntExtra("Event_ID", -2);
             int groupId = Intent.GetIntExtra("Group_ID", -2);
             
+            int groupGlobalId = Intent.GetIntExtra("Group_GlobalID", -2);
+            int billGlobalId = Intent.GetIntExtra("Bill_GlobalID", -2);
+
             m_Event = Controller.LoadObjectDetails<UEvent>(eventId);
 
             List<UMember> memberItems;
@@ -78,24 +81,33 @@ namespace share
             m_spMember.Adapter = m_MemberAdapter;
 
             m_ID = Intent.GetIntExtra("ID", -2);
-            if (m_ID < 0)
+
+            if (billGlobalId < 0)
             {
-                m_Bill = new UBill();
-                m_Bill.LocalId = -1;
-                m_Bill.UEventId = eventId;
-                m_Bill.Amount = 0.0;
+                if (m_ID < 0)
+                {
+                    m_Bill = new UBill();
+                    m_Bill.LocalId = -1;
+                    m_Bill.UEventId = eventId;
+                    m_Bill.Amount = 0.0;
+                }
+                else
+                {
+                    m_Bill = Controller.LoadObjectDetails<UBill>(m_ID);
+                    for (int position = 0; position < m_MemberAdapter.Count; position++)
+                    {
+                        if (m_MemberAdapter.GetItemId(position) == m_Bill.UMemberId)
+                        {
+                            m_spMember.SetSelection(position);
+                            break;
+                        }
+                    }
+                }
             }
             else
             {
-                m_Bill = Controller.LoadObjectDetails<UBill>(m_ID);
-                for (int position = 0; position < m_MemberAdapter.Count; position++)
-                {
-                    if (m_MemberAdapter.GetItemId(position) == m_Bill.UMemberId)
-                    {
-                        m_spMember.SetSelection(position);
-                        break;
-                    }
-                }
+                Client client = new Client();
+                m_Bill = client.LoadObject<UBill>(billGlobalId);
             }
 
             if(m_Event.UEventTypeId == UEventType.tOwn)
@@ -123,13 +135,21 @@ namespace share
             }
             m_Bill.UMemberId = (int)(m_spMember.SelectedItemId);
 
-            if (m_Bill.LocalId < 0)
+            if (m_Bill.Id == 0)
             {
-                Controller.CreateObject(m_Bill);
+                if (m_Bill.LocalId < 0)
+                {
+                    Controller.CreateObject(m_Bill);
+                }
+                else
+                {
+                    Controller.UpdateObject(m_Bill);
+                }
             }
             else
             {
-                Controller.UpdateObject(m_Bill);
+                Client client = new Client();
+                client.UpdateObject<UBill>(m_Bill);
             }
 
             SetResult(Android.App.Result.Ok);

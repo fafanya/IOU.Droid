@@ -18,6 +18,7 @@ namespace share
     {
         private int m_GroupId;
         private int m_EventId;
+        private int m_GlobalId;
 
         FloatingActionButton Fab { get; set; }
 
@@ -28,8 +29,6 @@ namespace share
         public override void OnCreate(Bundle savedInstanceState)
         {
             base.OnCreate(savedInstanceState);
-
-            
         }
 
         public override void OnViewCreated(View view, Bundle savedInstanceState)
@@ -44,7 +43,19 @@ namespace share
         {
             m_GroupId = Arguments.GetInt("Group_ID", -2);
             m_EventId = Arguments.GetInt("Event_ID", -2);
-            var items = Controller.LoadPaymentList(m_EventId);
+            m_GlobalId = Arguments.GetInt("Global_ID", -2);
+
+            List<UPayment> items;
+            if (m_GlobalId > 0)
+            {
+                Client client = new Client();
+                items = client.LoadPaymentList(m_GlobalId);
+            }
+            else
+            {
+                items = Controller.LoadPaymentList(m_EventId);
+            }
+
             m_ListAdapter = new PaymentListAdapter(Activity, items.ToArray());
             ListAdapter = m_ListAdapter;
         }

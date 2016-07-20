@@ -23,7 +23,6 @@
         android:layout_marginTop="20dp"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
         <LinearLayout
-            android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp">
@@ -33,7 +32,7 @@
                 android:layout_width="0dp"
                 android:layout_weight="1"
                 android:text="Новая" />
-          <Button
+            <Button
                 android:id="@+id/btnSelectInternetGroup"
                 android:layout_height="wrap_content"
                 android:layout_width="0dp"

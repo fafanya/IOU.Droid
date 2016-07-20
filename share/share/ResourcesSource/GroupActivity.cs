@@ -18,8 +18,7 @@ namespace share
         private Toolbar toolbar;
         private TabLayout tabLayout;
         private ViewPager viewPager;
-
-        private int m_ID;
+        private UGroup m_Group;
 
         protected override void OnCreate(Bundle savedInstanceState)
         {
@@ -29,9 +28,9 @@ namespace share
             toolbar = FindViewById<Toolbar>(Resource.Id.toolbarGroupActivity);
             SetSupportActionBar(toolbar);
 
-            m_ID = Intent.GetIntExtra("ID", -2);
-            UGroup g = Controller.LoadObjectDetails<UGroup>(m_ID);
-            SupportActionBar.Title = g.Name;
+            int id = Intent.GetIntExtra("ID", -2);
+            m_Group = Controller.LoadObjectDetails<UGroup>(id);
+            SupportActionBar.Title = m_Group.Name;
 
             SupportActionBar.SetDisplayHomeAsUpEnabled(true);
             SupportActionBar.SetDisplayShowHomeEnabled(true);
@@ -49,7 +48,6 @@ namespace share
             {
                 Finish();
             }
-
             return base.OnOptionsItemSelected(item);
         }
 
@@ -58,7 +56,8 @@ namespace share
             ViewPagerAdapter adapter = new ViewPagerAdapter(SupportFragmentManager);
 
             Bundle args = new Bundle();
-            args.PutInt("Group_ID", m_ID);
+            args.PutInt("Group_ID", m_Group.LocalId);
+            args.PutInt("Global_ID", m_Group.Id);
 
             EventListFragment eventListFragment = new EventListFragment();
             MemberListFragment memberListFragment = new MemberListFragment();
