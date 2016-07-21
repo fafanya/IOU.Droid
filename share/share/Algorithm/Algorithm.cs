@@ -228,4 +228,16 @@ namespace share
         public UMember Member { get; set; }
         public double Balance { get; set; }
     }
+
+    public class UNObject
+    {
+        public int Id { get; set; }
+    }
+
+    public class TotalDebt : UNObject
+    {
+        public string DebtorName { get; set; }
+        public string LenderName { get; set; }
+        public double Amount { get; set; }
+    }
 }

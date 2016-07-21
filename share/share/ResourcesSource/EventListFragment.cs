@@ -125,7 +125,14 @@ namespace share
                 }
                 else if (item.ItemId == 2)
                 {
-                    Controller.DeleteObject(i);
+                    if (i.Id > 0)
+                    {
+                        Client.DeleteObject(i);
+                    }
+                    else
+                    {
+                        Controller.DeleteObject(i);
+                    }
                     Refresh();
                 }
                 return true;

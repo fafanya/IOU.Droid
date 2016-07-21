@@ -17,6 +17,7 @@ namespace share
     {
         int m_ID;
         UPayment m_Payment;
+        UGroup m_Group;
         private Android.Support.V7.Widget.Toolbar toolbar;
         EditText m_etPaymentAmount;
         Spinner m_spMember;
@@ -56,6 +57,10 @@ namespace share
         {
             int eventId = Intent.GetIntExtra("Event_ID", -2);
             int groupId = Intent.GetIntExtra("Group_ID", -2);
+            if (groupId != 0)
+            {
+                m_Group = Client.UploadObject<UGroup>(groupId);
+            }
 
             List<UMember> memberItems;
             if (groupId != 0)

@@ -17,6 +17,7 @@ namespace share
     {
         int m_ID;
         UEvent m_Event;
+        UGroup m_Group;
         private Android.Support.V7.Widget.Toolbar toolbar;
         EditText m_etName;
         Spinner m_spEventType;
@@ -61,7 +62,12 @@ namespace share
         private void InitializeUObject()
         {
             m_ID = Intent.GetIntExtra("ID", -2);
+
             int groupId = Intent.GetIntExtra("Group_ID", -2);
+            if(groupId != 0)
+            {
+                m_Group = Client.UploadObject<UGroup>(groupId);
+            }
 
             List<UEventType> items = Controller.LoadEventTypeList();
 
