@@ -5,7 +5,7 @@ namespace share
 {
     public class Algorithm
     {
-        public static List<TotalDebt> RecountGroupTotalDebtList(List<UMember> members, List<UDebt> debts, List<UBill> bills,
+        public static List<UTotal> RecountGroupTotalDebtList(List<UMember> members, List<UDebt> debts, List<UBill> bills,
             List<UEvent> events, List<UPayment> payments)
         {
             List<CustomMember> cMembers = new List<CustomMember>();
@@ -101,7 +101,7 @@ namespace share
             return RecountTotalDebtList(cMembers);
         }
 
-        public static List<TotalDebt> RecountEventTotalDebtList(int eventId, List<UMember> members,
+        public static List<UTotal> RecountEventTotalDebtList(int eventId, List<UMember> members,
             List<UBill> bills, List<UPayment> payments)
         {
             List<CustomMember> cMembers = new List<CustomMember>();
@@ -179,9 +179,9 @@ namespace share
             return RecountTotalDebtList(cMembers);
         }
 
-        public static List<TotalDebt> RecountTotalDebtList(List<CustomMember> b)
+        public static List<UTotal> RecountTotalDebtList(List<CustomMember> b)
         {
-            var debts = new List<TotalDebt>();
+            var debts = new List<UTotal>();
 
             var N = b.Count;
 
@@ -209,7 +209,7 @@ namespace share
                     {
                         m = -b[j].Balance;
                     }
-                    TotalDebt debt = new TotalDebt();
+                    UTotal debt = new UTotal();
                     debt.DebtorName = b[i].Member.Name;
                     debt.LenderName = b[j].Member.Name;
                     debt.Amount = m;

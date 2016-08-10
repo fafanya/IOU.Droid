@@ -36,6 +36,10 @@ namespace share
                     {
                         using (SqliteCommand command = connection.CreateCommand())
                         {
+                            command.CommandText = "CREATE TABLE USER (ID TEXT NOT NULL PRIMARY KEY,  Name TEXT NOT NULL);";
+                            command.CommandType = CommandType.Text;
+                            command.ExecuteNonQuery();
+
                             command.CommandText = "CREATE TABLE GROUPS (ID INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE, " +
                                 "Global_ID INTEGER, Name TEXT NOT NULL, Password TEXT);";
                             command.CommandType = CommandType.Text;
@@ -373,9 +377,9 @@ namespace share
 
             return item;
         }
-        public static List<TotalDebt> LoadTotalDebtList(int eventId = 0, int groupId = 0)
+        public static List<UTotal> LoadTotalDebtList(int eventId = 0, int groupId = 0)
         {
-            List<TotalDebt> result;
+            List<UTotal> result;
 
             if(eventId != 0)
             {

@@ -42,7 +42,7 @@ namespace share
             m_GroupId = Arguments.GetInt("Group_ID", -2);
             m_EventId = Arguments.GetInt("Event_ID", -2);
 
-            List<TotalDebt> items;
+            List<UTotal> items;
             if(m_EventId > 0)
             {
                 items = Controller.LoadTotalDebtList(m_EventId, m_GroupId);

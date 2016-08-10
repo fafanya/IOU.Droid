@@ -22,7 +22,6 @@ namespace share
         EditText m_etGlobal;
         LinearLayout m_llCreate;
         LinearLayout m_llImport;
-        string m_Add;
 
         protected override void OnCreate(Bundle savedInstanceState)
         {

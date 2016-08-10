@@ -122,6 +122,11 @@ namespace share
             return false;
         }
 
+        public bool Registrate(RegisterViewModel m)
+        {
+            throw new NotImplementedException();
+        }
+
         public void UpdateObject<T>(T o) where T : UObject
         {
             try
@@ -162,12 +167,17 @@ namespace share
             throw new NotImplementedException();
         }
 
+        internal List<UMember> LoadMemberList(int m_GlobalId)
+        {
+            throw new NotImplementedException();
+        }
+
         internal List<UEvent> LoadEventList(int m_GroupId)
         {
             throw new NotImplementedException();
         }
 
-        internal List<UMember> LoadMemberList(int m_GlobalId)
+        internal List<UDebt> LoadDebtList(int m_GroupId)
         {
             throw new NotImplementedException();
         }
@@ -178,11 +188,6 @@ namespace share
         }
 
         internal List<UBill> LoadBillList(int m_GlobalId)
-        {
-            throw new NotImplementedException();
-        }
-
-        internal List<UDebt> LoadDebtList(int m_GroupId)
         {
             throw new NotImplementedException();
         }
@@ -232,7 +237,7 @@ namespace share
             }
             return false;
         }
-
+         
         public bool PostGroup(UGroup g)
         {
             try

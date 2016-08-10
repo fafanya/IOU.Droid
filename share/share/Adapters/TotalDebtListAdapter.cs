@@ -12,11 +12,11 @@ using Android.Widget;
 
 namespace share
 {
-    public class TotalDebtListAdapter : BaseAdapter<TotalDebt>
+    public class TotalDebtListAdapter : BaseAdapter<UTotal>
     {
-        TotalDebt[] items;
+        UTotal[] items;
         Activity context;
-        public TotalDebtListAdapter(Activity context, TotalDebt[] items) : base()
+        public TotalDebtListAdapter(Activity context, UTotal[] items) : base()
         {
             this.context = context;
             this.items = items;
@@ -27,7 +27,7 @@ namespace share
             return items[position].Id;
         }
 
-        public override TotalDebt this[int position]
+        public override UTotal this[int position]
         {
             get { return items[position]; }
         }

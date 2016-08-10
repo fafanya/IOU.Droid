@@ -45,6 +45,21 @@ namespace share
                     var intent = new Intent(this, typeof(AboutActivity));
                     StartActivity(intent);
                 }
+                else if(e.MenuItem.ItemId == Resource.Id.nav_registration)
+                {
+                    var intent = new Intent(this, typeof(RegistrationActivity));
+                    StartActivity(intent);
+                }
+                else if(e.MenuItem.ItemId == Resource.Id.nav_login)
+                {
+                    var intent = new Intent(this, typeof(LoginActivity));
+                    StartActivity(intent);
+                }
+                else if(e.MenuItem.ItemId == Resource.Id.nav_exit)
+                {
+                    var intent = new Intent(this, typeof(LogoutActivity));
+                    StartActivity(intent);
+                }
                 m_DrawerLayout.CloseDrawers();
             };
 

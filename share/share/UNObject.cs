@@ -17,7 +17,7 @@ namespace share
         public int Id { get; set; }
     }
 
-    public class TotalDebt : UNObject
+    public class UTotal : UNObject
     {
         public string DebtorName { get; set; }
         public string LenderName { get; set; }
