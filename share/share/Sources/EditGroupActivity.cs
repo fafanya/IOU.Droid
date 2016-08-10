@@ -114,8 +114,7 @@ namespace share
                 int globalId;
                 if (int.TryParse(m_etGlobal.Text, out globalId))
                 {
-                    Client client = new Client();
-                    client.ImportGroup(globalId);
+                    Client.ImportGroup(globalId);
                 }
             }
             else if(m_ID > 0)
@@ -123,8 +122,7 @@ namespace share
                 m_Group.Name = m_etName.Text;
                 if (m_Group.Id > 0)
                 {
-                    Client client = new Client();
-                    client.UpdateObject<UGroup>(m_Group);
+                    Client.UpdateObject<UGroup>(m_Group);
                 }
                 Controller.UpdateObject(m_Group);
             }

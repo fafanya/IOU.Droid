@@ -17,6 +17,7 @@ namespace share
     {
         int m_ID;
         UMember m_Member;
+        UGroup m_Group;
         private Android.Support.V7.Widget.Toolbar toolbar;
         EditText m_etName;
 
@@ -52,6 +53,12 @@ namespace share
         {
             m_ID = Intent.GetIntExtra("ID", -2);
             int groupId = Intent.GetIntExtra("Group_ID", -2);
+            if (groupId != 0)
+            {
+                m_Group = Client.UploadObject<UGroup>(groupId);
+            }
+
+
             int eventId = Intent.GetIntExtra("Event_ID", -2);
             if (m_ID < 0)
             {

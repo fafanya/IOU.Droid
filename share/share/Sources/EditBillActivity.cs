@@ -148,8 +148,7 @@ namespace share
             }
             else
             {
-                Client client = new Client();
-                client.UpdateObject<UBill>(m_Bill);
+                Client.UpdateObject<UBill>(m_Bill);
             }
 
             SetResult(Android.App.Result.Ok);

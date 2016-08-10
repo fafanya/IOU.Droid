@@ -125,8 +125,7 @@ namespace share
 
         private async void ImportGroup(int id)
         {
-            Client client = new Client();
-            if (await Task.Run(() => client.ImportGroup(id)))
+            if (await Task.Run(() => Client.ImportGroup(id)))
             {
                 Refresh();
             }

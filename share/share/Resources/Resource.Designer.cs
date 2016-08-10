@@ -2305,11 +2305,11 @@ namespace share
 			// aapt resource value: 0x7f060054
 			public const int radio = 2131099732;
 			
-			// aapt resource value: 0x7f0600cb
-			public const int result_icon = 2131099851;
+			// aapt resource value: 0x7f0600bc
+			public const int result_icon = 2131099836;
 			
-			// aapt resource value: 0x7f0600ca
-			public const int result_name = 2131099850;
+			// aapt resource value: 0x7f0600bd
+			public const int result_name = 2131099837;
 			
 			// aapt resource value: 0x7f0600cc
 			public const int result_second_line = 2131099852;

@@ -7,30 +7,27 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
-            android:layout_alignParentRight="true"
-            android:layout_marginRight="2dp">
+            android:layout_alignParentRight="true">
+  <ImageView
+      android:id="@+id/result_icon"
+      android:layout_width="20dp"
+      android:layout_height="20dp"
+      android:layout_alignParentRight="true"
+      android:src="@drawable/smartphone"/>
     <TextView
       android:id="@+id/result_name"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
-      android:layout_alignParentRight="true"
+      android:layout_toLeftOf="@id/result_name"
       android:layout_alignParentTop="true"
-      android:layout_alignWithParentIfMissing="true"
       android:gravity="center_vertical"
       android:text="Title" />
-  <ImageView
-      android:id="@+id/result_icon"
-      android:layout_width="wrap_content"
-      android:layout_height="20dp"
-      android:layout_toRightOf="@id/result_name"
-      android:src="@drawable/smartphone"/>
   </LinearLayout>
   <TextView
       android:id="@+id/result_second_line"
       android:layout_width="fill_parent"
       android:layout_height="wrap_content"
       android:layout_below="@id/group_ll"
-      android:layout_marginTop="10dp"
       android:layout_alignParentRight="true"
       android:layout_alignParentLeft="true"
       android:gravity="center_horizontal"
