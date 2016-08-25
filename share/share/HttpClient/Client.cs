@@ -23,8 +23,8 @@ namespace share
     {
         private static bool m_IsHome = !false;
         private static string m_HostURL = "http://46.101.214.70/";
-        private static string m_HomeURL = "http://192.168.1.4:2562/";
-        
+        private static string m_HomeURL = "http://192.168.0.73:2562/";//"http://192.168.1.4:2562/";
+
 
         public static bool Login(LoginViewModel m)
         {
@@ -418,10 +418,38 @@ namespace share
 
             return items;
         }
-        public static List<UTotal> LoadTotalList(int groupId)
+        public static List<UTotal> LoadTotalListByGroup(int groupId)
         {
             List<UTotal> items = new List<UTotal>();
-            string url = (m_IsHome ? m_HomeURL : m_HostURL) + "api/UTotalsApi/" + groupId;
+            string url = (m_IsHome ? m_HomeURL : m_HostURL) + "api/UTotalsApi/ByGroup/" + groupId;
+            try
+            {
+                HttpWebRequest request = (HttpWebRequest)WebRequest.Create(new Uri(url));
+                request.ContentType = "application/json";
+                request.Method = "GET";
+                using (WebResponse response = request.GetResponse())
+                {
+                    using (Stream stream = response.GetResponseStream())
+                    {
+                        JsonValue o = JsonValue.Load(stream);
+                        foreach (JsonValue g in o)
+                        {
+                            UTotal t = UploadTotal(g);
+                            items.Add(t);
+                        }
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                var error = e;
+            }
+            return items;
+        }
+        public static List<UTotal> LoadTotalListByEvent(int eventId)
+        {
+            List<UTotal> items = new List<UTotal>();
+            string url = (m_IsHome ? m_HomeURL : m_HostURL) + "api/UTotalsApi/ByEvent/" + eventId;
             try
             {
                 HttpWebRequest request = (HttpWebRequest)WebRequest.Create(new Uri(url));
@@ -953,6 +981,7 @@ namespace share
             uevent.Name = o["name"];
             uevent.UGroupId = o["uGroupId"];
             uevent.UEventTypeId = o["uEventTypeId"];
+            uevent.ReadOnlyFields["EventTypeName"] = o["eventTypeName"];
 
             if (o.ContainsKey("uBills") && o["uBills"] != null)
             {
@@ -1001,6 +1030,7 @@ namespace share
             ubill.Id = o["id"];
             ubill.UEventId = o["uEventId"];
             ubill.UMemberId = o["uMemberId"];
+            ubill.Amount = o["amount"];
             ubill.ReadOnlyFields["Name"] = o["memberName"];
             return ubill;
         }
@@ -1010,6 +1040,7 @@ namespace share
             upayment.Id = o["id"];
             upayment.UEventId = o["uEventId"];
             upayment.UMemberId = o["uMemberId"];
+            upayment.Amount = o["amount"];
             upayment.ReadOnlyFields["Name"] = o["memberName"];
             return upayment;
         }

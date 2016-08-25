@@ -102,6 +102,7 @@ namespace share
             menu.SetHeaderTitle("Меню");
             menu.Add(1, 1, 0, "Изменить");
             menu.Add(1, 2, 0, "Удалить");
+            menu.Add(1, 3, 0, "Отметить себя");
         }
         public override bool OnContextItemSelected(IMenuItem item)
         {
@@ -128,6 +129,13 @@ namespace share
                         Server.DeleteObject(o);
                     }
                     Refresh();
+                }
+                else if (item.ItemId == 3)
+                {
+                    if (m_EditMode == EditMode.itEditInternet)
+                    {
+                        Client.SelectMember(o.Id);
+                    }
                 }
                 return true;
             }

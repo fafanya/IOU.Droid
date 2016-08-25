@@ -44,11 +44,18 @@ namespace share
             List<UTotal> items;
             if (m_EditMode == EditMode.itEditInternet)
             {
-                items = Client.LoadTotalList(groupId);
+                if (eventId != 0)
+                {
+                    items = Client.LoadTotalListByEvent(eventId);
+                }
+                else
+                {
+                    items = Client.LoadTotalListByGroup(groupId);
+                }
             }
             else
             {
-                if (eventId > 0)
+                if (eventId != 0)
                 {
                     items = Server.LoadTotalDebtList(eventId, groupId);
                 }
