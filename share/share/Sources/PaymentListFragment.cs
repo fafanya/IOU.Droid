@@ -16,16 +16,10 @@ namespace share
 {
     public class PaymentListFragment : ListFragment
     {
-        private int m_GroupId;
-        private int m_EventId;
-        private int m_GlobalId;
+        private int m_UEventId;
+        private int m_EditMode = EditMode.itUnexpected;
 
-        FloatingActionButton Fab { get; set; }
-
-        Type m_ListItemActivity = typeof(EditPaymentActivity);
-        Type m_EditItemActivity = typeof(EditPaymentActivity);
-
-        PaymentListAdapter m_ListAdapter;
+        private PaymentListAdapter m_ListAdapter;
         public override void OnCreate(Bundle savedInstanceState)
         {
             base.OnCreate(savedInstanceState);
@@ -41,19 +35,17 @@ namespace share
 
         public void Refresh()
         {
-            m_GroupId = Arguments.GetInt("Group_ID", -2);
-            m_EventId = Arguments.GetInt("Event_ID", -2);
-            m_GlobalId = Arguments.GetInt("Global_ID", -2);
+            m_UEventId = Arguments.GetInt("Event_ID", 0);
+            m_EditMode = Arguments.GetInt("EditMode", EditMode.itUnexpected);
 
             List<UPayment> items;
-            if (m_GlobalId > 0)
+            if (m_EditMode == EditMode.itEditInternet)
             {
-                Client client = new Client();
-                items = client.LoadPaymentList(m_GlobalId);
+                items = Client.LoadPaymentList(m_UEventId);
             }
             else
             {
-                items = Controller.LoadPaymentList(m_EventId);
+                items = Server.LoadPaymentList(m_UEventId);
             }
 
             m_ListAdapter = new PaymentListAdapter(Activity, items.ToArray());
@@ -67,8 +59,8 @@ namespace share
 
         private void InitializeFab()
         {
-            Fab = View.FindViewById<FloatingActionButton>(Resource.Id.fabPaymentListFragment);
-            Fab.Click += Fab_Click;
+            var fab = View.FindViewById<FloatingActionButton>(Resource.Id.fabPaymentListFragment);
+            fab.Click += Fab_Click;
         }
 
         public override View OnCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
@@ -80,9 +72,8 @@ namespace share
         public override void OnListItemClick(ListView lValue, View vValue, int position, long id)
         {
             var intent = new Intent(Activity, typeof(EditPaymentActivity));
-            intent.PutExtra("ID", (int)id);
-            intent.PutExtra("Group_ID", m_GroupId);
-            intent.PutExtra("Event_ID", m_EventId);
+            intent.PutExtra("Key", (int)id);
+            intent.PutExtra("EditMode", m_EditMode);
             StartActivityForResult(intent, 0);
         }
 
@@ -92,10 +83,16 @@ namespace share
         }
         private void Fab_Click(object sender, EventArgs e)
         {
-            Intent intent = new Intent(Activity, m_EditItemActivity);
-            intent.PutExtra("ID", -1);
-            intent.PutExtra("Group_ID", m_GroupId);
-            intent.PutExtra("Event_ID", m_EventId);
+            Intent intent = new Intent(Activity, typeof(EditPaymentActivity));
+            intent.PutExtra("Event_ID", m_UEventId);
+            if (m_EditMode == EditMode.itEditInternet)
+            {
+                intent.PutExtra("EditMode", EditMode.itCreateInternet);
+            }
+            else
+            {
+                intent.PutExtra("EditMode", EditMode.itCreateLocal);
+            }
             StartActivityForResult(intent, 0);
         }
         public override void OnCreateContextMenu(IContextMenu menu, View v, IContextMenuContextMenuInfo menuInfo)
@@ -109,23 +106,26 @@ namespace share
         {
             if (item.GroupId == 1)
             {
-                AdapterView.AdapterContextMenuInfo info = item.MenuInfo as
-                    AdapterView.AdapterContextMenuInfo;
-                int id = (int)(ListView.Adapter.GetItemId(info.Position));
-
-                UObject i = m_ListAdapter[info.Position];
+                var info = item.MenuInfo as AdapterView.AdapterContextMenuInfo;
+                UObject o = m_ListAdapter[info.Position];
 
                 if (item.ItemId == 1)
                 {
-                    var intent = new Intent(Activity, m_EditItemActivity);
-                    intent.PutExtra("ID", id);
-                    intent.PutExtra("Group_ID", m_GroupId);
-                    intent.PutExtra("Event_ID", m_EventId);
+                    var intent = new Intent(Activity, typeof(EditPaymentActivity));
+                    intent.PutExtra("Key", o.Id);
+                    intent.PutExtra("EditMode", m_EditMode);
                     StartActivityForResult(intent, 1);
                 }
                 else if (item.ItemId == 2)
                 {
-                    Controller.DeleteObject(i);
+                    if (m_EditMode == EditMode.itEditInternet)
+                    {
+                        Client.DeleteObject(o);
+                    }
+                    else
+                    {
+                        Server.DeleteObject(o);
+                    }
                     Refresh();
                 }
                 return true;

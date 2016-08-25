@@ -1,44 +1,51 @@
-using System.Collections.Generic;
-
-using Android.Content;
 using Android.OS;
-
-using Android.Support.V4.App;
+using Android.Views;
+using Android.Content;
 using Android.Support.V7.App;
+using Android.Support.V4.View;
 using Android.Support.V7.Widget;
 using Android.Support.Design.Widget;
-using Android.Support.V4.View;
-using Android.Views;
 
 namespace share
 {
     [Android.App.Activity(Theme = "@style/MyTheme")]
     public class GroupActivity : AppCompatActivity
     {
-        private Toolbar toolbar;
-        private TabLayout tabLayout;
-        private ViewPager viewPager;
-        private UGroup m_Group;
-
+        protected int m_Key;
+        private int m_EditMode = EditMode.itUnexpected;
+        
         protected override void OnCreate(Bundle savedInstanceState)
         {
             base.OnCreate(savedInstanceState);
             SetContentView(Resource.Layout.GroupActivity);
 
-            toolbar = FindViewById<Toolbar>(Resource.Id.toolbarGroupActivity);
+            Toolbar toolbar = FindViewById<Toolbar>(Resource.Id.toolbarGroupActivity);
             SetSupportActionBar(toolbar);
 
-            int id = Intent.GetIntExtra("ID", -2);
-            m_Group = Controller.LoadObjectDetails<UGroup>(id);
-            SupportActionBar.Title = m_Group.Name;
+            m_Key = Intent.GetIntExtra("Key", 0);
+            m_EditMode = Intent.GetIntExtra("EditMode", EditMode.itUnexpected);
+
+            UGroup group = null;
+            if (m_EditMode == EditMode.itEditLocal)
+            {
+                group = Server.LoadObjectDetails<UGroup>(m_Key);
+            }
+            else if (m_EditMode == EditMode.itEditInternet)
+            {
+                group = Client.LoadObjectDetails<UGroup>(m_Key);
+            }
+            if(group != null)
+            {
+                SupportActionBar.Title = group.Name;
+            }
 
             SupportActionBar.SetDisplayHomeAsUpEnabled(true);
             SupportActionBar.SetDisplayShowHomeEnabled(true);
 
-            viewPager = FindViewById<ViewPager>(Resource.Id.viewpager);
+            ViewPager viewPager = FindViewById<ViewPager>(Resource.Id.viewpager);
             setupViewPager(viewPager);
 
-            tabLayout = FindViewById<TabLayout>(Resource.Id.tabs);
+            TabLayout tabLayout = FindViewById<TabLayout>(Resource.Id.tabs);
             tabLayout.SetupWithViewPager(viewPager);
         }
 
@@ -56,7 +63,8 @@ namespace share
             ViewPagerAdapter adapter = new ViewPagerAdapter(SupportFragmentManager);
 
             Bundle args = new Bundle();
-            args.PutInt("Group_ID", m_Group.LocalId);
+            args.PutInt("Group_ID", m_Key);
+            args.PutInt("EditMode", m_EditMode);
 
             EventListFragment eventListFragment = new EventListFragment();
             MemberListFragment memberListFragment = new MemberListFragment();

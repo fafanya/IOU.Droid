@@ -19,7 +19,7 @@ namespace share
 
         public override long GetItemId(int position)
         {
-            return items[position].LocalId;
+            return items[position].Id;
         }
 
         public override UGroup this[int position]
@@ -31,25 +31,6 @@ namespace share
         {
             get { return items.Length; }
         }
-
-        /*public override View GetView(int position, View convertView, ViewGroup parent)
-        {
-            View view = convertView;
-            if (view == null)
-            {
-                view = context.LayoutInflater.Inflate(Android.Resource.Layout.SimpleListItem1, null);
-            }
-
-            UGroup group = items[position];
-            TextView textView = view.FindViewById<TextView>(Android.Resource.Id.Text1);
-
-            textView.Text = group.Name;
-            if (group.Id != 0)
-            {
-                textView.Text += " [ID:" + group.Id + "]";
-            }
-            return view;
-        }*/
 
         public override View GetView(int position, View convertView, ViewGroup parent)
         {
@@ -67,16 +48,16 @@ namespace share
 
             name.Text = group.Name;
 
-            if (group.Id != 0)
+            if (string.IsNullOrWhiteSpace(group.UUserId))
+            {
+                title.Text = "в телефоне";
+                image.SetImageResource(Resource.Drawable.smartphone);
+            }
+            else
             {
                 title.Text = "в интернете";
                 name.Text += " [ID:" + group.Id + "]";
                 image.SetImageResource(Resource.Drawable.internet);
-            }
-            else
-            {
-                title.Text = "в телефоне";
-                image.SetImageResource(Resource.Drawable.smartphone);
             }
 
             return view;

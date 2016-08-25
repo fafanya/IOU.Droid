@@ -16,10 +16,8 @@ namespace share
 {
     public class TotalDebtListFragment : ListFragment
     {
-        private int m_GroupId;
-        private int m_EventId;
+        private int m_EditMode = EditMode.itUnexpected;
 
-        TotalDebtListAdapter m_ListAdapter;
         public override void OnCreate(Bundle savedInstanceState)
         {
             base.OnCreate(savedInstanceState);
@@ -39,21 +37,29 @@ namespace share
 
         public void Refresh()
         {
-            m_GroupId = Arguments.GetInt("Group_ID", -2);
-            m_EventId = Arguments.GetInt("Event_ID", -2);
+            int groupId = Arguments.GetInt("Group_ID", 0);
+            int eventId = Arguments.GetInt("Event_ID", 0);
+            m_EditMode = Arguments.GetInt("EditMode", EditMode.itUnexpected);
 
-            List<TotalDebt> items;
-            if(m_EventId > 0)
+            List<UTotal> items;
+            if (m_EditMode == EditMode.itEditInternet)
             {
-                items = Controller.LoadTotalDebtList(m_EventId, m_GroupId);
+                items = Client.LoadTotalList(groupId);
             }
             else
             {
-                items = Controller.LoadTotalDebtList(groupId: m_GroupId);
+                if (eventId > 0)
+                {
+                    items = Server.LoadTotalDebtList(eventId, groupId);
+                }
+                else
+                {
+                    items = Server.LoadTotalDebtList(groupId: groupId);
+                }
             }
 
-            m_ListAdapter = new TotalDebtListAdapter(Activity, items.ToArray());
-            ListAdapter = m_ListAdapter;
+            TotalDebtListAdapter  listAdapter = new TotalDebtListAdapter(Activity, items.ToArray());
+            ListAdapter = listAdapter;
         }
 
         private void InitializeList()

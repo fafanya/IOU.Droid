@@ -1,52 +1,49 @@
-using System.Collections.Generic;
-
-using Android.Content;
 using Android.OS;
-
-using Android.Support.V4.App;
+using Android.Views;
+using Android.Content;
 using Android.Support.V7.App;
+using Android.Support.V4.View;
 using Android.Support.V7.Widget;
 using Android.Support.Design.Widget;
-using Android.Support.V4.View;
-using Android.Views;
 
 namespace share
 {
     [Android.App.Activity(Theme = "@style/MyTheme")]
     public class EventActivity : AppCompatActivity
     {
-        private Toolbar toolbar;
-        private TabLayout tabLayout;
-        private ViewPager viewPager;
+        private int m_Key;
+        private int m_EditMode = EditMode.itUnexpected;
 
-        private int m_ID;
-        private int m_GroupId;
-
-
-        UEvent m_Event;
         protected override void OnCreate(Bundle savedInstanceState)
         {
             base.OnCreate(savedInstanceState);
             SetContentView(Resource.Layout.EventActivity);
 
-            toolbar = FindViewById<Toolbar>(Resource.Id.toolbarEventActivity);
+            Toolbar toolbar = FindViewById<Toolbar>(Resource.Id.toolbarEventActivity);
             SetSupportActionBar(toolbar);
 
-            m_ID = Intent.GetIntExtra("ID", -2);
-            m_Event = Controller.LoadObjectDetails<UEvent>(m_ID);
-            SupportActionBar.Title = m_Event.Name + " (Ñ÷¸ò: " + m_Event.EventTypeName + ")";
+            m_Key = Intent.GetIntExtra("Key", 0);
+            m_EditMode = Intent.GetIntExtra("EditMode", EditMode.itUnexpected);
+
+            UEvent uevent;
+            if (m_EditMode == EditMode.itEditInternet)
+            {
+                uevent = Client.LoadObjectDetails<UEvent>(m_Key);
+            }
+            else
+            {
+                uevent = Server.LoadObjectDetails<UEvent>(m_Key);
+            }
+            SupportActionBar.Title = uevent.Name + " (Ñ÷¸ò: " + uevent.EventTypeName + ")";
 
             SupportActionBar.SetDisplayHomeAsUpEnabled(true);
             SupportActionBar.SetDisplayShowHomeEnabled(true);
 
-            m_GroupId = Intent.GetIntExtra("Group_ID", -2);
+            ViewPager viewPager = FindViewById<ViewPager>(Resource.Id.viewpagerEventActivity);
+            setupViewPager(viewPager, uevent);
 
-            viewPager = FindViewById<ViewPager>(Resource.Id.viewpagerEventActivity);
-            setupViewPager(viewPager);
-
-            tabLayout = FindViewById<TabLayout>(Resource.Id.tabsEventActivity);
+            TabLayout tabLayout = FindViewById<TabLayout>(Resource.Id.tabsEventActivity);
             tabLayout.SetupWithViewPager(viewPager);
-            //setupTabIcons();
         }
 
         public override bool OnOptionsItemSelected(IMenuItem item)
@@ -55,39 +52,31 @@ namespace share
             {
                 Finish();
             }
-
             return base.OnOptionsItemSelected(item);
         }
 
-        private void setupTabIcons()
-        {
-            tabLayout.GetTabAt(0).SetIcon(Resource.Drawable.image);
-            tabLayout.GetTabAt(1).SetIcon(Resource.Drawable.image);
-            tabLayout.GetTabAt(2).SetIcon(Resource.Drawable.image);
-        }
-
-        private void setupViewPager(ViewPager viewPager)
+        private void setupViewPager(ViewPager viewPager, UEvent uevent)
         {
             ViewPagerAdapter adapter = new ViewPagerAdapter(SupportFragmentManager);
 
             Bundle args = new Bundle();
-            args.PutInt("Event_ID", m_ID);
-            args.PutInt("Group_ID", m_GroupId);
+            args.PutInt("Event_ID", m_Key);
+            args.PutInt("EditMode", m_EditMode);
             
-            if(m_GroupId == 0)
+            if(uevent.UGroupId == 0)
             {
                 MemberListFragment memberListFragment = new MemberListFragment();
                 memberListFragment.Arguments = args;
                 adapter.addFragment(memberListFragment, new Java.Lang.String("Ëþäè"));
             }
 
-            if (m_Event.UEventTypeId == UEventType.tOwn)
+            if (uevent.UEventTypeId == UEventType.tOwn)
             {
                 BillListFragment billListFragment = new BillListFragment();
                 billListFragment.Arguments = args;
                 adapter.addFragment(billListFragment, new Java.Lang.String("Ñ÷åòà"));
             }
-            if (m_Event.UEventTypeId == UEventType.tPartly)
+            if (uevent.UEventTypeId == UEventType.tPartly)
             {
                 BillListFragment billListFragment = new BillListFragment();
                 billListFragment.Arguments = args;

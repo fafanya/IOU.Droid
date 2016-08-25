@@ -1,31 +1,18 @@
 using System;
+using System.Threading.Tasks;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
-using Android.Content;
 using Android.OS;
-using Android.Runtime;
-using Android.Util;
 using Android.Views;
 using Android.Widget;
-using Android.Support.Design.Widget;
+using Android.Content;
 using Android.Support.V4.App;
-
-using System.Net;
-using System.IO;
-using System.Json;
-using System.Threading.Tasks;
+using Android.Support.Design.Widget;
 
 namespace share
 {
     public class GroupListFragment : ListFragment
     {
-        FloatingActionButton Fab { get; set; }
-
-        Type m_ListItemActivity = typeof(GroupActivity);
-        Type m_EditItemActivity = typeof(EditGroupActivity);
-
         GroupListAdapter m_ListAdapter;
         public override void OnCreate(Bundle savedInstanceState)
         {
@@ -43,7 +30,12 @@ namespace share
 
         private void Refresh()
         {
-            var items = Controller.LoadGroupList();
+            List<UGroup> items = new List<UGroup>();
+            List<UGroup> localitems = Server.LoadGroupList();
+            List<UGroup> outerItems = Client.LoadGroupList();
+            items.AddRange(localitems);
+            items.AddRange(outerItems);
+
             m_ListAdapter = new GroupListAdapter(Activity, items.ToArray());
             ListAdapter = m_ListAdapter;
         }
@@ -55,8 +47,8 @@ namespace share
 
         private void InitializeFab()
         {
-            Fab = View.FindViewById<FloatingActionButton>(Resource.Id.fabGroupListFragment);
-            Fab.Click += Fab_Click;
+            FloatingActionButton fab = View.FindViewById<FloatingActionButton>(Resource.Id.fabGroupListFragment);
+            fab.Click += Fab_Click;
         }
 
         public override View OnCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
@@ -67,8 +59,18 @@ namespace share
 
         public override void OnListItemClick(ListView lValue, View vValue, int position, long id)
         {
-            var intent = new Intent(Activity, m_ListItemActivity);
-            intent.PutExtra("ID", (int)id);
+            UGroup g = m_ListAdapter[position];
+
+            var intent = new Intent(Activity, typeof(GroupActivity));
+            intent.PutExtra("Key", g.Id);
+            if (string.IsNullOrWhiteSpace(g.UUserId))
+            {
+                intent.PutExtra("EditMode", EditMode.itEditLocal);
+            }
+            else
+            {
+                intent.PutExtra("EditMode", EditMode.itEditInternet);
+            }
             StartActivity(intent);
         }
 
@@ -89,8 +91,8 @@ namespace share
             menu.SetHeaderTitle("Меню");
             menu.Add(4, 1, 0, "Изменить");
             menu.Add(4, 2, 0, "Удалить");
-            menu.Add(4, 3, 0, "Импорт");
-            menu.Add(4, 4, 0, "Экспорт");
+            menu.Add(4, 3, 0, "Экспорт");
+            menu.Add(4, 4, 0, "Импорт");
         }
 
         public override bool OnContextItemSelected(IMenuItem item)
@@ -101,40 +103,62 @@ namespace share
                 UGroup g = m_ListAdapter[info.Position];
                 if (item.ItemId == 1)
                 {
-                    var intent = new Intent(Activity, m_EditItemActivity);
-                    intent.PutExtra("ID", g.LocalId);
+                    var intent = new Intent(Activity, typeof(EditGroupActivity));
+                    intent.PutExtra("Key", g.Id);
+                    if (string.IsNullOrWhiteSpace(g.UUserId))
+                    {
+                        intent.PutExtra("EditMode", EditMode.itEditLocal);
+                    }
+                    else
+                    {
+                        intent.PutExtra("EditMode", EditMode.itEditInternet);
+                    }
                     StartActivityForResult(intent, 1);
                 }
                 else if (item.ItemId == 2)
                 {
-                    Controller.DeleteObject(g);
+                    if (string.IsNullOrWhiteSpace(g.UUserId))
+                    {
+                        Server.DeleteObject(g);
+                    }
+                    else
+                    {
+                        Client.DeleteObject(g);
+                    }
                     Refresh();
                 }
                 else if (item.ItemId == 3)
                 {
-                    ImportGroup(g.Id);
+                    if (string.IsNullOrWhiteSpace(g.UUserId))
+                    {
+                        ExportGroup(g.Id);
+                    }
                 }
-                else if (item.ItemId == 4)
+                else if(item.ItemId == 4)
                 {
-                    ExportGroup(g.LocalId);
+                    if (!string.IsNullOrWhiteSpace(g.UUserId))
+                    {
+                        ImportGroup(g.Id);
+                    }
                 }
                 return true;
             }
             return false;
         }
 
-        private async void ImportGroup(int id)
+        private async void ExportGroup(int id)
         {
-            if (await Task.Run(() => Client.ImportGroup(id)))
+            Client client = new Client();
+            if (await Task.Run(() => client.ExportGroup(id)))
             {
                 Refresh();
             }
         }
 
-        private async void ExportGroup(int localId)
+        private async void ImportGroup(int id)
         {
             Client client = new Client();
-            if (await Task.Run(() => client.ExportGroup(localId)))
+            if (await Task.Run(() => client.ImportGroup(id)))
             {
                 Refresh();
             }

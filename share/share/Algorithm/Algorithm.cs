@@ -5,7 +5,7 @@ namespace share
 {
     public class Algorithm
     {
-        public static List<TotalDebt> RecountGroupTotalDebtList(List<UMember> members, List<UDebt> debts, List<UBill> bills,
+        public static List<UTotal> RecountGroupTotalDebtList(List<UMember> members, List<UDebt> debts, List<UBill> bills,
             List<UEvent> events, List<UPayment> payments)
         {
             List<CustomMember> cMembers = new List<CustomMember>();
@@ -22,11 +22,11 @@ namespace share
             {
                 foreach (UDebt d in debts)
                 {
-                    if (d.DebtorUMemberId == m.Member.LocalId)
+                    if (d.DebtorId == m.Member.Id)
                     {
                         m.Balance += d.Amount;
                     }
-                    if (d.LenderUMemberId == m.Member.LocalId)
+                    if (d.LenderId == m.Member.Id)
                     {
                         m.Balance -= d.Amount;
                     }
@@ -37,17 +37,17 @@ namespace share
             {
                 if (e.UEventTypeId == UEventType.tOwn)
                 {
-                    foreach (UPayment p in payments.Where(x => x.UEventId == e.LocalId))
+                    foreach (UPayment p in payments.Where(x => x.UEventId == e.Id))
                     {
-                        foreach (CustomMember m in cMembers.Where(x => x.Member.LocalId == p.UMemberId))
+                        foreach (CustomMember m in cMembers.Where(x => x.Member.Id == p.UMemberId))
                         {
                             m.Balance -= p.Amount;
                         }
                     }
 
-                    foreach (UBill b in bills.Where(x => x.UEventId == e.LocalId))
+                    foreach (UBill b in bills.Where(x => x.UEventId == e.Id))
                     {
-                        foreach (CustomMember m in cMembers.Where(x => x.Member.LocalId == b.UMemberId))
+                        foreach (CustomMember m in cMembers.Where(x => x.Member.Id == b.UMemberId))
                         {
                             m.Balance += b.Amount;
                         }
@@ -57,10 +57,10 @@ namespace share
                 {
                     double summa = 0.0;
 
-                    foreach (UPayment p in payments.Where(x => x.UEventId == e.LocalId))
+                    foreach (UPayment p in payments.Where(x => x.UEventId == e.Id))
                     {
                         summa += p.Amount;
-                        foreach (CustomMember m in cMembers.Where(x => x.Member.LocalId == p.UMemberId))
+                        foreach (CustomMember m in cMembers.Where(x => x.Member.Id == p.UMemberId))
                         {
                             m.Balance -= p.Amount;
                         }
@@ -76,21 +76,21 @@ namespace share
                 else if(e.UEventTypeId == UEventType.tPartly)
                 {
                     double summa = 0.0;
-                    foreach (UPayment p in payments.Where(x => x.UEventId == e.LocalId))
+                    foreach (UPayment p in payments.Where(x => x.UEventId == e.Id))
                     {
                         summa += p.Amount;
-                        foreach (CustomMember m in cMembers.Where(x => x.Member.LocalId == p.UMemberId))
+                        foreach (CustomMember m in cMembers.Where(x => x.Member.Id == p.UMemberId))
                         {
                             m.Balance -= p.Amount;
                         }
                     }
 
-                    int count = bills.Where(x=>x.UEventId == e.LocalId).GroupBy(y=>y.UMemberId).Count();
+                    int count = bills.Where(x=>x.UEventId == e.Id).GroupBy(y=>y.UMemberId).Count();
 
                     double avg = summa / count;
-                    foreach (UBill b in bills.Where(x => x.UEventId == e.LocalId))
+                    foreach (UBill b in bills.Where(x => x.UEventId == e.Id))
                     {
-                        foreach (CustomMember m in cMembers.Where(x => x.Member.LocalId == b.UMemberId))
+                        foreach (CustomMember m in cMembers.Where(x => x.Member.Id == b.UMemberId))
                         {
                             m.Balance += avg;
                         }
@@ -101,12 +101,12 @@ namespace share
             return RecountTotalDebtList(cMembers);
         }
 
-        public static List<TotalDebt> RecountEventTotalDebtList(int eventId, List<UMember> members,
+        public static List<UTotal> RecountEventTotalDebtList(int eventId, List<UMember> members,
             List<UBill> bills, List<UPayment> payments)
         {
             List<CustomMember> cMembers = new List<CustomMember>();
 
-            UEvent e =  Controller.LoadObjectDetails<UEvent>(eventId);
+            UEvent e =  Server.LoadObjectDetails<UEvent>(eventId);
 
             foreach (UMember m in members)
             {
@@ -120,7 +120,7 @@ namespace share
             {
                 foreach (UPayment p in payments.Where(x => x.UEventId == eventId))
                 {
-                    foreach (CustomMember m in cMembers.Where(x => x.Member.LocalId == p.UMemberId))
+                    foreach (CustomMember m in cMembers.Where(x => x.Member.Id == p.UMemberId))
                     {
                         m.Balance -= p.Amount;
                     }
@@ -128,7 +128,7 @@ namespace share
 
                 foreach (UBill b in bills.Where(x => x.UEventId == eventId))
                 {
-                    foreach (CustomMember m in cMembers.Where(x => x.Member.LocalId == b.UMemberId))
+                    foreach (CustomMember m in cMembers.Where(x => x.Member.Id == b.UMemberId))
                     {
                         m.Balance += b.Amount;
                     }
@@ -137,10 +137,10 @@ namespace share
             else if (e.UEventTypeId == UEventType.tCommon)
             {
                 double summa = 0.0;
-                foreach (UPayment p in payments.Where(x => x.UEventId == e.LocalId))
+                foreach (UPayment p in payments.Where(x => x.UEventId == e.Id))
                 {
                     summa += p.Amount;
-                    foreach (CustomMember m in cMembers.Where(x => x.Member.LocalId == p.UMemberId))
+                    foreach (CustomMember m in cMembers.Where(x => x.Member.Id == p.UMemberId))
                     {
                         m.Balance -= p.Amount;
                     }
@@ -156,21 +156,21 @@ namespace share
             else if (e.UEventTypeId == UEventType.tPartly)
             {
                 double summa = 0.0;
-                foreach (UPayment p in payments.Where(x => x.UEventId == e.LocalId))
+                foreach (UPayment p in payments.Where(x => x.UEventId == e.Id))
                 {
                     summa += p.Amount;
-                    foreach (CustomMember m in cMembers.Where(x => x.Member.LocalId == p.UMemberId))
+                    foreach (CustomMember m in cMembers.Where(x => x.Member.Id == p.UMemberId))
                     {
                         m.Balance -= p.Amount;
                     }
                 }
 
-                int count = bills.Where(x => x.UEventId == e.LocalId).GroupBy(y => y.UMemberId).Count();
+                int count = bills.Where(x => x.UEventId == e.Id).GroupBy(y => y.UMemberId).Count();
 
                 double avg = summa / count;
-                foreach (UBill b in bills.Where(x => x.UEventId == e.LocalId))
+                foreach (UBill b in bills.Where(x => x.UEventId == e.Id))
                 {
-                    foreach (CustomMember m in cMembers.Where(x => x.Member.LocalId == b.UMemberId))
+                    foreach (CustomMember m in cMembers.Where(x => x.Member.Id == b.UMemberId))
                     {
                         m.Balance += avg;
                     }
@@ -179,9 +179,9 @@ namespace share
             return RecountTotalDebtList(cMembers);
         }
 
-        public static List<TotalDebt> RecountTotalDebtList(List<CustomMember> b)
+        public static List<UTotal> RecountTotalDebtList(List<CustomMember> b)
         {
-            var debts = new List<TotalDebt>();
+            var debts = new List<UTotal>();
 
             var N = b.Count;
 
@@ -209,7 +209,7 @@ namespace share
                     {
                         m = -b[j].Balance;
                     }
-                    TotalDebt debt = new TotalDebt();
+                    UTotal debt = new UTotal();
                     debt.DebtorName = b[i].Member.Name;
                     debt.LenderName = b[j].Member.Name;
                     debt.Amount = m;

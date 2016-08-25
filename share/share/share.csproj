@@ -103,39 +103,44 @@
     <Compile Include="Adapters\ViewPagerAdapter.cs" />
     <Compile Include="Algorithm\Algorithm.cs" />
     <Compile Include="Convertors.cs" />
-    <Compile Include="ResourcesSource\AboutActivity.cs" />
-    <Compile Include="ResourcesSource\BillListFragment.cs" />
-    <Compile Include="ResourcesSource\DebtListFragment.cs" />
-    <Compile Include="ResourcesSource\EditBillActivity.cs" />
-    <Compile Include="ResourcesSource\EditDebtActivity.cs" />
-    <Compile Include="ResourcesSource\EditMemberActivity.cs" />
-    <Compile Include="ResourcesSource\EditPaymentActivity.cs" />
-    <Compile Include="ResourcesSource\EditEventActivity.cs" />
-    <Compile Include="ResourcesSource\EditGroupActivity.cs" />
-    <Compile Include="ResourcesSource\EventActivity.cs" />
-    <Compile Include="ResourcesSource\EventListFragment.cs" />
-    <Compile Include="ResourcesSource\GroupActivity.cs" />
-    <Compile Include="ResourcesSource\GroupListActivity.cs" />
-    <Compile Include="ResourcesSource\GroupListFragment.cs" />
-    <Compile Include="ResourcesSource\SelectEditGroupActivity.cs" />
+    <Compile Include="Sources\AboutActivity.cs" />
+    <Compile Include="Sources\BillListFragment.cs" />
+    <Compile Include="Sources\DebtListFragment.cs" />
+    <Compile Include="Sources\EditActivity.cs" />
+    <Compile Include="Sources\EditBillActivity.cs" />
+    <Compile Include="Sources\EditDebtActivity.cs" />
+    <Compile Include="Sources\EditMemberActivity.cs" />
+    <Compile Include="Sources\EditPaymentActivity.cs" />
+    <Compile Include="Sources\EditEventActivity.cs" />
+    <Compile Include="Sources\EditGroupActivity.cs" />
+    <Compile Include="Sources\EventActivity.cs" />
+    <Compile Include="Sources\EventListFragment.cs" />
+    <Compile Include="Sources\GroupActivity.cs" />
+    <Compile Include="Sources\GroupListFragment.cs" />
+    <Compile Include="Sources\LoginActivity.cs" />
+    <Compile Include="Sources\LoginGroupActivity.cs" />
+    <Compile Include="Sources\LogoutActivity.cs" />
+    <Compile Include="Sources\RegistrationActivity.cs" />
+    <Compile Include="Sources\SelectEditGroupActivity.cs" />
     <Compile Include="HttpClient\Client.cs" />
-    <Compile Include="ResourcesSource\MainActivity.cs" />
-    <Compile Include="ResourcesSource\MemberListFragment.cs" />
-    <Compile Include="ResourcesSource\PaymentListFragment.cs" />
+    <Compile Include="Sources\MainActivity.cs" />
+    <Compile Include="Sources\MemberListFragment.cs" />
+    <Compile Include="Sources\PaymentListFragment.cs" />
     <Compile Include="Resources\Resource.Designer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="ResourcesSource\SplashActivity.cs" />
-    <Compile Include="ResourcesSource\TotalDebtListFragment.cs" />
-    <Compile Include="Controller.cs" />
+    <Compile Include="Sources\SelectMemberActivity.cs" />
+    <Compile Include="Sources\SplashActivity.cs" />
+    <Compile Include="Sources\TotalDebtListFragment.cs" />
+    <Compile Include="Server.cs" />
+    <Compile Include="SessionManager.cs" />
     <Compile Include="UNObject.cs" />
     <Compile Include="UObject.cs" />
     <Compile Include="UTransaction.cs" />
+    <Compile Include="ViewModels\LoginViewModel.cs" />
+    <Compile Include="ViewModels\RegisterViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\AboutAssets.txt" />
-    <AndroidResource Include="Resources\layout\GroupListActivity.axml">
-      <SubType>AndroidResource</SubType>
-    </AndroidResource>
     <AndroidResource Include="Resources\layout\EventActivity.axml">
       <SubType>AndroidResource</SubType>
     </AndroidResource>
@@ -161,7 +166,7 @@
       <SubType>AndroidResource</SubType>
     </AndroidResource>
     <AndroidResource Include="Resources\layout\EditMemberActivity.axml">
-      <SubType>AndroidResource</SubType>
+      <SubType>Designer</SubType>
     </AndroidResource>
     <AndroidResource Include="Resources\layout\EditEventActivity.axml">
       <SubType>Designer</SubType>
@@ -197,6 +202,21 @@
       <SubType>Designer</SubType>
     </AndroidResource>
     <AndroidResource Include="Resources\drawable\group_item.axml">
+      <SubType>Designer</SubType>
+    </AndroidResource>
+    <AndroidResource Include="Resources\layout\LoginActivity.axml">
+      <SubType>Designer</SubType>
+    </AndroidResource>
+    <AndroidResource Include="Resources\layout\RegistrationActivity.axml">
+      <SubType>Designer</SubType>
+    </AndroidResource>
+    <AndroidResource Include="Resources\layout\LogoutaActivity.axml">
+      <SubType>Designer</SubType>
+    </AndroidResource>
+    <AndroidResource Include="Resources\layout\LoginGroupActivity.axml">
+      <SubType>Designer</SubType>
+    </AndroidResource>
+    <AndroidResource Include="Resources\layout\SelectMemberActivity.axml">
       <SubType>Designer</SubType>
     </AndroidResource>
   </ItemGroup>

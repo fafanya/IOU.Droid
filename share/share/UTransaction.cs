@@ -12,7 +12,7 @@ namespace share
     {
         public static string GetDBName()
         {
-            return "udb42.db";
+            return "udb43.db";
         }
 
         private SqliteConnection m_SqliteConnection;

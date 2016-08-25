@@ -1,7 +1,4 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using Android.App;
 
 using Android.Support.V7.App;
@@ -13,7 +10,7 @@ using Android.Widget;
 
 namespace share
 {
-    [Android.App.Activity(Label = "Добавление группы", Theme = "@style/MyTheme")]
+    [Activity(Label = "Добавление группы", Theme = "@style/MyTheme")]
     public class SelectEditGroupActivity : AppCompatActivity
     {
         private Android.Support.V7.Widget.Toolbar toolbar;
@@ -32,11 +29,15 @@ namespace share
             Button btnImport = FindViewById<Button>(Resource.Id.btnSelectImportGroup);
             Button btnInternet = FindViewById<Button>(Resource.Id.btnSelectInternetGroup);
 
-            btnImport.Visibility = ViewStates.Gone;
-
             btnCreate.Click += BtnCreate_Click;
-            btnImport.Click += BtnImport_Click;
             btnInternet.Click += BtnInternet_Click;
+            btnImport.Click += BtnImport_Click;
+        }
+
+        private void BtnImport_Click(object sender, EventArgs e)
+        {
+            var intent = new Intent(this, typeof(LoginGroupActivity));
+            StartActivityForResult(intent, 1);
         }
 
         public override bool OnOptionsItemSelected(IMenuItem item)
@@ -51,21 +52,14 @@ namespace share
         private void BtnCreate_Click(object sender, EventArgs e)
         {
             var intent = new Intent(this, typeof(EditGroupActivity));
-            intent.PutExtra("ID", 0);
+            intent.PutExtra("EditMode", EditMode.itCreateLocal);
             StartActivityForResult(intent, 1);
         }
 
         private void BtnInternet_Click(object sender, EventArgs e)
         {
             var intent = new Intent(this, typeof(EditGroupActivity));
-            intent.PutExtra("ID", -1);
-            StartActivityForResult(intent, 1);
-        }
-
-        private void BtnImport_Click(object sender, EventArgs e)
-        {
-            var intent = new Intent(this, typeof(EditGroupActivity));
-            intent.PutExtra("ID", -2);
+            intent.PutExtra("EditMode", EditMode.itCreateInternet);
             StartActivityForResult(intent, 1);
         }
 
