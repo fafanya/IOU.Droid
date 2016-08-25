@@ -1,36 +1,27 @@
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-using Android.Support.V7.App;
-using Android.Content;
 using Android.OS;
-using Android.Runtime;
+using Android.App;
 using Android.Views;
 using Android.Widget;
+using Android.Content;
 
 namespace share
 {
-    [Android.App.Activity(Label = "—чЄт", Theme = "@style/MyTheme")]
-    public class EditBillActivity : AppCompatActivity
+    [Activity(Label = "—чЄт", Theme = "@style/MyTheme")]
+    public class EditBillActivity : EditActivityEx
     {
-        int m_ID;
         UBill m_Bill;
-        private Android.Support.V7.Widget.Toolbar toolbar;
         EditText m_etBillAmount;
         Spinner m_spMember;
         LinearLayout m_ll;
         UEvent m_Event;
-
-        DebtorListAdapter m_MemberAdapter;
 
         protected override void OnCreate(Bundle savedInstanceState)
         {
             base.OnCreate(savedInstanceState);
             SetContentView(Resource.Layout.EditBillActivity);
 
-            toolbar = FindViewById<Android.Support.V7.Widget.Toolbar>(Resource.Id.toolbarEditBillActivity);
+            var toolbar = FindViewById<Android.Support.V7.Widget.Toolbar>(Resource.Id.toolbarEditBillActivity);
             SetSupportActionBar(toolbar);
             SupportActionBar.SetDisplayHomeAsUpEnabled(true);
             SupportActionBar.SetDisplayShowHomeEnabled(true);
@@ -46,71 +37,27 @@ namespace share
 
             InitializeUObject();
         }
-        public override bool OnOptionsItemSelected(IMenuItem item)
+
+        protected override void StartCreateLocal()
         {
-            if (item.ItemId == Android.Resource.Id.Home)
-            {
-                Finish();
-            }
+            int eventId = Intent.GetIntExtra("Event_ID", 0);
+            m_Bill = new UBill();
+            m_Bill.UEventId = eventId;
+            m_Bill.Amount = 0.0;
 
-            return base.OnOptionsItemSelected(item);
-        }
-        private void InitializeUObject()
-        {
-            int eventId = Intent.GetIntExtra("Event_ID", -2);
-            int groupId = Intent.GetIntExtra("Group_ID", -2);
-            
-            int groupGlobalId = Intent.GetIntExtra("Group_GlobalID", -2);
-            int billGlobalId = Intent.GetIntExtra("Bill_GlobalID", -2);
-
-            m_Event = Controller.LoadObjectDetails<UEvent>(eventId);
-
+            UEvent m_Event = Server.LoadObjectDetails<UEvent>(eventId);
             List<UMember> memberItems;
-
-            if (groupId != 0)
+            if (m_Event.UGroupId != 0)
             {
-                memberItems = Controller.LoadMemberList(groupId);
+                memberItems = Server.LoadMemberList(m_Event.UGroupId);
             }
             else
             {
-                memberItems = Controller.LoadMemberList(eventId: eventId);
+                memberItems = Server.LoadMemberList(eventId: eventId);
             }
+            m_spMember.Adapter = new DebtorListAdapter(this, memberItems.ToArray());
 
-            m_MemberAdapter = new DebtorListAdapter(this, memberItems.ToArray());
-
-            m_spMember.Adapter = m_MemberAdapter;
-
-            m_ID = Intent.GetIntExtra("ID", -2);
-
-            if (billGlobalId < 0)
-            {
-                if (m_ID < 0)
-                {
-                    m_Bill = new UBill();
-                    m_Bill.LocalId = -1;
-                    m_Bill.UEventId = eventId;
-                    m_Bill.Amount = 0.0;
-                }
-                else
-                {
-                    m_Bill = Controller.LoadObjectDetails<UBill>(m_ID);
-                    for (int position = 0; position < m_MemberAdapter.Count; position++)
-                    {
-                        if (m_MemberAdapter.GetItemId(position) == m_Bill.UMemberId)
-                        {
-                            m_spMember.SetSelection(position);
-                            break;
-                        }
-                    }
-                }
-            }
-            else
-            {
-                Client client = new Client();
-                m_Bill = client.LoadObject<UBill>(billGlobalId);
-            }
-
-            if(m_Event.UEventTypeId == UEventType.tOwn)
+            if (m_Event.UEventTypeId == UEventType.tOwn)
             {
                 m_etBillAmount.Text = m_Bill.Amount.ToString();
             }
@@ -121,38 +68,129 @@ namespace share
             }
         }
 
-        private void BtnCancel_Click(object sender, EventArgs e)
+        protected override void StartCreateInternet()
         {
-            SetResult(Android.App.Result.Canceled);
-            Finish();
+            int eventId = Intent.GetIntExtra("Event_ID", 0);
+            m_Bill = new UBill();
+            m_Bill.UEventId = eventId;
+            m_Bill.Amount = 0.0;
+
+            m_Event = Client.LoadObjectDetails<UEvent>(eventId);
+            List<UMember> memberItems = Client.LoadMemberList(m_Event.UGroupId);
+            m_spMember.Adapter = new DebtorListAdapter(this, memberItems.ToArray());
+
+            if (m_Event.UEventTypeId == UEventType.tOwn)
+            {
+                m_etBillAmount.Text = m_Bill.Amount.ToString();
+            }
+            else
+            {
+                SupportActionBar.Title = "”частник";
+                m_ll.Visibility = ViewStates.Gone;
+            }
         }
 
-        private void BtnOK_Click(object sender, EventArgs e)
+        protected override void StartEditLocal()
+        {
+            m_Bill = Server.LoadObjectDetails<UBill>(m_Key);
+            
+            m_Event = Server.LoadObjectDetails<UEvent>(m_Bill.UEventId);
+            List<UMember> memberItems;
+            if (m_Event.UGroupId != 0)
+            {
+                memberItems = Server.LoadMemberList(m_Event.UGroupId);
+            }
+            else
+            {
+                memberItems = Server.LoadMemberList(eventId: m_Event.UGroupId);
+            }
+            m_spMember.Adapter = new DebtorListAdapter(this, memberItems.ToArray());
+
+            for (int position = 0; position < m_spMember.Adapter.Count; position++)
+            {
+                if (m_spMember.Adapter.GetItemId(position) == m_Bill.UMemberId)
+                {
+                    m_spMember.SetSelection(position);
+                    break;
+                }
+            }
+
+            if (m_Event.UEventTypeId == UEventType.tOwn)
+            {
+                m_etBillAmount.Text = m_Bill.Amount.ToString();
+            }
+            else
+            {
+                SupportActionBar.Title = "”частник";
+                m_ll.Visibility = ViewStates.Gone;
+            }
+        }
+
+        protected override void StartEditInternet()
+        {
+            m_Bill = Client.LoadObjectDetails<UBill>(m_Key);
+
+            m_Event = Client.LoadObjectDetails<UEvent>(m_Bill.UEventId);
+            List<UMember> memberItems = Client.LoadMemberList(m_Event.UGroupId);
+            m_spMember.Adapter = new DebtorListAdapter(this, memberItems.ToArray());
+            for (int position = 0; position < m_spMember.Adapter.Count; position++)
+            {
+                if (m_spMember.Adapter.GetItemId(position) == m_Bill.UMemberId)
+                {
+                    m_spMember.SetSelection(position);
+                    break;
+                }
+            }
+
+            if (m_Event.UEventTypeId == UEventType.tOwn)
+            {
+                m_etBillAmount.Text = m_Bill.Amount.ToString();
+            }
+            else
+            {
+                SupportActionBar.Title = "”частник";
+                m_ll.Visibility = ViewStates.Gone;
+            }
+        }
+
+        protected override void FinishCreateLocal()
         {
             if (m_Event.UEventTypeId == UEventType.tOwn)
             {
                 m_Bill.Amount = double.Parse(m_etBillAmount.Text, System.Globalization.CultureInfo.InvariantCulture);
             }
             m_Bill.UMemberId = (int)(m_spMember.SelectedItemId);
+            Server.CreateObject(m_Bill);
+        }
 
-            if (m_Bill.Id == 0)
+        protected override void FinishCreateInternet()
+        {
+            if (m_Event.UEventTypeId == UEventType.tOwn)
             {
-                if (m_Bill.LocalId < 0)
-                {
-                    Controller.CreateObject(m_Bill);
-                }
-                else
-                {
-                    Controller.UpdateObject(m_Bill);
-                }
+                m_Bill.Amount = double.Parse(m_etBillAmount.Text, System.Globalization.CultureInfo.InvariantCulture);
             }
-            else
-            {
-                Client.UpdateObject<UBill>(m_Bill);
-            }
+            m_Bill.UMemberId = (int)(m_spMember.SelectedItemId);
+            Client.CreateObject(m_Bill);
+        }
 
-            SetResult(Android.App.Result.Ok);
-            Finish();
+        protected override void FinishEditLocal()
+        {
+            if (m_Event.UEventTypeId == UEventType.tOwn)
+            {
+                m_Bill.Amount = double.Parse(m_etBillAmount.Text, System.Globalization.CultureInfo.InvariantCulture);
+            }
+            m_Bill.UMemberId = (int)(m_spMember.SelectedItemId);
+            Server.UpdateObject(m_Bill);
+        }
+
+        protected override void FinishEditInternet()
+        {
+            if (m_Event.UEventTypeId == UEventType.tOwn)
+            {
+                m_Bill.Amount = double.Parse(m_etBillAmount.Text, System.Globalization.CultureInfo.InvariantCulture);
+            }
+            m_Bill.UMemberId = (int)(m_spMember.SelectedItemId);
+            Client.UpdateObject(m_Bill);
         }
     }
 }

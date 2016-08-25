@@ -12,10 +12,10 @@ using Android.Widget;
 
 namespace share
 {
-    public class UNObject
+    /*public class UNObject
     {
         public int Id { get; set; }
-    }
+    }*/
 
     public class UTotal : UNObject
     {
@@ -23,4 +23,11 @@ namespace share
         public string LenderName { get; set; }
         public double Amount { get; set; }
     }
+
+    public class UUser
+    {
+        public string id { get; set; }
+        public string email { get; set; }
+    }
+
 }

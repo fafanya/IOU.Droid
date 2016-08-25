@@ -24,10 +24,7 @@ namespace share
 
         public override long GetItemId(int position)
         {
-            int id = items[position].LocalId;
-            if(id == 0)
-                return items[position].Id;
-            return id;
+            return items[position].Id;
         }
 
         public override UEvent this[int position]

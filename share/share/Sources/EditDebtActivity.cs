@@ -14,25 +14,20 @@ using System.Globalization;
 namespace share
 {
     [Android.App.Activity(Label = "Долг", Theme = "@style/MyTheme")]
-    public class EditDebtActivity : AppCompatActivity
+    public class EditDebtActivity : EditActivityEx
     {
-        int m_ID;
         UDebt m_Debt;
-        private Android.Support.V7.Widget.Toolbar toolbar;
         EditText m_etDebtAmount;
         EditText m_etName;
         Spinner m_spDebtor;
         Spinner m_spLender;
-
-        DebtorListAdapter m_DebtorAdapter;
-        LenderListAdapter m_LenderAdapter;
 
         protected override void OnCreate(Bundle savedInstanceState)
         {
             base.OnCreate(savedInstanceState);
             SetContentView(Resource.Layout.EditDebtActivity);
 
-            toolbar = FindViewById<Android.Support.V7.Widget.Toolbar>(Resource.Id.toolbarEditDebtActivity);
+            var toolbar = FindViewById<Android.Support.V7.Widget.Toolbar>(Resource.Id.toolbarEditDebtActivity);
             SetSupportActionBar(toolbar);
             SupportActionBar.SetDisplayHomeAsUpEnabled(true);
             SupportActionBar.SetDisplayShowHomeEnabled(true);
@@ -49,89 +44,135 @@ namespace share
 
             InitializeUObject();
         }
-        public override bool OnOptionsItemSelected(IMenuItem item)
-        {
-            if (item.ItemId == Android.Resource.Id.Home)
-            {
-                Finish();
-            }
 
-            return base.OnOptionsItemSelected(item);
+        protected override void StartCreateLocal()
+        {
+            int uGroupId = Intent.GetIntExtra("Group_ID", 0);
+
+            m_Debt = new UDebt();
+            m_Debt.UGroupId = uGroupId;
+            SupportActionBar.Title = "Добавить долг";
+            
+            var debtorItems = Server.LoadMemberList(uGroupId);
+            var lenderItems = Server.LoadMemberList(uGroupId);
+            m_spDebtor.Adapter = new DebtorListAdapter(this, debtorItems.ToArray());
+            m_spLender.Adapter = new LenderListAdapter(this, lenderItems.ToArray());
         }
-        private void InitializeUObject()
+
+        protected override void StartCreateInternet()
         {
-            int groupId = Intent.GetIntExtra("Group_ID", -2);
+            int uGroupId = Intent.GetIntExtra("Group_ID", 0);
 
-            var debtorItems = Controller.LoadMemberList(groupId);
-            var lenderItems = Controller.LoadMemberList(groupId);
+            m_Debt = new UDebt();
+            m_Debt.UGroupId = uGroupId;
+            SupportActionBar.Title = "Добавить долг";
 
-            m_DebtorAdapter = new DebtorListAdapter(this, debtorItems.ToArray());
-            m_LenderAdapter = new LenderListAdapter(this, lenderItems.ToArray());
+            var debtorItems = Client.LoadMemberList(uGroupId);
+            var lenderItems = Client.LoadMemberList(uGroupId);
+            m_spDebtor.Adapter = new DebtorListAdapter(this, debtorItems.ToArray());
+            m_spLender.Adapter = new LenderListAdapter(this, lenderItems.ToArray());
+        }
 
-            m_spDebtor.Adapter = m_DebtorAdapter;
-            m_spLender.Adapter = m_LenderAdapter;
+        protected override void StartEditLocal()
+        {
+            int uGroupId = Intent.GetIntExtra("Group_ID", 0);
 
-            m_ID = Intent.GetIntExtra("ID", -2);
-            if (m_ID < 0)
+            m_Debt = Server.LoadObjectDetails<UDebt>(m_Key);
+            m_etName.Text = m_Debt.Name;
+            m_etDebtAmount.Text = m_Debt.Amount.ToString();
+            SupportActionBar.Title = m_Debt.Name;
+            
+            var debtorItems = Server.LoadMemberList(uGroupId);
+            var lenderItems = Server.LoadMemberList(uGroupId);
+            m_spDebtor.Adapter = new DebtorListAdapter(this, debtorItems.ToArray());
+            m_spLender.Adapter = new LenderListAdapter(this, lenderItems.ToArray());
+
+            for (int position = 0; position < m_spDebtor.Adapter.Count; position++)
             {
-                m_Debt = new UDebt();
-                m_Debt.LocalId = -1;
-                m_Debt.UGroupId = groupId;
-                SupportActionBar.Title = "Добавить долг";
-            }
-            else
-            {
-                m_Debt = Controller.LoadObjectDetails<UDebt>(m_ID);
-                m_etName.Text = m_Debt.Name;
-                m_etDebtAmount.Text = m_Debt.Amount.ToString();
-                SupportActionBar.Title = m_Debt.Name;
-
-                for (int position = 0; position < m_DebtorAdapter.Count; position++)
+                if (m_spDebtor.Adapter.GetItemId(position) == m_Debt.DebtorId)
                 {
-                    if (m_DebtorAdapter.GetItemId(position) == m_Debt.DebtorUMemberId)
-                    {
-                        m_spDebtor.SetSelection(position);
-                        break;
-                    }
-                }
-
-                for (int position = 0; position < m_LenderAdapter.Count; position++)
-                {
-                    if (m_LenderAdapter.GetItemId(position) == m_Debt.LenderUMemberId)
-                    {
-                        m_spLender.SetSelection(position);
-                        break;
-                    }
+                    m_spDebtor.SetSelection(position);
+                    break;
                 }
             }
+
+            for (int position = 0; position < m_spLender.Adapter.Count; position++)
+            {
+                if (m_spLender.Adapter.GetItemId(position) == m_Debt.LenderId)
+                {
+                    m_spLender.SetSelection(position);
+                    break;
+                }
+            }
         }
 
-        private void BtnCancel_Click(object sender, EventArgs e)
+        protected override void StartEditInternet()
         {
-            SetResult(Android.App.Result.Canceled);
-            Finish();
+            int uGroupId = Intent.GetIntExtra("Group_ID", 0);
+
+            m_Debt = Client.LoadObjectDetails<UDebt>(m_Key);
+            m_etName.Text = m_Debt.Name;
+            m_etDebtAmount.Text = m_Debt.Amount.ToString();
+            SupportActionBar.Title = m_Debt.Name;
+            
+            var debtorItems = Client.LoadMemberList(uGroupId);
+            var lenderItems = Client.LoadMemberList(uGroupId);
+            m_spDebtor.Adapter = new DebtorListAdapter(this, debtorItems.ToArray());
+            m_spLender.Adapter = new LenderListAdapter(this, lenderItems.ToArray());
+
+            for (int position = 0; position < m_spDebtor.Adapter.Count; position++)
+            {
+                if (m_spDebtor.Adapter.GetItemId(position) == m_Debt.DebtorId)
+                {
+                    m_spDebtor.SetSelection(position);
+                    break;
+                }
+            }
+
+            for (int position = 0; position < m_spLender.Adapter.Count; position++)
+            {
+                if (m_spLender.Adapter.GetItemId(position) == m_Debt.LenderId)
+                {
+                    m_spLender.SetSelection(position);
+                    break;
+                }
+            }
         }
 
-        private void BtnOK_Click(object sender, EventArgs e)
+        protected override void FinishCreateLocal()
         {
             m_Debt.Name = m_etName.Text;
-
             m_Debt.Amount = Convertors.StringToDouble(m_etDebtAmount.Text);
-            m_Debt.DebtorUMemberId = (int)(m_spDebtor.SelectedItemId);
-            m_Debt.LenderUMemberId = (int)(m_spLender.SelectedItemId);
-
-            if (m_Debt.LocalId < 0)
-            {
-                Controller.CreateObject(m_Debt);
-            }
-            else
-            {
-                Controller.UpdateObject(m_Debt);
-            }
-
-            SetResult(Android.App.Result.Ok);
-            Finish();
+            m_Debt.DebtorId = (int)(m_spDebtor.SelectedItemId);
+            m_Debt.LenderId = (int)(m_spLender.SelectedItemId);
+            Server.CreateObject(m_Debt);
         }
-        
+
+        protected override void FinishCreateInternet()
+        {
+            m_Debt.Name = m_etName.Text;
+            m_Debt.Amount = Convertors.StringToDouble(m_etDebtAmount.Text);
+            m_Debt.DebtorId = (int)(m_spDebtor.SelectedItemId);
+            m_Debt.LenderId = (int)(m_spLender.SelectedItemId);
+            Client.CreateObject(m_Debt);
+        }
+
+        protected override void FinishEditLocal()
+        {
+            m_Debt.Name = m_etName.Text;
+            m_Debt.Amount = Convertors.StringToDouble(m_etDebtAmount.Text);
+            m_Debt.DebtorId = (int)(m_spDebtor.SelectedItemId);
+            m_Debt.LenderId = (int)(m_spLender.SelectedItemId);
+            Server.UpdateObject(m_Debt);
+        }
+
+        protected override void FinishEditInternet()
+        {
+            m_Debt.Name = m_etName.Text;
+            m_Debt.Amount = Convertors.StringToDouble(m_etDebtAmount.Text);
+            m_Debt.DebtorId = (int)(m_spDebtor.SelectedItemId);
+            m_Debt.LenderId = (int)(m_spLender.SelectedItemId);
+            Client.UpdateObject(m_Debt);
+        }
     }
 }

@@ -1,16 +1,12 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
-using Android.Content;
 using Android.OS;
-using Android.Runtime;
-using Android.Util;
 using Android.Views;
 using Android.Widget;
-using Android.Support.Design.Widget;
+using Android.Content;
 using Android.Support.V4.App;
+using Android.Support.Design.Widget;
 
 namespace share
 {
@@ -18,12 +14,7 @@ namespace share
     {
         private int m_GroupId;
         private int m_EventId;
-        private int m_GlobalId;
-
-        FloatingActionButton Fab { get; set; }
-
-        Type m_ListItemActivity = typeof(EditMemberActivity);
-        Type m_EditItemActivity = typeof(EditMemberActivity);
+        private int m_EditMode = EditMode.itUnexpected;
 
         MemberListAdapter m_ListAdapter;
         public override void OnActivityCreated(Bundle savedInstanceState)
@@ -35,26 +26,27 @@ namespace share
             InitializeConextMenu();
         }
 
-
         private void Refresh()
         {
-            m_GroupId = Arguments.GetInt("Group_ID", -2);
-            m_EventId = Arguments.GetInt("Event_ID", -2);
-            m_GlobalId = Arguments.GetInt("Global_ID", -2);
+            m_GroupId = Arguments.GetInt("Group_ID", 0);
+            m_EventId = Arguments.GetInt("Event_ID", 0);
+            m_EditMode = Arguments.GetInt("EditMode", EditMode.itUnexpected);
 
             List<UMember> items;
-            if(m_GlobalId > 0)
+            if (m_EditMode == EditMode.itEditInternet)
             {
-                Client client = new Client();
-                items = client.LoadMemberList(m_GlobalId);
-            }
-            else if (m_EventId > 0)
-            {
-                items = Controller.LoadMemberList(eventId: m_EventId);
+                items = Client.LoadMemberList(m_GroupId);
             }
             else
             {
-                items = Controller.LoadMemberList(groupId: m_GroupId);
+                if (m_EventId > 0)
+                {
+                    items = Server.LoadMemberList(eventId: m_EventId);
+                }
+                else
+                {
+                    items = Server.LoadMemberList(groupId: m_GroupId);
+                }
             }
             m_ListAdapter = new MemberListAdapter(Activity, items.ToArray());
             ListAdapter = m_ListAdapter;
@@ -67,8 +59,8 @@ namespace share
 
         private void InitializeFab()
         {
-            Fab = View.FindViewById<FloatingActionButton>(Resource.Id.fabMemberListFragment);
-            Fab.Click += Fab_Click;
+            var fab = View.FindViewById<FloatingActionButton>(Resource.Id.fabMemberListFragment);
+            fab.Click += Fab_Click;
         }
 
         public override View OnCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
@@ -79,9 +71,9 @@ namespace share
 
         public override void OnListItemClick(ListView lValue, View vValue, int position, long id)
         {
-            var intent = new Intent(Activity, m_EditItemActivity);
-            intent.PutExtra("ID", (int)id);
-            intent.PutExtra("Event_ID", m_EventId);
+            var intent = new Intent(Activity, typeof(EditMemberActivity));
+            intent.PutExtra("Key", (int)id);
+            intent.PutExtra("EditMode", m_EditMode);
             StartActivityForResult(intent, 0);
         }
 
@@ -91,10 +83,17 @@ namespace share
         }
         private void Fab_Click(object sender, EventArgs e)
         {
-            Intent intent = new Intent(Activity, m_EditItemActivity);
-            intent.PutExtra("ID", -1);
+            Intent intent = new Intent(Activity, typeof(EditMemberActivity));
             intent.PutExtra("Group_ID", m_GroupId);
             intent.PutExtra("Event_ID", m_EventId);
+            if(m_EditMode == EditMode.itEditLocal)
+            {
+                intent.PutExtra("EditMode", EditMode.itCreateLocal);
+            }
+            else
+            {
+                intent.PutExtra("EditMode", EditMode.itCreateInternet);
+            }
             StartActivityForResult(intent, 0);
         }
         public override void OnCreateContextMenu(IContextMenu menu, View v, IContextMenuContextMenuInfo menuInfo)
@@ -108,21 +107,26 @@ namespace share
         {
             if (item.GroupId == 1)
             {
-                AdapterView.AdapterContextMenuInfo info = item.MenuInfo as
-                        AdapterView.AdapterContextMenuInfo;
-                int id = (int)(ListView.Adapter.GetItemId(info.Position));
-
-                UObject i = m_ListAdapter[info.Position];
+                var info = item.MenuInfo as AdapterView.AdapterContextMenuInfo;
+                UObject o = m_ListAdapter[info.Position];
 
                 if (item.ItemId == 1)
                 {
-                    var intent = new Intent(Activity, m_EditItemActivity);
-                    intent.PutExtra("ID", id);
+                    var intent = new Intent(Activity, typeof(EditMemberActivity));
+                    intent.PutExtra("Key", o.Id);
+                    intent.PutExtra("EditMode", m_EditMode);
                     StartActivityForResult(intent, 1);
                 }
                 else if (item.ItemId == 2)
                 {
-                    Controller.DeleteObject(i);
+                    if (m_EditMode == EditMode.itEditInternet)
+                    {
+                        Client.DeleteObject(o);
+                    }
+                    else
+                    {
+                        Server.DeleteObject(o);
+                    }
                     Refresh();
                 }
                 return true;

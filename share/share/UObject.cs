@@ -10,7 +10,7 @@ namespace share
         public UGroup()
         {
             Table = "GROUPS";
-            Controller = "UGroups";
+            Controller = "UGroupsApi";
             EditableFields.Add("Name", null);
             EditableFields.Add("Password", null);
         }
@@ -45,11 +45,12 @@ namespace share
         }
 
         [DataMember]
-        public List<UEvent> UEvents { get; set; }
+        public string UUserId { get; set; }
 
         [DataMember]
+        public List<UEvent> UEvents { get; set; }
+        [DataMember]
         public List<UMember> UMembers { get; set; }
-
         [DataMember]
         public List<UDebt> UDebts { get; set; }
 
@@ -57,15 +58,7 @@ namespace share
         {
             get
             {
-                return "SELECT * FROM GROUPS G WHERE G.ID = " + LocalId + ";";
-            }
-        }
-
-        public override string DetailsQueryByGlobalId
-        {
-            get
-            {
-                return "SELECT * FROM GROUPS G WHERE G.Global_ID = " + Id + ";";
+                return "SELECT * FROM GROUPS G WHERE G.ID = " + Id + ";";
             }
         }
     }
@@ -75,6 +68,7 @@ namespace share
         public UEvent()
         {
             Table = "EVENT";
+            Controller = "UEventsApi";
             EditableFields.Add("Group_ID", 0);
             EditableFields.Add("EventType_ID", 0);
             EditableFields.Add("Name", null);
@@ -142,7 +136,7 @@ namespace share
         {
             get
             {
-                return "SELECT E.*, ET.Name as EventTypeName FROM EVENT E, EVENTTYPE ET WHERE E.EventType_ID = ET.ID AND E.ID = " + LocalId + ";";
+                return "SELECT E.*, ET.Name as EventTypeName FROM EVENT E, EVENTTYPE ET WHERE E.EventType_ID = ET.ID AND E.ID = " + Id + ";";
             }
         }
     }
@@ -153,6 +147,7 @@ namespace share
         public UMember()
         {
             Table = "MEMBER";
+            Controller = "UMembersApi";
             EditableFields.Add("Group_ID", 0);
             EditableFields.Add("Event_ID", 0);
             EditableFields.Add("Name", null);
@@ -207,7 +202,7 @@ namespace share
         {
             get
             {
-                return "SELECT * FROM MEMBER M WHERE M.ID = " + LocalId + ";";
+                return "SELECT * FROM MEMBER M WHERE M.ID = " + Id + ";";
             }
         }
     }
@@ -218,6 +213,7 @@ namespace share
         public UDebt()
         {
             Table = "DEBT";
+            Controller = "UDebtsApi";
             EditableFields.Add("Group_ID", 0);
             EditableFields.Add("Name", null);
             EditableFields.Add("Debtor_ID", 0);
@@ -252,7 +248,7 @@ namespace share
             }
         }
         [DataMember]
-        public int DebtorUMemberId
+        public int DebtorId
         {
             get
             {
@@ -264,7 +260,7 @@ namespace share
             }
         }
         [DataMember]
-        public int LenderUMemberId
+        public int LenderId
         {
             get
             {
@@ -309,7 +305,7 @@ namespace share
             {
                 return "SELECT D.*, MD.Name AS DebtorName, ML.Name AS LenderName FROM DEBT D, MEMBER MD, MEMBER ML WHERE " +
                         "MD.ID = D.Debtor_ID AND ML.ID = D.Lender_ID"
-                    + " AND D.ID = " + LocalId + ";";
+                    + " AND D.ID = " + Id + ";";
             }
         }
     }
@@ -320,6 +316,7 @@ namespace share
         public UBill()
         {
             Table = "BILL";
+            Controller = "UBillsApi";
             EditableFields.Add("Event_ID", 0);
             EditableFields.Add("Member_ID", 0);
             EditableFields.Add("Amount", 0.0);
@@ -374,7 +371,7 @@ namespace share
         {
             get
             {
-                return "SELECT * FROM BILL B WHERE B.ID = " + LocalId + ";";
+                return "SELECT * FROM BILL B WHERE B.ID = " + Id + ";";
             }
         }
     }
@@ -385,6 +382,7 @@ namespace share
         public UPayment()
         {
             Table = "PAYMENT";
+            Controller = "UPaymentsApi";
             EditableFields.Add("Event_ID", 0);
             EditableFields.Add("Member_ID", 0);
             EditableFields.Add("Amount", 0.0);
@@ -439,7 +437,7 @@ namespace share
         {
             get
             {
-                return "SELECT * FROM PAYMENT P WHERE P.ID = " + LocalId + ";";
+                return "SELECT * FROM PAYMENT P WHERE P.ID = " + Id + ";";
             }
         }
     }
@@ -484,21 +482,6 @@ namespace share
         {
             get
             {
-                if (EditableFields["Global_ID"] == null || EditableFields["Global_ID"] == DBNull.Value)
-                    return 0;
-
-                return Convert.ToInt32(EditableFields["Global_ID"]);
-            }
-            set
-            {
-                EditableFields["Global_ID"] = value;
-            }
-        }
-
-        public int LocalId
-        {
-            get
-            {
                 return Convert.ToInt32(EditableFields["ID"]);
             }
             set
@@ -506,16 +489,10 @@ namespace share
                 EditableFields["ID"] = value;
             }
         }
+
         public string Table { get; set; }
         public string Controller { get; set; }
         public virtual string DetailsQuery
-        {
-            get
-            {
-                return null;
-            }
-        }
-        public virtual string DetailsQueryByGlobalId
         {
             get
             {
@@ -533,19 +510,6 @@ namespace share
             ReadOnlyFields = new Dictionary<string, object>();
 
             EditableFields.Add("ID", 0);
-            EditableFields.Add("Global_ID", null);
         }
-
-        /*public T GetValue<T>(object input)
-        {
-            T defaultOutput = default(T);
-            if(typeof(T) == typeof(double))
-            {
-                string temp = input.ToString();
-                dynamic output = Convertors.StringToDouble(temp);
-                return output;
-            }
-            return defaultOutput;
-        }*/
     }
 }

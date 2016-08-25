@@ -1,27 +1,19 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
-using Android.Content;
 using Android.OS;
-using Android.Runtime;
-using Android.Util;
 using Android.Views;
 using Android.Widget;
-using Android.Support.Design.Widget;
+using Android.Content;
 using Android.Support.V4.App;
+using Android.Support.Design.Widget;
 
 namespace share
 {
     public class EventListFragment : ListFragment
     {
-        UGroup m_Group;
-
-        FloatingActionButton Fab { get; set; }
-
-        Type m_ListItemActivity = typeof(EventActivity);
-        Type m_EditItemActivity = typeof(EditEventActivity);
+        private int m_UGroupId;
+        private int m_EditMode = EditMode.itUnexpected;
 
         EventListAdapter m_ListAdapter;
         public override void OnActivityCreated(Bundle savedInstanceState)
@@ -35,24 +27,17 @@ namespace share
 
         private void Refresh()
         {
+            m_UGroupId = Arguments.GetInt("Group_ID", 0);
+            m_EditMode = Arguments.GetInt("EditMode", EditMode.itUnexpected);
+
             List<UEvent> items;
-            int groupId = Arguments.GetInt("Group_ID", 0);
-            if(groupId != 0)
+            if (m_EditMode == EditMode.itEditInternet)
             {
-                m_Group = Controller.LoadObjectDetails<UGroup>(groupId);
-                if (m_Group.Id > 0)
-                {
-                    Client client = new Client();
-                    items = client.LoadEventList(m_Group.Id);
-                }
-                else
-                {
-                    items = Controller.LoadEventList(m_Group.LocalId);
-                }
+                items = Client.LoadEventList(m_UGroupId);
             }
             else
             {
-                items = Controller.LoadEventList(0);
+                items = Server.LoadEventList(m_UGroupId);
             }
 
             m_ListAdapter = new EventListAdapter(Activity, items.ToArray());
@@ -66,8 +51,8 @@ namespace share
 
         private void InitializeFab()
         {
-            Fab = View.FindViewById<FloatingActionButton>(Resource.Id.fabEventListFragment);
-            Fab.Click += Fab_Click;
+            FloatingActionButton fab = View.FindViewById<FloatingActionButton>(Resource.Id.fabEventListFragment);
+            fab.Click += Fab_Click;
         }
 
         public override View OnCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
@@ -76,27 +61,11 @@ namespace share
             return view;
         }
 
-        public override void OnListItemClick(ListView lValue, View vValue, int position, long id)
-        {
-            var intent = new Intent(Activity, typeof(EventActivity));
-            intent.PutExtra("ID", (int)id);
-            if (m_Group != null)
-                intent.PutExtra("Group_ID", m_Group.Id);
-            StartActivity(intent);
-        }
-
         private void InitializeConextMenu()
         {
             RegisterForContextMenu(ListView);
         }
-        private void Fab_Click(object sender, EventArgs e)
-        {
-            Intent intent = new Intent(Activity, m_EditItemActivity);
-            intent.PutExtra("ID", -1);
-            if (m_Group != null)
-                intent.PutExtra("Group_ID", m_Group.Id);
-            StartActivityForResult(intent, 0);
-        }
+
         public override void OnCreateContextMenu(IContextMenu menu, View v, IContextMenuContextMenuInfo menuInfo)
         {
             base.OnCreateContextMenu(menu, v, menuInfo);
@@ -105,48 +74,67 @@ namespace share
             menu.Add(0, 2, 0, "Удалить");
         }
 
+        public override void OnActivityResult(int requestCode, int resultCode, Intent data)
+        {
+            base.OnActivityResult(requestCode, resultCode, data);
+            if (resultCode == -1)
+            {
+                Refresh();
+            }
+        }
+
+        public override void OnListItemClick(ListView lValue, View vValue, int position, long id)
+        {
+            var intent = new Intent(Activity, typeof(EventActivity));
+            intent.PutExtra("Key", (int)id);
+            intent.PutExtra("EditMode", m_EditMode);
+            StartActivity(intent);
+        }
+        
+        private void Fab_Click(object sender, EventArgs e)
+        {
+            Intent intent = new Intent(Activity, typeof(EditEventActivity));
+            intent.PutExtra("Group_ID", m_UGroupId);
+            if(m_EditMode == EditMode.itEditInternet)
+            {
+                intent.PutExtra("EditMode", EditMode.itCreateInternet);
+            }
+            else
+            {
+                intent.PutExtra("EditMode", EditMode.itCreateLocal);
+            }
+            StartActivityForResult(intent, 0);
+        }
+
         public override bool OnContextItemSelected(IMenuItem item)
         {
             if (item.GroupId == 0)
             {
-                AdapterView.AdapterContextMenuInfo info = item.MenuInfo as
-                    AdapterView.AdapterContextMenuInfo;
-                int id = (int)(ListView.Adapter.GetItemId(info.Position));
-
-                UObject i = m_ListAdapter[info.Position];
+                var info = item.MenuInfo as AdapterView.AdapterContextMenuInfo;
+                UObject o = m_ListAdapter[info.Position];
 
                 if (item.ItemId == 1)
                 {
-                    var intent = new Intent(Activity, m_EditItemActivity);
-                    intent.PutExtra("ID", id);
-                    if (m_Group != null)
-                        intent.PutExtra("Group_ID", m_Group.Id);
+                    var intent = new Intent(Activity, typeof(EditEventActivity));
+                    intent.PutExtra("Key", o.Id);
+                    intent.PutExtra("EditMode", m_EditMode);
                     StartActivityForResult(intent, 1);
                 }
                 else if (item.ItemId == 2)
                 {
-                    if (i.Id > 0)
+                    if (m_EditMode == EditMode.itEditInternet)
                     {
-                        Client.DeleteObject(i);
+                        Client.DeleteObject(o);
                     }
                     else
                     {
-                        Controller.DeleteObject(i);
+                        Server.DeleteObject(o);
                     }
                     Refresh();
                 }
                 return true;
             }
             return false;
-        }
-
-        public override void OnActivityResult(int requestCode, int resultCode, Intent data)
-        {
-            base.OnActivityResult(requestCode, resultCode, data);
-            if(resultCode == -1)
-            {
-                Refresh();
-            }
         }
     }
 }

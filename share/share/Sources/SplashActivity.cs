@@ -21,7 +21,7 @@ namespace share
 
             Task startupWork = new Task(() =>
             {
-                Controller.Initialize();
+                Server.Initialize();
             });
 
             startupWork.ContinueWith(t =>

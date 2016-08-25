@@ -3,78 +3,78 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
-  <android.support.design.widget.AppBarLayout
-      android:layout_width="match_parent"
-      android:layout_height="wrap_content"
-      android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
-    <android.support.v7.widget.Toolbar
-        android:id="@+id/toolbarLoginActivity"
-        android:layout_width="match_parent"
-        android:layout_height="?attr/actionBarSize"
-        android:background="?attr/colorPrimary"
-        app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
-  </android.support.design.widget.AppBarLayout>
-  <LinearLayout
-      android:orientation="vertical"
-      android:layout_width="match_parent"
-      android:layout_height="match_parent"
-      android:layout_marginLeft="10dp"
-      android:layout_marginRight="10dp"
-      android:layout_marginTop="20dp"
-      app:layout_behavior="@string/appbar_scrolling_view_behavior">
-    <LinearLayout
+    <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="4dp">
-      <TextView
-          android:layout_height="wrap_content"
-          android:layout_width="0dp"
-          android:layout_weight="1"
-          android:textSize="20sp"
-          android:textStyle="bold"
-          android:text="Name: " />
-      <EditText
-          android:id="@+id/etLoginName"
-          android:layout_height="wrap_content"
-          android:layout_width="0dp"
-          android:layout_weight="1"
-          android:textSize="20sp" />
-    </LinearLayout>
+        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbarLoginActivity"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="?attr/colorPrimary"
+            app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
+    </android.support.design.widget.AppBarLayout>
     <LinearLayout
+        android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:layout_marginLeft="4dp">
-      <TextView
-          android:layout_height="wrap_content"
-          android:layout_width="0dp"
-          android:layout_weight="1"
-          android:textStyle="bold"
-          android:textSize="20sp"
-          android:text="Password: " />
-      <EditText
-          android:id="@+id/etLoginPassword"
-          android:layout_height="wrap_content"
-          android:layout_width="0dp"
-          android:layout_weight="1"
-          android:textSize="20sp" />
+        android:layout_height="match_parent"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginTop="20dp"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="4dp">
+            <TextView
+                android:layout_height="wrap_content"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                android:text="Почта: " />
+            <EditText
+                android:id="@+id/etEmail"
+                android:layout_height="wrap_content"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:textSize="20sp" />
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:layout_marginLeft="4dp">
+            <TextView
+                android:layout_height="wrap_content"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:textStyle="bold"
+                android:textSize="20sp"
+                android:text="Пароль: " />
+            <EditText
+                android:id="@+id/etPassword"
+                android:layout_height="wrap_content"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:textSize="20sp" />
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp">
+            <Button
+                android:id="@+id/btnOK"
+                android:layout_height="wrap_content"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:text="@string/ok" />
+            <Button
+                android:id="@+id/btnCancel"
+                android:layout_height="wrap_content"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:text="@string/cancel" />
+        </LinearLayout>
     </LinearLayout>
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="20dp">
-      <Button
-          android:id="@+id/btnLoginOK"
-          android:layout_height="wrap_content"
-          android:layout_width="0dp"
-          android:layout_weight="1"
-          android:text="@string/ok" />
-      <Button
-          android:id="@+id/btnLoginCancel"
-          android:layout_height="wrap_content"
-          android:layout_width="0dp"
-          android:layout_weight="1"
-          android:text="@string/cancel" />
-    </LinearLayout>
-  </LinearLayout>
 </android.support.design.widget.CoordinatorLayout>

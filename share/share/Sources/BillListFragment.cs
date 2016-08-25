@@ -1,30 +1,18 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-using Android.Content;
 using Android.OS;
-using Android.Runtime;
-using Android.Util;
 using Android.Views;
 using Android.Widget;
-using Android.Support.Design.Widget;
+using Android.Content;
 using Android.Support.V4.App;
+using Android.Support.Design.Widget;
 
 namespace share
 {
     public class BillListFragment : ListFragment
     {
-        private int m_GroupId;
-        private int m_EventId;
-        private int m_GlobalId;
-        private UEvent m_Event;
-
-        FloatingActionButton Fab { get; set; }
-
-        Type m_ListItemActivity = typeof(EditBillActivity);
-        Type m_EditItemActivity = typeof(EditBillActivity);
+        private int m_UEventId;
+        private int m_EditMode = EditMode.itUnexpected;
 
         BillListAdapter m_ListAdapter;
         public override void OnCreate(Bundle savedInstanceState)
@@ -34,24 +22,22 @@ namespace share
 
         public void Refresh()
         {
-            m_GroupId = Arguments.GetInt("Group_ID", -2);
-            m_EventId = Arguments.GetInt("Event_ID", -2);
-            m_GlobalId = Arguments.GetInt("Global_ID", -2);
+            m_UEventId = Arguments.GetInt("Event_ID", 0);
+            m_EditMode = Arguments.GetInt("EditMode", EditMode.itUnexpected);
 
-            m_Event = Controller.LoadObjectDetails<UEvent>(m_EventId);
+            UEvent uevent = Server.LoadObjectDetails<UEvent>(m_UEventId);
 
             List<UBill> items;
-            if (m_GlobalId > 0)
+            if (m_EditMode == EditMode.itEditInternet)
             {
-                Client client = new Client();
-                items = client.LoadBillList(m_GlobalId);
+                items = Client.LoadBillList(m_UEventId);
             }
             else
             {
-                items = Controller.LoadBillList(m_EventId);
+                items = Server.LoadBillList(m_UEventId);
             }
 
-            m_ListAdapter = new BillListAdapter(Activity, items.ToArray(), m_Event.UEventTypeId != UEventType.tPartly);
+            m_ListAdapter = new BillListAdapter(Activity, items.ToArray(), uevent.UEventTypeId != UEventType.tPartly);
             ListAdapter = m_ListAdapter;
         }
 
@@ -70,8 +56,8 @@ namespace share
 
         private void InitializeFab()
         {
-            Fab = View.FindViewById<FloatingActionButton>(Resource.Id.fabBillListFragment);
-            Fab.Click += Fab_Click;
+            var fab = View.FindViewById<FloatingActionButton>(Resource.Id.fabBillListFragment);
+            fab.Click += Fab_Click;
         }
 
         public override View OnCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
@@ -83,9 +69,8 @@ namespace share
         public override void OnListItemClick(ListView lValue, View vValue, int position, long id)
         {
             var intent = new Intent(Activity, typeof(EditBillActivity));
-            intent.PutExtra("ID", (int)id);
-            intent.PutExtra("Group_ID", m_GroupId);
-            intent.PutExtra("Event_ID", m_EventId);
+            intent.PutExtra("Key", (int)id);
+            intent.PutExtra("EditMode", m_EditMode);
             StartActivityForResult(intent, 0);
         }
 
@@ -96,10 +81,16 @@ namespace share
 
         private void Fab_Click(object sender, EventArgs e)
         {
-            Intent intent = new Intent(Activity, m_EditItemActivity);
-            intent.PutExtra("ID", -1);
-            intent.PutExtra("Group_ID", m_GroupId);
-            intent.PutExtra("Event_ID", m_EventId);
+            Intent intent = new Intent(Activity, typeof(EditBillActivity));
+            intent.PutExtra("Event_ID", m_UEventId);
+            if (m_EditMode == EditMode.itEditInternet)
+            {
+                intent.PutExtra("EditMode", EditMode.itCreateInternet);
+            }
+            else
+            {
+                intent.PutExtra("EditMode", EditMode.itCreateLocal);
+            }
             StartActivityForResult(intent, 0);
         }
 
@@ -113,25 +104,28 @@ namespace share
 
         public override bool OnContextItemSelected(IMenuItem item)
         {
-            if (item.GroupId == 2)
+            if (item.GroupId == 1)
             {
-                AdapterView.AdapterContextMenuInfo info = item.MenuInfo as
-                    AdapterView.AdapterContextMenuInfo;
-                int id = (int)(ListView.Adapter.GetItemId(info.Position));
-
-                UObject i = m_ListAdapter[info.Position];
+                var info = item.MenuInfo as AdapterView.AdapterContextMenuInfo;
+                UObject o = m_ListAdapter[info.Position];
 
                 if (item.ItemId == 1)
                 {
-                    var intent = new Intent(Activity, m_EditItemActivity);
-                    intent.PutExtra("ID", id);
-                    intent.PutExtra("Group_ID", m_GroupId);
-                    intent.PutExtra("Event_ID", m_EventId);
+                    var intent = new Intent(Activity, typeof(EditBillActivity));
+                    intent.PutExtra("Key", o.Id);
+                    intent.PutExtra("EditMode", m_EditMode);
                     StartActivityForResult(intent, 1);
                 }
                 else if (item.ItemId == 2)
                 {
-                    Controller.DeleteObject(i);
+                    if (m_EditMode == EditMode.itEditInternet)
+                    {
+                        Client.DeleteObject(o);
+                    }
+                    else
+                    {
+                        Server.DeleteObject(o);
+                    }
                     Refresh();
                 }
                 return true;

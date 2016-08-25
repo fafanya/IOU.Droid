@@ -8,7 +8,7 @@
         android:layout_height="wrap_content"
         android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
         <android.support.v7.widget.Toolbar
-            android:id="@+id/toolbarSelectEditGroupActivity"
+            android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             android:background="?attr/colorPrimary"
@@ -25,35 +25,56 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="20dp">
-            <Button
-                android:id="@+id/btnSelectInternetGroup"
+            android:layout_marginLeft="4dp">
+            <TextView
                 android:layout_height="wrap_content"
                 android:layout_width="0dp"
                 android:layout_weight="1"
-                android:text="Новая в интернете" />
+                android:textSize="20sp"
+                android:textStyle="bold"
+                android:text="ID группы: " />
+            <EditText
+                android:id="@+id/etId"
+                android:layout_height="wrap_content"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:textSize="20sp" />
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:layout_marginLeft="4dp">
+            <TextView
+                android:layout_height="wrap_content"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:textStyle="bold"
+                android:textSize="20sp"
+                android:text="Пароль: " />
+            <EditText
+                android:id="@+id/etPassword"
+                android:layout_height="wrap_content"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:textSize="20sp" />
         </LinearLayout>
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp">
             <Button
-                android:id="@+id/btnSelectCreateGroup"
+                android:id="@+id/btnOK"
                 android:layout_height="wrap_content"
                 android:layout_width="0dp"
                 android:layout_weight="1"
-                android:text="Новая в телефоне" />
-        </LinearLayout>
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="20dp">
+                android:text="@string/ok" />
             <Button
-                android:id="@+id/btnSelectImportGroup"
+                android:id="@+id/btnCancel"
                 android:layout_height="wrap_content"
                 android:layout_width="0dp"
                 android:layout_weight="1"
-                android:text="Присоединиться к группе в интернете" />
+                android:text="@string/cancel" />
         </LinearLayout>
     </LinearLayout>
 </android.support.design.widget.CoordinatorLayout>

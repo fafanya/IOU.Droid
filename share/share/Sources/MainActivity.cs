@@ -1,14 +1,10 @@
-using System.Collections.Generic;
-
-using Android.Content;
 using Android.OS;
-
-using Android.Support.V4.App;
+using Android.Views;
+using Android.Content;
 using Android.Support.V7.App;
+using Android.Support.V4.View;
 using Android.Support.V7.Widget;
 using Android.Support.Design.Widget;
-using Android.Support.V4.View;
-using Android.Views;
 
 namespace share
 {
@@ -32,7 +28,15 @@ namespace share
             SupportActionBar.SetHomeAsUpIndicator(Resource.Drawable.ic_menu);
             SupportActionBar.SetDisplayHomeAsUpEnabled(true);
 
-            SupportActionBar.Title = "Менеджер долгов";
+            string email = Server.GetCurrentUserEmail();
+            if (string.IsNullOrWhiteSpace(email))
+            {
+                SupportActionBar.Title = "Менеджер долгов";
+            }
+            else
+            {
+                SupportActionBar.Title = email;
+            }
 
             m_DrawerLayout = FindViewById<Android.Support.V4.Widget.DrawerLayout>(Resource.Id.drawer_layout);
 
@@ -72,7 +76,7 @@ namespace share
 
         private void InitializeApp()
         {
-            Controller.Initialize();
+            Server.Initialize();
         }
 
         public override bool OnOptionsItemSelected(IMenuItem item)
@@ -84,6 +88,20 @@ namespace share
                     return true;
             }
             return base.OnOptionsItemSelected(item);
+        }
+
+        protected override void OnResume()
+        {
+            base.OnResume();
+            string email = Server.GetCurrentUserEmail();
+            if (string.IsNullOrWhiteSpace(email))
+            {
+                SupportActionBar.Title = "Менеджер долгов";
+            }
+            else
+            {
+                SupportActionBar.Title = email;
+            }
         }
 
         private void setupViewPager(ViewPager viewPager)

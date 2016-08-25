@@ -1,24 +1,16 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-using Android.Support.V7.App;
-using Android.Content;
 using Android.OS;
-using Android.Runtime;
+using Android.App;
 using Android.Views;
 using Android.Widget;
+using Android.Content;
+using System.Collections.Generic;
 
 namespace share
 {
-    [Android.App.Activity(Label = "Событие", Theme = "@style/MyTheme")]
-    public class EditEventActivity : AppCompatActivity
+    [Activity(Label = "Событие", Theme = "@style/MyTheme")]
+    public class EditEventActivity : EditActivityEx
     {
-        int m_ID;
         UEvent m_Event;
-        UGroup m_Group;
-        private Android.Support.V7.Widget.Toolbar toolbar;
         EditText m_etName;
         Spinner m_spEventType;
         TextView m_twHalfCommon;
@@ -29,7 +21,7 @@ namespace share
             base.OnCreate(savedInstanceState);
             SetContentView(Resource.Layout.EditEventActivity);
 
-            toolbar = FindViewById<Android.Support.V7.Widget.Toolbar>(Resource.Id.toolbarEditEventActivity);
+            var toolbar = FindViewById<Android.Support.V7.Widget.Toolbar>(Resource.Id.toolbarEditEventActivity);
             SetSupportActionBar(toolbar);
             SupportActionBar.SetDisplayHomeAsUpEnabled(true);
             SupportActionBar.SetDisplayShowHomeEnabled(true);
@@ -45,55 +37,23 @@ namespace share
 
             InitializeUObject();
         }
-        public override bool OnOptionsItemSelected(IMenuItem item)
+
+        protected override void StartCreateLocal()
         {
-            if (item.ItemId == Android.Resource.Id.Home)
+            int groupId = Intent.GetIntExtra("Group_ID", 0);
+            m_Event = new UEvent();
+            m_Event.UGroupId = groupId;
+            m_Event.UEventTypeId = 1;
+            SupportActionBar.Title = "Новое событие";
+
+            List<UEventType> items = Server.LoadEventTypeList();
+            if (m_Event.UGroupId == 0)
             {
-                Finish();
-            }
-            return base.OnOptionsItemSelected(item);
-        }
-        private void BtnCancel_Click(object sender, EventArgs e)
-        {
-            SetResult(Android.App.Result.Canceled);
-            Finish();
-        }
-
-        private void InitializeUObject()
-        {
-            m_ID = Intent.GetIntExtra("ID", -2);
-
-            int groupId = Intent.GetIntExtra("Group_ID", -2);
-            if(groupId != 0)
-            {
-                m_Group = Client.UploadObject<UGroup>(groupId);
-            }
-
-            List<UEventType> items = Controller.LoadEventTypeList();
-
-            if (groupId == 0)
-            {
-                items.RemoveAll(x => x.LocalId == 3);
+                items.RemoveAll(x => x.Id == 3);
                 m_twHalfCommon.Visibility = ViewStates.Gone;
             }
-
             m_EventTypeListAdapter = new EventTypeListAdapter(this, items.ToArray());
             m_spEventType.Adapter = m_EventTypeListAdapter;
-
-            if (m_ID < 0)
-            {
-                m_Event = new UEvent();
-                m_Event.LocalId = -1;
-                m_Event.UGroupId = groupId;
-                m_Event.UEventTypeId = 1;
-                SupportActionBar.Title = "Новое событие";
-            }
-            else
-            {
-                m_Event = Controller.LoadObjectDetails<UEvent>(m_ID);
-                m_etName.Text = m_Event.Name;
-                SupportActionBar.Title = m_Event.Name;
-            }
 
             for (int position = 0; position < m_EventTypeListAdapter.Count; position++)
             {
@@ -105,24 +65,99 @@ namespace share
             }
         }
 
-        
+        protected override void StartCreateInternet()
+        {
+            int groupId = Intent.GetIntExtra("Group_ID", 0);
+            m_Event = new UEvent();
+            m_Event.UGroupId = groupId;
+            m_Event.UEventTypeId = 1;
+            SupportActionBar.Title = "Новое событие";
 
-        private void BtnOK_Click(object sender, EventArgs e)
+            List<UEventType> items = Server.LoadEventTypeList();
+            m_EventTypeListAdapter = new EventTypeListAdapter(this, items.ToArray());
+            m_spEventType.Adapter = m_EventTypeListAdapter;
+
+            for (int position = 0; position < m_EventTypeListAdapter.Count; position++)
+            {
+                if (m_EventTypeListAdapter.GetItemId(position) == m_Event.UEventTypeId)
+                {
+                    m_spEventType.SetSelection(position);
+                    break;
+                }
+            }
+        }
+
+        protected override void StartEditLocal()
+        {
+            m_Event = Server.LoadObjectDetails<UEvent>(m_Key);
+            m_etName.Text = m_Event.Name;
+            SupportActionBar.Title = m_Event.Name;
+
+            List<UEventType> items = Server.LoadEventTypeList();
+            if (m_Event.UGroupId == 0)
+            {
+                items.RemoveAll(x => x.Id == 3);
+                m_twHalfCommon.Visibility = ViewStates.Gone;
+            }
+            m_EventTypeListAdapter = new EventTypeListAdapter(this, items.ToArray());
+            m_spEventType.Adapter = m_EventTypeListAdapter;
+
+            for (int position = 0; position < m_EventTypeListAdapter.Count; position++)
+            {
+                if (m_EventTypeListAdapter.GetItemId(position) == m_Event.UEventTypeId)
+                {
+                    m_spEventType.SetSelection(position);
+                    break;
+                }
+            }
+        }
+
+        protected override void StartEditInternet()
+        {
+            m_Event = Client.LoadObjectDetails<UEvent>(m_Key);
+            m_etName.Text = m_Event.Name;
+            SupportActionBar.Title = m_Event.Name;
+
+            List<UEventType> items = Server.LoadEventTypeList();
+            m_EventTypeListAdapter = new EventTypeListAdapter(this, items.ToArray());
+            m_spEventType.Adapter = m_EventTypeListAdapter;
+
+            for (int position = 0; position < m_EventTypeListAdapter.Count; position++)
+            {
+                if (m_EventTypeListAdapter.GetItemId(position) == m_Event.UEventTypeId)
+                {
+                    m_spEventType.SetSelection(position);
+                    break;
+                }
+            }
+        }
+
+        protected override void FinishCreateLocal()
         {
             m_Event.Name = m_etName.Text;
             m_Event.UEventTypeId = (int)(m_spEventType.SelectedItemId);
+            Server.CreateObject(m_Event);
+        }
 
-            if (m_Event.LocalId < 0)
-            {
-                Controller.CreateObject(m_Event);
-            }
-            else
-            {
-                Controller.UpdateObject(m_Event);
-            }
+        protected override void FinishCreateInternet()
+        {
+            m_Event.Name = m_etName.Text;
+            m_Event.UEventTypeId = (int)(m_spEventType.SelectedItemId);
+            Client.CreateObject(m_Event);
+        }
 
-            SetResult(Android.App.Result.Ok);
-            Finish();
+        protected override void FinishEditLocal()
+        {
+            m_Event.Name = m_etName.Text;
+            m_Event.UEventTypeId = (int)(m_spEventType.SelectedItemId);
+            Server.UpdateObject(m_Event);
+        }
+
+        protected override void FinishEditInternet()
+        {
+            m_Event.Name = m_etName.Text;
+            m_Event.UEventTypeId = (int)(m_spEventType.SelectedItemId);
+            Client.UpdateObject(m_Event);
         }
     }
 }

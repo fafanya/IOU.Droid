@@ -16,25 +16,25 @@ namespace share
     public class RegistrationActivity : AppCompatActivity
     {
         Android.Support.V7.Widget.Toolbar m_Toolbar;
-        EditText m_etName;
+        EditText m_etEmail;
         EditText m_etRegPassword;
         EditText m_etConfirmRegPassword;
 
         protected override void OnCreate(Bundle savedInstanceState)
         {
             base.OnCreate(savedInstanceState);
-            SetContentView(Resource.Layout.EditGroupActivity);
+            SetContentView(Resource.Layout.RegistrationActivity);
 
             m_Toolbar = FindViewById<Android.Support.V7.Widget.Toolbar>(Resource.Id.toolbarRegistrationActivity);
             SetSupportActionBar(m_Toolbar);
             SupportActionBar.SetDisplayHomeAsUpEnabled(true);
             SupportActionBar.SetDisplayShowHomeEnabled(true);
 
-            m_etName = FindViewById<EditText>(Resource.Id.etGroupName);
-            m_etRegPassword = FindViewById<EditText>(Resource.Id.etRegPassword);
-            m_etConfirmRegPassword = FindViewById<EditText>(Resource.Id.etConfirmRegPassword);
-            Button btnOK = FindViewById<Button>(Resource.Id.btnGroupOK);
-            Button btnCancel = FindViewById<Button>(Resource.Id.btnGroupCancel);
+            m_etEmail = FindViewById<EditText>(Resource.Id.etEmail);
+            m_etRegPassword = FindViewById<EditText>(Resource.Id.etPassword);
+            m_etConfirmRegPassword = FindViewById<EditText>(Resource.Id.etConfirmPassword);
+            Button btnOK = FindViewById<Button>(Resource.Id.btnOK);
+            Button btnCancel = FindViewById<Button>(Resource.Id.btnCancel);
 
             btnOK.Click += BtnOK_Click;
             btnCancel.Click += BtnCancel_Click;
@@ -56,12 +56,11 @@ namespace share
         private void BtnOK_Click(object sender, EventArgs e)
         {
             RegisterViewModel m = new RegisterViewModel();
-            m.Email = m_etName.Text;
-            m.Password = m_etRegPassword.Text;
+            m.Email = m_etEmail.Text;
+            m.Password        = m_etRegPassword.Text;
             m.ConfirmPassword = m_etConfirmRegPassword.Text;
 
-            Client client = new Client();
-            client.Registrate(m);
+            Client.Registrate(m);
             
             SetResult(Android.App.Result.Ok);
             Finish();
