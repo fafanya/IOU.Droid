@@ -210,7 +210,7 @@
     <AndroidResource Include="Resources\layout\RegistrationActivity.axml">
       <SubType>Designer</SubType>
     </AndroidResource>
-    <AndroidResource Include="Resources\layout\LogoutaActivity.axml">
+    <AndroidResource Include="Resources\layout\LogoutActivity.axml">
       <SubType>Designer</SubType>
     </AndroidResource>
     <AndroidResource Include="Resources\layout\LoginGroupActivity.axml">

@@ -15,22 +15,16 @@ namespace share
     [Android.App.Activity(Label = "Выход", Theme = "@style/MyTheme")]
     public class LogoutActivity : AppCompatActivity
     {
-        Android.Support.V7.Widget.Toolbar m_Toolbar;
-        EditText m_etEmail;
-        EditText m_etPassword;
-
         protected override void OnCreate(Bundle savedInstanceState)
         {
             base.OnCreate(savedInstanceState);
-            SetContentView(Resource.Layout.LoginActivity);
+            SetContentView(Resource.Layout.LogoutActivity);
 
-            m_Toolbar = FindViewById<Android.Support.V7.Widget.Toolbar>(Resource.Id.toolbarLoginActivity);
-            SetSupportActionBar(m_Toolbar);
+            var toolbar = FindViewById<Android.Support.V7.Widget.Toolbar>(Resource.Id.toolbar);
+            SetSupportActionBar(toolbar);
             SupportActionBar.SetDisplayHomeAsUpEnabled(true);
             SupportActionBar.SetDisplayShowHomeEnabled(true);
 
-            m_etEmail = FindViewById<EditText>(Resource.Id.etEmail);
-            m_etPassword = FindViewById<EditText>(Resource.Id.etPassword);
             Button btnOK = FindViewById<Button>(Resource.Id.btnOK);
             Button btnCancel = FindViewById<Button>(Resource.Id.btnCancel);
 
@@ -53,11 +47,7 @@ namespace share
 
         private void BtnOK_Click(object sender, EventArgs e)
         {
-            LoginViewModel m = new LoginViewModel();
-            m.Email = "suslika@gmail.com";// m_etEmail.Text;
-            m.Password = "Qwwwwwww1!";// m_etRegPassword.Text;
-
-            Client.Login(m);
+            Client.Logout();
 
             SetResult(Android.App.Result.Ok);
             Finish();
