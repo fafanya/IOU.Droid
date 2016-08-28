@@ -40,6 +40,12 @@ namespace share
             ListAdapter = m_ListAdapter;
         }
 
+        public override void OnResume()
+        {
+            base.OnResume();
+            Refresh();
+        }
+
         private void InitializeList()
         {
             Refresh();

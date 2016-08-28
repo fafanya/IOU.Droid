@@ -50,8 +50,8 @@ namespace share
         protected override void FinishCreateInternet()
         {
             m_Group.Name = m_etName.Text;
-            m_Group.UUserId = Server.GetCurrentUser();
-            Client.CreateGroup(m_Group);
+            m_Group.UUserId = Server.GetCurrentUserId();
+            Client.CreateObject(m_Group);
         }
 
         protected override void StartEditLocal()

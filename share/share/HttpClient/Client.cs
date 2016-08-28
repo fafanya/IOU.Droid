@@ -1,16 +1,6 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
-using System.Net.Http;
-using System.Threading.Tasks;
-
-using Android.App;
-using Android.Content;
-using Android.OS;
-using Android.Runtime;
-using Android.Views;
-using Android.Widget;
 
 using System.Net;
 using System.IO;
@@ -21,10 +11,52 @@ namespace share
 {
     public class Client
     {
-        private static bool m_IsHome = !false;
+        private static bool m_IsHome = false;
         private static string m_HostURL = "http://46.101.214.70/";
         private static string m_HomeURL = "http://192.168.1.4:2562/";//"http://192.168.0.73:2562/";
 
+        public static bool Registrate(RegisterViewModel m)
+        {
+            try
+            {
+                MemoryStream stream = new MemoryStream();
+                DataContractJsonSerializer serializer = new DataContractJsonSerializer(typeof(RegisterViewModel));
+                serializer.WriteObject(stream, m);
+                stream.Position = 0;
+                StreamReader sr = new StreamReader(stream);
+                string postData = sr.ReadToEnd();
+
+                string url = (m_IsHome ? m_HomeURL : m_HostURL) + "api/AccountApi/Register";
+                HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
+                request.Method = "POST";
+                byte[] byteArray = Encoding.UTF8.GetBytes(postData);
+                request.ContentType = "application/json";
+                request.ContentLength = byteArray.Length;
+                Stream dataStream = request.GetRequestStream();
+                dataStream.Write(byteArray, 0, byteArray.Length);
+                dataStream.Close();
+
+                WebResponse response = request.GetResponse();
+                dataStream = response.GetResponseStream();
+                StreamReader reader = new StreamReader(dataStream);
+                string result = reader.ReadToEnd();
+                reader.Close();
+                dataStream.Close();
+                response.Close();
+
+                int id;
+                if (int.TryParse(result, out id))
+                {
+                    Server.CreateUser(null, null);
+                    return true;
+                }
+            }
+            catch (Exception e)
+            {
+                var error = e;
+            }
+            return false;
+        }
 
         public static bool Login(LoginViewModel m)
         {
@@ -67,55 +99,16 @@ namespace share
             }
             return false;
         }
-
-        
-
-        public static bool SelectMember(int memberId)
+        public static void Logout()
         {
-            SelectViewModel m = new SelectViewModel();
-            m.UMemberId = memberId;
-            m.UUserId = Server.GetCurrentUser();
-
             try
             {
-                MemoryStream stream = new MemoryStream();
-                DataContractJsonSerializer serializer = new DataContractJsonSerializer(typeof(SelectViewModel));
-                serializer.WriteObject(stream, m);
-                stream.Position = 0;
-                StreamReader sr = new StreamReader(stream);
-                string postData = sr.ReadToEnd();
-
-                string url = (m_IsHome ? m_HomeURL : m_HostURL) + "api/UMembersApi/Select";
-                HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
-                request.Method = "POST";
-                byte[] byteArray = Encoding.UTF8.GetBytes(postData);
-                request.ContentType = "application/json";
-                request.ContentLength = byteArray.Length;
-                Stream dataStream = request.GetRequestStream();
-                dataStream.Write(byteArray, 0, byteArray.Length);
-                dataStream.Close();
-
-                WebResponse response = request.GetResponse();
-                dataStream = response.GetResponseStream();
-                StreamReader reader = new StreamReader(dataStream);
-                string result = reader.ReadToEnd();
-                reader.Close();
-                dataStream.Close();
-                response.Close();
-
-                bool isSuccess;
-                if (bool.TryParse(result, out isSuccess))
-                {
-                    return isSuccess;
-                }
-
-                return false;
+                Server.Logout();
             }
-            catch (Exception e)
+            catch
             {
-                var error = e;
+
             }
-            return false;
         }
 
         public static bool LoginInGroup(LoginGroupViewModel m)
@@ -148,7 +141,7 @@ namespace share
                 response.Close();
 
                 bool isSuccess;
-                if(bool.TryParse(result, out isSuccess))
+                if (bool.TryParse(result, out isSuccess))
                 {
                     return isSuccess;
                 }
@@ -161,55 +154,22 @@ namespace share
             }
             return false;
         }
-
-        public bool ImportGroup(int id)
-        {
-            string url = (m_IsHome ? m_HomeURL : m_HostURL) + "api/UGroupsApi/Import/" + id.ToString();
-            try
-            {
-                HttpWebRequest request = (HttpWebRequest)WebRequest.Create(new Uri(url));
-                request.ContentType = "application/json";
-                request.Method = "GET";
-                using (WebResponse response = request.GetResponse())
-                {
-                    using (Stream stream = response.GetResponseStream())
-                    {
-                        JsonValue o = JsonValue.Load(stream);
-                        UGroup g = UploadGroup(o);
-                        Server.UploadGroup(g);
-                        return true;
-                    }
-                }
-            }
-            catch (Exception e)
-            {
-                var error = e;
-            }
-            return false;
-        }
-
-        public static T Deserialize<T>(string json)
-        {
-            T obj = Activator.CreateInstance<T>();
-            MemoryStream ms = new MemoryStream(Encoding.Unicode.GetBytes(json));
-            DataContractJsonSerializer serializer = new DataContractJsonSerializer(obj.GetType());
-            obj = (T)serializer.ReadObject(ms);
-            ms.Close();
-            return obj;
-        }
-
-        public static bool Registrate(RegisterViewModel m)
+        public static bool SelectMember(int memberId)
         {
             try
             {
+                SelectViewModel m = new SelectViewModel();
+                m.UMemberId = memberId;
+                m.UUserId = Server.GetCurrentUserId();
+
                 MemoryStream stream = new MemoryStream();
-                DataContractJsonSerializer serializer = new DataContractJsonSerializer(typeof(RegisterViewModel));
+                DataContractJsonSerializer serializer = new DataContractJsonSerializer(typeof(SelectViewModel));
                 serializer.WriteObject(stream, m);
                 stream.Position = 0;
                 StreamReader sr = new StreamReader(stream);
                 string postData = sr.ReadToEnd();
 
-                string url = (m_IsHome ? m_HomeURL : m_HostURL) + "api/AccountApi/Register";
+                string url = (m_IsHome ? m_HomeURL : m_HostURL) + "api/UMembersApi/Select";
                 HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
                 request.Method = "POST";
                 byte[] byteArray = Encoding.UTF8.GetBytes(postData);
@@ -227,12 +187,13 @@ namespace share
                 dataStream.Close();
                 response.Close();
 
-                int id;
-                if (int.TryParse(result, out id))
+                bool isSuccess;
+                if (bool.TryParse(result, out isSuccess))
                 {
-                    Server.CreateUser(null, null);
-                    return true;
+                    return isSuccess;
                 }
+
+                return false;
             }
             catch (Exception e)
             {
@@ -384,13 +345,14 @@ namespace share
         public static List<UGroup> LoadGroupList()
         {
             List<UGroup> items = new List<UGroup>();
-            string userId = Server.GetCurrentUser();
-            if (userId == null)
-                return items;
-            
-            string url = (m_IsHome ? m_HomeURL : m_HostURL) + "api/UGroupsApi/ByUser/" +  userId;
             try
             {
+                string userId = Server.GetCurrentUserId();
+                if (userId == null)
+                    return items;
+
+                string url = (m_IsHome ? m_HomeURL : m_HostURL) + "api/UGroupsApi/ByUser/" + userId;
+
                 HttpWebRequest request = (HttpWebRequest)WebRequest.Create(new Uri(url));
                 request.ContentType = "application/json";
                 request.Method = "GET";
@@ -401,11 +363,7 @@ namespace share
                         JsonValue o = JsonValue.Load(stream);
                         foreach(JsonValue g in o)
                         {
-                            UGroup ng = new UGroup();
-                            ng.Id = g["id"];
-                            ng.Name = g["name"];
-                            ng.UUserId = g["uUserId"];
-
+                            UGroup ng = UploadGroup(g);
                             items.Add(ng);
                         }
                     }
@@ -480,7 +438,7 @@ namespace share
             try
             {
                 UGroup ugroup = Server.LoadFullGroupDetails(id);
-                ugroup.UUserId = Server.GetCurrentUser();
+                ugroup.UUserId = Server.GetCurrentUserId();
                 if (string.IsNullOrWhiteSpace(ugroup.UUserId))
                     return false;
 
@@ -515,247 +473,23 @@ namespace share
             }
             return true;
         }
-         
-        public static bool CreateGroup(UGroup g)
+        public bool ImportGroup(int id)
         {
+            string url = (m_IsHome ? m_HomeURL : m_HostURL) + "api/UGroupsApi/Import/" + id.ToString();
             try
             {
-                MemoryStream stream = new MemoryStream();
-                DataContractJsonSerializer serializer = new DataContractJsonSerializer(typeof(UGroup));
-                serializer.WriteObject(stream, g);
-                stream.Position = 0;
-                StreamReader sr = new StreamReader(stream);
-                string postData = sr.ReadToEnd();
-
-                string url = (m_IsHome ? m_HomeURL : m_HostURL) + "api/" + g.Controller;
-                HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
-                request.Method = "POST";
-                byte[] byteArray = Encoding.UTF8.GetBytes(postData);
+                HttpWebRequest request = (HttpWebRequest)WebRequest.Create(new Uri(url));
                 request.ContentType = "application/json";
-                request.ContentLength = byteArray.Length;
-                Stream dataStream = request.GetRequestStream();
-                dataStream.Write(byteArray, 0, byteArray.Length);
-                dataStream.Close();
-
-                WebResponse response = request.GetResponse();
-                dataStream = response.GetResponseStream();
-                StreamReader reader = new StreamReader(dataStream);
-                string result = reader.ReadToEnd();
-                reader.Close();
-                dataStream.Close();
-                response.Close();
-
-                int id;
-                if (int.TryParse(result, out id))
+                request.Method = "GET";
+                using (WebResponse response = request.GetResponse())
                 {
-                    g.Id = id;
-                    Server.UpdateObject(g);
-                    return true;
-                }
-            }
-            catch (Exception e)
-            {
-                var error = e;
-            }
-            return false;
-        }
-        public bool PostEvent(UEvent e)
-        {
-            try
-            {
-                MemoryStream stream = new MemoryStream();
-                DataContractJsonSerializer serializer = new DataContractJsonSerializer(typeof(UEvent));
-                serializer.WriteObject(stream, e);
-                stream.Position = 0;
-                StreamReader sr = new StreamReader(stream);
-                string postData = sr.ReadToEnd();
-
-                string url = (m_IsHome ? m_HomeURL : m_HostURL) + "api/UEvents";
-                HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
-                request.Method = "POST";
-                byte[] byteArray = Encoding.UTF8.GetBytes(postData);
-                request.ContentType = "application/json";
-                request.ContentLength = byteArray.Length;
-                Stream dataStream = request.GetRequestStream();
-                dataStream.Write(byteArray, 0, byteArray.Length);
-                dataStream.Close();
-
-                WebResponse response = request.GetResponse();
-                dataStream = response.GetResponseStream();
-                StreamReader reader = new StreamReader(dataStream);
-                string result = reader.ReadToEnd();
-                reader.Close();
-                dataStream.Close();
-                response.Close();
-
-                int id;
-                if (int.TryParse(result, out id))
-                {
-                    return true;
-                }
-            }
-            catch (Exception ex)
-            {
-                var error = ex;
-            }
-            return false;
-        }
-        public bool PostMember(UMember m)
-        {
-            try
-            {
-                MemoryStream stream = new MemoryStream();
-                DataContractJsonSerializer serializer = new DataContractJsonSerializer(typeof(UMember));
-                serializer.WriteObject(stream, m);
-                stream.Position = 0;
-                StreamReader sr = new StreamReader(stream);
-                string postData = sr.ReadToEnd();
-
-                string url = (m_IsHome ? m_HomeURL : m_HostURL) + "api/UMembers";
-                HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
-                request.Method = "POST";
-                byte[] byteArray = Encoding.UTF8.GetBytes(postData);
-                request.ContentType = "application/json";
-                request.ContentLength = byteArray.Length;
-                Stream dataStream = request.GetRequestStream();
-                dataStream.Write(byteArray, 0, byteArray.Length);
-                dataStream.Close();
-
-                WebResponse response = request.GetResponse();
-                dataStream = response.GetResponseStream();
-                StreamReader reader = new StreamReader(dataStream);
-                string result = reader.ReadToEnd();
-                reader.Close();
-                dataStream.Close();
-                response.Close();
-
-                int id;
-                if (int.TryParse(result, out id))
-                {
-                    return true;
-                }
-            }
-            catch (Exception e)
-            {
-                var error = e;
-            }
-            return false;
-        }
-        public bool PostDebt(UDebt d)
-        {
-            try
-            {
-                MemoryStream stream = new MemoryStream();
-                DataContractJsonSerializer serializer = new DataContractJsonSerializer(typeof(UDebt));
-                serializer.WriteObject(stream, d);
-                stream.Position = 0;
-                StreamReader sr = new StreamReader(stream);
-                string postData = sr.ReadToEnd();
-
-                string url = (m_IsHome ? m_HomeURL : m_HostURL) + "api/UDebts";
-                HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
-                request.Method = "POST";
-                byte[] byteArray = Encoding.UTF8.GetBytes(postData);
-                request.ContentType = "application/json";
-                request.ContentLength = byteArray.Length;
-                Stream dataStream = request.GetRequestStream();
-                dataStream.Write(byteArray, 0, byteArray.Length);
-                dataStream.Close();
-
-                WebResponse response = request.GetResponse();
-                dataStream = response.GetResponseStream();
-                StreamReader reader = new StreamReader(dataStream);
-                string result = reader.ReadToEnd();
-                reader.Close();
-                dataStream.Close();
-                response.Close();
-
-                int id;
-                if (int.TryParse(result, out id))
-                {
-                    return true;
-                }
-            }
-            catch (Exception e)
-            {
-                var error = e;
-            }
-            return false;
-        }
-        public bool PostBill(UBill b)
-        {
-            try
-            {
-                MemoryStream stream = new MemoryStream();
-                DataContractJsonSerializer serializer = new DataContractJsonSerializer(typeof(UBill));
-                serializer.WriteObject(stream, b);
-                stream.Position = 0;
-                StreamReader sr = new StreamReader(stream);
-                string postData = sr.ReadToEnd();
-
-                string url = (m_IsHome ? m_HomeURL : m_HostURL) + "api/UBills";
-                HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
-                request.Method = "POST";
-                byte[] byteArray = Encoding.UTF8.GetBytes(postData);
-                request.ContentType = "application/json";
-                request.ContentLength = byteArray.Length;
-                Stream dataStream = request.GetRequestStream();
-                dataStream.Write(byteArray, 0, byteArray.Length);
-                dataStream.Close();
-
-                WebResponse response = request.GetResponse();
-                dataStream = response.GetResponseStream();
-                StreamReader reader = new StreamReader(dataStream);
-                string result = reader.ReadToEnd();
-                reader.Close();
-                dataStream.Close();
-                response.Close();
-
-                int id;
-                if (int.TryParse(result, out id))
-                {
-                    return true;
-                }
-            }
-            catch (Exception e)
-            {
-                var error = e;
-            }
-            return false;
-        }
-        public bool PostPayment(UPayment p)
-        {
-            try
-            {
-                MemoryStream stream = new MemoryStream();
-                DataContractJsonSerializer serializer = new DataContractJsonSerializer(typeof(UPayment));
-                serializer.WriteObject(stream, p);
-                stream.Position = 0;
-                StreamReader sr = new StreamReader(stream);
-                string postData = sr.ReadToEnd();
-
-                string url = (m_IsHome ? m_HomeURL : m_HostURL) + "api/UPayments";
-                HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
-                request.Method = "POST";
-                byte[] byteArray = Encoding.UTF8.GetBytes(postData);
-                request.ContentType = "application/json";
-                request.ContentLength = byteArray.Length;
-                Stream dataStream = request.GetRequestStream();
-                dataStream.Write(byteArray, 0, byteArray.Length);
-                dataStream.Close();
-
-                WebResponse response = request.GetResponse();
-                dataStream = response.GetResponseStream();
-                StreamReader reader = new StreamReader(dataStream);
-                string result = reader.ReadToEnd();
-                reader.Close();
-                dataStream.Close();
-                response.Close();
-
-                int id;
-                if (int.TryParse(result, out id))
-                {
-                    return true;
+                    using (Stream stream = response.GetResponseStream())
+                    {
+                        JsonValue o = JsonValue.Load(stream);
+                        UGroup g = UploadGroup(o);
+                        Server.UploadGroup(g);
+                        return true;
+                    }
                 }
             }
             catch (Exception e)
@@ -859,37 +593,6 @@ namespace share
                 var erros = er;
             }
         }
-
-        public static T UploadObject<T>(int id) where T : UObject
-        {
-            T item = Activator.CreateInstance(typeof(T)) as T;
-
-            string url = (m_IsHome ? m_HomeURL : m_HostURL) + "api/" + item.Controller + "/" + id.ToString();
-            try
-            {
-                HttpWebRequest request = (HttpWebRequest)HttpWebRequest.Create(new Uri(url));
-                request.ContentType = "application/json";
-                request.Method = "GET";
-                using (WebResponse response = request.GetResponse())
-                {
-                    using (Stream stream = response.GetResponseStream())
-                    {
-                        JsonValue o = JsonValue.Load(stream);
-                        if (typeof(T) == typeof(UGroup))
-                        {
-                            return UploadGroup(o) as T;
-                        }
-                    }
-                }
-            }
-            catch (Exception e)
-            {
-                var error = e;
-            }
-
-            return null;
-        }
-
         public static T LoadObjectDetails<T>(int id) where T : UObject
         {
             T item = Activator.CreateInstance(typeof(T)) as T;
@@ -940,7 +643,7 @@ namespace share
             return null;
         }
 
-        public static UGroup UploadGroup(JsonValue o)
+        private static UGroup UploadGroup(JsonValue o)
         {
             UGroup ugroup = new UGroup();
             ugroup.Id = o["id"];
@@ -974,7 +677,7 @@ namespace share
             }
             return ugroup;
         }
-        public static UEvent UploadEvent(JsonValue o)
+        private static UEvent UploadEvent(JsonValue o)
         {
             UEvent uevent = new UEvent();
             uevent.Id = o["id"];
@@ -1002,7 +705,7 @@ namespace share
             }
             return uevent;
         }
-        public static UMember UploadMember(JsonValue o)
+        private static UMember UploadMember(JsonValue o)
         {
             UMember umember = new UMember();
             umember.Id = o["id"];
@@ -1010,7 +713,7 @@ namespace share
             umember.UGroupId = o["uGroupId"];
             return umember;
         }
-        public static UDebt UploadDebt(JsonValue o)
+        private static UDebt UploadDebt(JsonValue o)
         {
             UDebt udebt = new UDebt();
             udebt.Id = o["id"];
@@ -1024,7 +727,7 @@ namespace share
             udebt.ReadOnlyFields["LenderName"] = o["lenderName"];
             return udebt;
         }
-        public static UBill UploadBill(JsonValue o)
+        private static UBill UploadBill(JsonValue o)
         {
             UBill ubill = new UBill();
             ubill.Id = o["id"];
@@ -1034,7 +737,7 @@ namespace share
             ubill.ReadOnlyFields["Name"] = o["memberName"];
             return ubill;
         }
-        public static UPayment UploadPayment(JsonValue o)
+        private static UPayment UploadPayment(JsonValue o)
         {
             UPayment upayment = new UPayment();
             upayment.Id = o["id"];
@@ -1044,13 +747,23 @@ namespace share
             upayment.ReadOnlyFields["Name"] = o["memberName"];
             return upayment;
         }
-        public static UTotal UploadTotal(JsonValue o)
+        private static UTotal UploadTotal(JsonValue o)
         {
             UTotal utotal = new UTotal();
             utotal.Amount = o["amount"];
             utotal.DebtorName = o["debtorName"];
             utotal.LenderName = o["lenderName"];
             return utotal;
+        }
+
+        private static T Deserialize<T>(string json)
+        {
+            T obj = Activator.CreateInstance<T>();
+            MemoryStream ms = new MemoryStream(Encoding.Unicode.GetBytes(json));
+            DataContractJsonSerializer serializer = new DataContractJsonSerializer(obj.GetType());
+            obj = (T)serializer.ReadObject(ms);
+            ms.Close();
+            return obj;
         }
     }
 }

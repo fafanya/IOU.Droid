@@ -1,13 +1,11 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-using Android.Support.V7.App;
-using Android.Content;
 using Android.OS;
 using Android.App;
+using Android.Views;
 using Android.Widget;
+using Android.Content;
+using Android.Support.V7.App;
 
 namespace share
 {
@@ -36,6 +34,16 @@ namespace share
             btnOK.Click += BtnOK_Click;
             btnCancel.Click += BtnCancel_Click;
         }
+
+        public override bool OnOptionsItemSelected(IMenuItem item)
+        {
+            if (item.ItemId == Android.Resource.Id.Home)
+            {
+                Finish();
+            }
+            return base.OnOptionsItemSelected(item);
+        }
+
 
         private void BtnCancel_Click(object sender, EventArgs e)
         {

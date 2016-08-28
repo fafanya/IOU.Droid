@@ -95,6 +95,8 @@ namespace share
             }
         }
 
+        
+
         private static void FillExample()
         {
             UGroup g = new UGroup() { Name = "Поездка в Прагу" };
@@ -426,7 +428,7 @@ namespace share
             return null;
         }
 
-        public static string GetCurrentUser()
+        public static string GetCurrentUserId()
         {
             string commandText = "SELECT * FROM USER;";
             SqliteDataReader reader = GetReader(commandText);
@@ -467,6 +469,15 @@ namespace share
                 return result.FirstOrDefault().email;
             }
             return null;
+        }
+        public static void Logout()
+        {
+            string userId = GetCurrentUserId();
+            if (!string.IsNullOrWhiteSpace(userId))
+            {
+                string commandText = "DELETE FROM USER WHERE USER.ID = \"" + userId + "\" ;";
+                ExecuteCommand(commandText);
+            }
         }
 
         static SqliteConnection m_UploadConnection = null;
