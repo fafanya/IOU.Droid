@@ -23,7 +23,7 @@ namespace share
     {
         private static bool m_IsHome = !false;
         private static string m_HostURL = "http://46.101.214.70/";
-        private static string m_HomeURL = "http://192.168.0.73:2562/";//"http://192.168.1.4:2562/";
+        private static string m_HomeURL = "http://192.168.1.4:2562/";//"http://192.168.0.73:2562/";
 
 
         public static bool Login(LoginViewModel m)

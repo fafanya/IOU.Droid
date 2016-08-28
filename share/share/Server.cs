@@ -95,7 +95,6 @@ namespace share
             }
         }
 
-
         private static void FillExample()
         {
             UGroup g = new UGroup() { Name = "Поездка в Прагу" };
