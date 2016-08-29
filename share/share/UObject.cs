@@ -16,7 +16,7 @@ namespace share
         }
 
         [DataMember]
-        public string name
+        public string Name
         {
             get
             {
@@ -29,7 +29,7 @@ namespace share
         }
 
         [DataMember]
-        public string password
+        public string Password
         {
             get
             {
@@ -45,20 +45,20 @@ namespace share
         }
 
         [DataMember]
-        public string uUserId { get; set; }
+        public string UUserId { get; set; }
 
         [DataMember]
-        public List<UEvent> uEvents { get; set; }
+        public List<UEvent> UEvents { get; set; }
         [DataMember]
-        public List<UMember> uMembers { get; set; }
+        public List<UMember> UMembers { get; set; }
         [DataMember]
-        public List<UDebt> uDebts { get; set; }
+        public List<UDebt> UDebts { get; set; }
 
         public override string DetailsQuery
         {
             get
             {
-                return "SELECT * FROM GROUPS G WHERE G.ID = " + id + ";";
+                return "SELECT * FROM GROUPS G WHERE G.ID = " + Id + ";";
             }
         }
     }
@@ -136,7 +136,7 @@ namespace share
         {
             get
             {
-                return "SELECT E.*, ET.Name as EventTypeName FROM EVENT E, EVENTTYPE ET WHERE E.EventType_ID = ET.ID AND E.ID = " + id + ";";
+                return "SELECT E.*, ET.Name as EventTypeName FROM EVENT E, EVENTTYPE ET WHERE E.EventType_ID = ET.ID AND E.ID = " + Id + ";";
             }
         }
     }
@@ -202,7 +202,7 @@ namespace share
         {
             get
             {
-                return "SELECT * FROM MEMBER M WHERE M.ID = " + id + ";";
+                return "SELECT * FROM MEMBER M WHERE M.ID = " + Id + ";";
             }
         }
     }
@@ -305,7 +305,7 @@ namespace share
             {
                 return "SELECT D.*, MD.Name AS DebtorName, ML.Name AS LenderName FROM DEBT D, MEMBER MD, MEMBER ML WHERE " +
                         "MD.ID = D.Debtor_ID AND ML.ID = D.Lender_ID"
-                    + " AND D.ID = " + id + ";";
+                    + " AND D.ID = " + Id + ";";
             }
         }
     }
@@ -371,7 +371,7 @@ namespace share
         {
             get
             {
-                return "SELECT * FROM BILL B WHERE B.ID = " + id + ";";
+                return "SELECT * FROM BILL B WHERE B.ID = " + Id + ";";
             }
         }
     }
@@ -437,7 +437,7 @@ namespace share
         {
             get
             {
-                return "SELECT * FROM PAYMENT P WHERE P.ID = " + id + ";";
+                return "SELECT * FROM PAYMENT P WHERE P.ID = " + Id + ";";
             }
         }
     }
@@ -478,7 +478,7 @@ namespace share
     public class UObject
     {
         [DataMember]
-        public int id
+        public int Id
         {
             get
             {

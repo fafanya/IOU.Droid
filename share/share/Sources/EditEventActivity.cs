@@ -49,7 +49,7 @@ namespace share
             List<UEventType> items = Server.LoadEventTypeList();
             if (m_Event.UGroupId == 0)
             {
-                items.RemoveAll(x => x.id == 3);
+                items.RemoveAll(x => x.Id == 3);
                 m_twHalfCommon.Visibility = ViewStates.Gone;
             }
             m_EventTypeListAdapter = new EventTypeListAdapter(this, items.ToArray());
@@ -96,7 +96,7 @@ namespace share
             List<UEventType> items = Server.LoadEventTypeList();
             if (m_Event.UGroupId == 0)
             {
-                items.RemoveAll(x => x.id == 3);
+                items.RemoveAll(x => x.Id == 3);
                 m_twHalfCommon.Visibility = ViewStates.Gone;
             }
             m_EventTypeListAdapter = new EventTypeListAdapter(this, items.ToArray());

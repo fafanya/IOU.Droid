@@ -22,7 +22,7 @@ namespace share
             {
                 get
                 {
-                    return Hosting.m_Work;
+                    return Hosting.m_Home;
                 }
             }
         }
@@ -229,7 +229,7 @@ namespace share
                 foreach (JsonValue ugroupJSON in ugroupJSONList)
                 {
                     /*string a = ugroupJSON.ToString();
-                    UGroup temp = Deserialize<UGroup>(ugroupJSON.ToString());*/
+                    SimpleUGroup temp = Deserialize<SimpleUGroup>(ugroupJSON.ToString());*/
 
                     UGroup ugroup = UploadGroup(ugroupJSON);
                     items.Add(ugroup);
@@ -286,8 +286,8 @@ namespace share
             try
             {
                 UGroup o = Server.LoadFullGroupDetails(id);
-                o.uUserId = Server.GetCurrentUserId();
-                if (string.IsNullOrWhiteSpace(o.uUserId))
+                o.UUserId = Server.GetCurrentUserId();
+                if (string.IsNullOrWhiteSpace(o.UUserId))
                     return false;
 
                 string url = Hosting.Current + "api/UGroupsApi/Export";
@@ -332,7 +332,7 @@ namespace share
         {
             try
             {
-                string url = Hosting.Current + "api/" + o.Controller + "/" + o.id;
+                string url = Hosting.Current + "api/" + o.Controller + "/" + o.Id;
                 string result = Put(url, o);
             }
             catch (Exception e)
@@ -342,7 +342,7 @@ namespace share
         }
         public static void DeleteObject<T>(T o) where T : UObject
         {
-            string url = Hosting.Current + "api/" + o.Controller + "/" + o.id.ToString();
+            string url = Hosting.Current + "api/" + o.Controller + "/" + o.Id.ToString();
             try
             {
                 HttpWebRequest request = (HttpWebRequest)HttpWebRequest.Create(new Uri(url));
@@ -414,33 +414,33 @@ namespace share
         private static UGroup UploadGroup(JsonValue o)
         {
             UGroup ugroup = new UGroup();
-            ugroup.id = o["id"];
-            ugroup.name = o["name"];
-            ugroup.password = o["password"];
-            ugroup.uUserId = o["uUserId"];
+            ugroup.Id = o["id"];
+            ugroup.Name = o["name"];
+            ugroup.Password = o["password"];
+            ugroup.UUserId = o["uUserId"];
 
             if (o.ContainsKey("uEvents") && o["uEvents"] != null)
             {
-                ugroup.uEvents = new List<UEvent>();
+                ugroup.UEvents = new List<UEvent>();
                 foreach (JsonValue e in o["uEvents"])
                 {
-                    ugroup.uEvents.Add(UploadEvent(e));
+                    ugroup.UEvents.Add(UploadEvent(e));
                 }
             }
             if (o.ContainsKey("uMembers") && o["uMembers"] != null)
             {
-                ugroup.uMembers = new List<UMember>();
+                ugroup.UMembers = new List<UMember>();
                 foreach (JsonValue m in o["uMembers"])
                 {
-                    ugroup.uMembers.Add(UploadMember(m));
+                    ugroup.UMembers.Add(UploadMember(m));
                 }
             }
             if (o.ContainsKey("uDebts") && o["uDebts"] != null)
             {
-                ugroup.uDebts = new List<UDebt>();
+                ugroup.UDebts = new List<UDebt>();
                 foreach (JsonValue d in o["uDebts"])
                 {
-                    ugroup.uDebts.Add(UploadDebt(d));
+                    ugroup.UDebts.Add(UploadDebt(d));
                 }
             }
             return ugroup;
@@ -448,7 +448,7 @@ namespace share
         private static UEvent UploadEvent(JsonValue o)
         {
             UEvent uevent = new UEvent();
-            uevent.id = o["id"];
+            uevent.Id = o["id"];
             uevent.Name = o["name"];
             uevent.UGroupId = o["uGroupId"];
             uevent.UEventTypeId = o["uEventTypeId"];
@@ -476,7 +476,7 @@ namespace share
         private static UMember UploadMember(JsonValue o)
         {
             UMember umember = new UMember();
-            umember.id = o["id"];
+            umember.Id = o["id"];
             umember.Name = o["name"];
             umember.UGroupId = o["uGroupId"];
             return umember;
@@ -484,7 +484,7 @@ namespace share
         private static UDebt UploadDebt(JsonValue o)
         {
             UDebt udebt = new UDebt();
-            udebt.id = o["id"];
+            udebt.Id = o["id"];
             udebt.Name = o["name"];
             udebt.Amount = o["amount"];
             udebt.UGroupId = o["uGroupId"];
@@ -498,7 +498,7 @@ namespace share
         private static UBill UploadBill(JsonValue o)
         {
             UBill ubill = new UBill();
-            ubill.id = o["id"];
+            ubill.Id = o["id"];
             ubill.UEventId = o["uEventId"];
             ubill.UMemberId = o["uMemberId"];
             ubill.Amount = o["amount"];
@@ -508,7 +508,7 @@ namespace share
         private static UPayment UploadPayment(JsonValue o)
         {
             UPayment upayment = new UPayment();
-            upayment.id = o["id"];
+            upayment.Id = o["id"];
             upayment.UEventId = o["uEventId"];
             upayment.UMemberId = o["uMemberId"];
             upayment.Amount = o["amount"];
@@ -526,11 +526,23 @@ namespace share
 
         private static T Deserialize<T>(string json)
         {
-            T obj = Activator.CreateInstance<T>();
-            MemoryStream ms = new MemoryStream(Encoding.Unicode.GetBytes(json));
-            DataContractJsonSerializer serializer = new DataContractJsonSerializer(obj.GetType());
-            obj = (T)serializer.ReadObject(ms);
-            ms.Close();
+            T obj = default(T);
+            MemoryStream ms = null;
+            try
+            {
+                ms = new MemoryStream(Encoding.Unicode.GetBytes(json));
+                DataContractJsonSerializer serializer = new DataContractJsonSerializer(typeof(T));
+                obj = (T)serializer.ReadObject(ms);
+            }
+            catch(Exception ex)
+            {
+                Exception e = ex;
+            }
+            finally
+            {
+                if (ms != null)
+                    ms.Close();
+            }
             return obj;
         }
 

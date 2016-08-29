@@ -1,24 +1,8 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-using Android.App;
-using Android.Content;
-using Android.OS;
-using Android.Runtime;
-using Android.Views;
-using Android.Widget;
-
 namespace share
 {
-    /*public class UNObject
+    public class UTotal
     {
         public int Id { get; set; }
-    }*/
-
-    public class UTotal : UNObject
-    {
         public string DebtorName { get; set; }
         public string LenderName { get; set; }
         public double Amount { get; set; }
@@ -30,4 +14,16 @@ namespace share
         public string email { get; set; }
     }
 
+    public class SimpleUGroup
+    {
+        public int id { get; set; }
+        public int name { get; set; }
+        public int password { get; set; }
+        public string uUserId { get; set; }
+        public string[] uUser { get; set; }
+        public string[] uDebts { get; set; }
+        public string[] uEvents { get; set; }
+        public string[] uMembers { get; set; }
+        public string[] uTotals { get; set; }
+    }
 }

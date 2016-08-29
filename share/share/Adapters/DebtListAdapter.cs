@@ -24,7 +24,7 @@ namespace share
 
         public override long GetItemId(int position)
         {
-            return items[position].id;
+            return items[position].Id;
         }
 
         public override UDebt this[int position]

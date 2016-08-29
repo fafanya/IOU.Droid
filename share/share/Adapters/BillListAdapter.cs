@@ -28,7 +28,7 @@ namespace share
 
         public override long GetItemId(int position)
         {
-            return items[position].id;
+            return items[position].Id;
         }
 
         public override UBill this[int position]
