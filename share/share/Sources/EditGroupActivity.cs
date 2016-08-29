@@ -38,7 +38,7 @@ namespace share
         }
         protected override void FinishCreateLocal()
         {
-            m_Group.Name = m_etName.Text;
+            m_Group.name = m_etName.Text;
             Server.CreateObject(m_Group);
         }
 
@@ -49,32 +49,32 @@ namespace share
         }
         protected override void FinishCreateInternet()
         {
-            m_Group.Name = m_etName.Text;
-            m_Group.UUserId = Server.GetCurrentUserId();
+            m_Group.name = m_etName.Text;
+            m_Group.uUserId = Server.GetCurrentUserId();
             Client.CreateObject(m_Group);
         }
 
         protected override void StartEditLocal()
         {
             m_Group = Server.LoadObjectDetails<UGroup>(m_Key);
-            m_etName.Text = m_Group.Name;
-            SupportActionBar.Title = m_Group.Name;
+            m_etName.Text = m_Group.name;
+            SupportActionBar.Title = m_Group.name;
         }
         protected override void FinishEditLocal()
         {
-            m_Group.Name = m_etName.Text;
+            m_Group.name = m_etName.Text;
             Server.UpdateObject(m_Group);
         }
 
         protected override void StartEditInternet()
         {
             m_Group = Client.LoadObjectDetails<UGroup>(m_Key);
-            m_etName.Text = m_Group.Name;
-            SupportActionBar.Title = m_Group.Name;
+            m_etName.Text = m_Group.name;
+            SupportActionBar.Title = m_Group.name;
         }
         protected override void FinishEditInternet()
         {
-            m_Group.Name = m_etName.Text;
+            m_Group.name = m_etName.Text;
             Client.UpdateObject(m_Group);
         }
     }

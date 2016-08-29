@@ -57,11 +57,11 @@ namespace share
             {
                 if (eventId != 0)
                 {
-                    items = Server.LoadTotalDebtList(eventId, groupId);
+                    items = Server.LoadTotalListByEvent(eventId);
                 }
                 else
                 {
-                    items = Server.LoadTotalDebtList(groupId: groupId);
+                    items = Server.LoadTotalListByGroup(groupId);
                 }
             }
 

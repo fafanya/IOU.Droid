@@ -68,8 +68,8 @@ namespace share
             UGroup g = m_ListAdapter[position];
 
             var intent = new Intent(Activity, typeof(GroupActivity));
-            intent.PutExtra("Key", g.Id);
-            if (string.IsNullOrWhiteSpace(g.UUserId))
+            intent.PutExtra("Key", g.id);
+            if (string.IsNullOrWhiteSpace(g.uUserId))
             {
                 intent.PutExtra("EditMode", EditMode.itEditLocal);
             }
@@ -110,8 +110,8 @@ namespace share
                 if (item.ItemId == 1)
                 {
                     var intent = new Intent(Activity, typeof(EditGroupActivity));
-                    intent.PutExtra("Key", g.Id);
-                    if (string.IsNullOrWhiteSpace(g.UUserId))
+                    intent.PutExtra("Key", g.id);
+                    if (string.IsNullOrWhiteSpace(g.uUserId))
                     {
                         intent.PutExtra("EditMode", EditMode.itEditLocal);
                     }
@@ -123,7 +123,7 @@ namespace share
                 }
                 else if (item.ItemId == 2)
                 {
-                    if (string.IsNullOrWhiteSpace(g.UUserId))
+                    if (string.IsNullOrWhiteSpace(g.uUserId))
                     {
                         Server.DeleteObject(g);
                     }
@@ -135,16 +135,16 @@ namespace share
                 }
                 else if (item.ItemId == 3)
                 {
-                    if (string.IsNullOrWhiteSpace(g.UUserId))
+                    if (string.IsNullOrWhiteSpace(g.uUserId))
                     {
-                        ExportGroup(g.Id);
+                        ExportGroup(g.id);
                     }
                 }
                 else if(item.ItemId == 4)
                 {
-                    if (!string.IsNullOrWhiteSpace(g.UUserId))
+                    if (!string.IsNullOrWhiteSpace(g.uUserId))
                     {
-                        ImportGroup(g.Id);
+                        ImportGroup(g.id);
                     }
                 }
                 return true;

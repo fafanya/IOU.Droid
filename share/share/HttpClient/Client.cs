@@ -5,51 +5,38 @@ using System.Text;
 using System.Net;
 using System.IO;
 using System.Json;
+using System.Linq;
 using System.Runtime.Serialization.Json;
 
 namespace share
 {
     public class Client
     {
-        private static bool m_IsHome = false;
-        private static string m_HostURL = "http://46.101.214.70/";
-        private static string m_HomeURL = "http://192.168.1.4:2562/";//"http://192.168.0.73:2562/";
+        public class Hosting
+        {
+            public static string m_Work = "http://192.168.0.73:2562/";
+            public static string m_Home = "http://192.168.1.4:2562/";
+            public static string m_Host = "http://46.101.214.70/";
+
+            public static string Current
+            {
+                get
+                {
+                    return Hosting.m_Work;
+                }
+            }
+        }
 
         public static bool Registrate(RegisterViewModel m)
         {
             try
             {
-                MemoryStream stream = new MemoryStream();
-                DataContractJsonSerializer serializer = new DataContractJsonSerializer(typeof(RegisterViewModel));
-                serializer.WriteObject(stream, m);
-                stream.Position = 0;
-                StreamReader sr = new StreamReader(stream);
-                string postData = sr.ReadToEnd();
+                string url = Hosting.Current + "api/AccountApi/Register";
+                string result = Post(url, m);
 
-                string url = (m_IsHome ? m_HomeURL : m_HostURL) + "api/AccountApi/Register";
-                HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
-                request.Method = "POST";
-                byte[] byteArray = Encoding.UTF8.GetBytes(postData);
-                request.ContentType = "application/json";
-                request.ContentLength = byteArray.Length;
-                Stream dataStream = request.GetRequestStream();
-                dataStream.Write(byteArray, 0, byteArray.Length);
-                dataStream.Close();
-
-                WebResponse response = request.GetResponse();
-                dataStream = response.GetResponseStream();
-                StreamReader reader = new StreamReader(dataStream);
-                string result = reader.ReadToEnd();
-                reader.Close();
-                dataStream.Close();
-                response.Close();
-
-                int id;
-                if (int.TryParse(result, out id))
-                {
-                    Server.CreateUser(null, null);
-                    return true;
-                }
+                UUser uUser = Deserialize<UUser>(result);
+                Server.CreateUser(uUser.id, uUser.email);
+                return true;
             }
             catch (Exception e)
             {
@@ -62,34 +49,10 @@ namespace share
         {
             try
             {
-                MemoryStream stream = new MemoryStream();
-                DataContractJsonSerializer serializer = new DataContractJsonSerializer(typeof(LoginViewModel));
-                serializer.WriteObject(stream, m);
-                stream.Position = 0;
-                StreamReader sr = new StreamReader(stream);
-                string postData = sr.ReadToEnd();
-
-                string url = (m_IsHome ? m_HomeURL : m_HostURL) + "api/AccountApi/Login";
-                HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
-                request.Method = "POST";
-                byte[] byteArray = Encoding.UTF8.GetBytes(postData);
-                request.ContentType = "application/json";
-                request.ContentLength = byteArray.Length;
-                Stream dataStream = request.GetRequestStream();
-                dataStream.Write(byteArray, 0, byteArray.Length);
-                dataStream.Close();
-
-                WebResponse response = request.GetResponse();
-                dataStream = response.GetResponseStream();
-                StreamReader reader = new StreamReader(dataStream);
-                string result = reader.ReadToEnd();
-                reader.Close();
-                dataStream.Close();
-                response.Close();
-
+                string url = Hosting.Current + "api/AccountApi/Login";
+                string result = Post(url, m);
 
                 UUser uUser = Deserialize<UUser>(result);
-
                 Server.CreateUser(uUser.id, uUser.email);
                 return true;
             }
@@ -115,30 +78,8 @@ namespace share
         {
             try
             {
-                MemoryStream stream = new MemoryStream();
-                DataContractJsonSerializer serializer = new DataContractJsonSerializer(typeof(LoginGroupViewModel));
-                serializer.WriteObject(stream, m);
-                stream.Position = 0;
-                StreamReader sr = new StreamReader(stream);
-                string postData = sr.ReadToEnd();
-
-                string url = (m_IsHome ? m_HomeURL : m_HostURL) + "api/UGroupsApi/Login";
-                HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
-                request.Method = "POST";
-                byte[] byteArray = Encoding.UTF8.GetBytes(postData);
-                request.ContentType = "application/json";
-                request.ContentLength = byteArray.Length;
-                Stream dataStream = request.GetRequestStream();
-                dataStream.Write(byteArray, 0, byteArray.Length);
-                dataStream.Close();
-
-                WebResponse response = request.GetResponse();
-                dataStream = response.GetResponseStream();
-                StreamReader reader = new StreamReader(dataStream);
-                string result = reader.ReadToEnd();
-                reader.Close();
-                dataStream.Close();
-                response.Close();
+                string url = Hosting.Current + "api/UGroupsApi/Login";
+                string result = Post(url, m);
 
                 bool isSuccess;
                 if (bool.TryParse(result, out isSuccess))
@@ -162,37 +103,14 @@ namespace share
                 m.UMemberId = memberId;
                 m.UUserId = Server.GetCurrentUserId();
 
-                MemoryStream stream = new MemoryStream();
-                DataContractJsonSerializer serializer = new DataContractJsonSerializer(typeof(SelectViewModel));
-                serializer.WriteObject(stream, m);
-                stream.Position = 0;
-                StreamReader sr = new StreamReader(stream);
-                string postData = sr.ReadToEnd();
-
-                string url = (m_IsHome ? m_HomeURL : m_HostURL) + "api/UMembersApi/Select";
-                HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
-                request.Method = "POST";
-                byte[] byteArray = Encoding.UTF8.GetBytes(postData);
-                request.ContentType = "application/json";
-                request.ContentLength = byteArray.Length;
-                Stream dataStream = request.GetRequestStream();
-                dataStream.Write(byteArray, 0, byteArray.Length);
-                dataStream.Close();
-
-                WebResponse response = request.GetResponse();
-                dataStream = response.GetResponseStream();
-                StreamReader reader = new StreamReader(dataStream);
-                string result = reader.ReadToEnd();
-                reader.Close();
-                dataStream.Close();
-                response.Close();
+                string url = Hosting.Current + "api/UMembersApi/Select";
+                string result = Post(url, m);
 
                 bool isSuccess;
                 if (bool.TryParse(result, out isSuccess))
                 {
                     return isSuccess;
                 }
-
                 return false;
             }
             catch (Exception e)
@@ -205,23 +123,14 @@ namespace share
         public static List<UMember> LoadMemberList(int groupId)
         {
             List<UMember> items = new List<UMember>();
-            string url = (m_IsHome ? m_HomeURL : m_HostURL) + "api/UMembersApi/ByGroup/" + groupId;
+            string url = Hosting.Current + "api/UMembersApi/ByGroup/" + groupId;
             try
             {
-                HttpWebRequest request = (HttpWebRequest)WebRequest.Create(new Uri(url));
-                request.ContentType = "application/json";
-                request.Method = "GET";
-                using (WebResponse response = request.GetResponse())
+                JsonValue umemberJSONList = Get(url);
+                foreach (JsonValue umemberJSON in umemberJSONList)
                 {
-                    using (Stream stream = response.GetResponseStream())
-                    {
-                        JsonValue o = JsonValue.Load(stream);
-                        foreach (JsonValue g in o)
-                        {
-                            UMember m = UploadMember(g);
-                            items.Add(m);
-                        }
-                    }
+                    UMember umember = UploadMember(umemberJSON);
+                    items.Add(umember);
                 }
             }
             catch (Exception e)
@@ -233,23 +142,14 @@ namespace share
         public static List<UEvent> LoadEventList(int groupId)
         {
             List<UEvent> items = new List<UEvent>();
-            string url = (m_IsHome ? m_HomeURL : m_HostURL) + "api/UEventsApi/ByGroup/" + groupId;
+            string url = Hosting.Current + "api/UEventsApi/ByGroup/" + groupId;
             try
             {
-                HttpWebRequest request = (HttpWebRequest)WebRequest.Create(new Uri(url));
-                request.ContentType = "application/json";
-                request.Method = "GET";
-                using (WebResponse response = request.GetResponse())
+                JsonValue ueventJSONList = Get(url);
+                foreach (JsonValue ueventJSON in ueventJSONList)
                 {
-                    using (Stream stream = response.GetResponseStream())
-                    {
-                        JsonValue o = JsonValue.Load(stream);
-                        foreach (JsonValue g in o)
-                        {
-                            UEvent e = UploadEvent(g);
-                            items.Add(e);
-                        }
-                    }
+                    UEvent uevent = UploadEvent(ueventJSON);
+                    items.Add(uevent);
                 }
             }
             catch (Exception e)
@@ -261,23 +161,14 @@ namespace share
         public static List<UDebt> LoadDebtList(int groupId)
         {
             List<UDebt> items = new List<UDebt>();
-            string url = (m_IsHome ? m_HomeURL : m_HostURL) + "api/UDebtsApi/ByGroup/" + groupId;
+            string url = Hosting.Current + "api/UDebtsApi/ByGroup/" + groupId;
             try
             {
-                HttpWebRequest request = (HttpWebRequest)WebRequest.Create(new Uri(url));
-                request.ContentType = "application/json";
-                request.Method = "GET";
-                using (WebResponse response = request.GetResponse())
+                JsonValue udebtJSONList = Get(url);
+                foreach (JsonValue udebtJSON in udebtJSONList)
                 {
-                    using (Stream stream = response.GetResponseStream())
-                    {
-                        JsonValue o = JsonValue.Load(stream);
-                        foreach (JsonValue g in o)
-                        {
-                            UDebt d = UploadDebt(g);
-                            items.Add(d);
-                        }
-                    }
+                    UDebt udebtJ = UploadDebt(udebtJSON);
+                    items.Add(udebtJ);
                 }
             }
             catch (Exception e)
@@ -289,23 +180,14 @@ namespace share
         public static List<UPayment> LoadPaymentList(int eventId)
         {
             List<UPayment> items = new List<UPayment>();
-            string url = (m_IsHome ? m_HomeURL : m_HostURL) + "api/UPaymentsApi/ByEvent/" + eventId;
+            string url = Hosting.Current + "api/UPaymentsApi/ByEvent/" + eventId;
             try
             {
-                HttpWebRequest request = (HttpWebRequest)WebRequest.Create(new Uri(url));
-                request.ContentType = "application/json";
-                request.Method = "GET";
-                using (WebResponse response = request.GetResponse())
+                JsonValue upaymentJSONList = Get(url);
+                foreach (JsonValue upaymentJSON in upaymentJSONList)
                 {
-                    using (Stream stream = response.GetResponseStream())
-                    {
-                        JsonValue o = JsonValue.Load(stream);
-                        foreach (JsonValue g in o)
-                        {
-                            UPayment p = UploadPayment(g);
-                            items.Add(p);
-                        }
-                    }
+                    UPayment upayment = UploadPayment(upaymentJSON);
+                    items.Add(upayment);
                 }
             }
             catch (Exception e)
@@ -317,23 +199,14 @@ namespace share
         public static List<UBill> LoadBillList(int eventId)
         {
             List<UBill> items = new List<UBill>();
-            string url = (m_IsHome ? m_HomeURL : m_HostURL) + "api/UBillsApi/ByEvent/" + eventId;
+            string url = Hosting.Current + "api/UBillsApi/ByEvent/" + eventId;
             try
             {
-                HttpWebRequest request = (HttpWebRequest)WebRequest.Create(new Uri(url));
-                request.ContentType = "application/json";
-                request.Method = "GET";
-                using (WebResponse response = request.GetResponse())
+                JsonValue ubillJSONList = Get(url);
+                foreach (JsonValue ubillJSON in ubillJSONList)
                 {
-                    using (Stream stream = response.GetResponseStream())
-                    {
-                        JsonValue o = JsonValue.Load(stream);
-                        foreach (JsonValue g in o)
-                        {
-                            UBill b = UploadBill(g);
-                            items.Add(b);
-                        }
-                    }
+                    UBill ubill = UploadBill(ubillJSON);
+                    items.Add(ubill);
                 }
             }
             catch (Exception e)
@@ -351,22 +224,15 @@ namespace share
                 if (userId == null)
                     return items;
 
-                string url = (m_IsHome ? m_HomeURL : m_HostURL) + "api/UGroupsApi/ByUser/" + userId;
-
-                HttpWebRequest request = (HttpWebRequest)WebRequest.Create(new Uri(url));
-                request.ContentType = "application/json";
-                request.Method = "GET";
-                using (WebResponse response = request.GetResponse())
+                string url = Hosting.Current + "api/UGroupsApi/ByUser/" + userId;
+                JsonValue ugroupJSONList = Get(url);
+                foreach (JsonValue ugroupJSON in ugroupJSONList)
                 {
-                    using (Stream stream = response.GetResponseStream())
-                    {
-                        JsonValue o = JsonValue.Load(stream);
-                        foreach(JsonValue g in o)
-                        {
-                            UGroup ng = UploadGroup(g);
-                            items.Add(ng);
-                        }
-                    }
+                    /*string a = ugroupJSON.ToString();
+                    UGroup temp = Deserialize<UGroup>(ugroupJSON.ToString());*/
+
+                    UGroup ugroup = UploadGroup(ugroupJSON);
+                    items.Add(ugroup);
                 }
             }
             catch (Exception e)
@@ -379,23 +245,14 @@ namespace share
         public static List<UTotal> LoadTotalListByGroup(int groupId)
         {
             List<UTotal> items = new List<UTotal>();
-            string url = (m_IsHome ? m_HomeURL : m_HostURL) + "api/UTotalsApi/ByGroup/" + groupId;
+            string url = Hosting.Current + "api/UTotalsApi/ByGroup/" + groupId;
             try
             {
-                HttpWebRequest request = (HttpWebRequest)WebRequest.Create(new Uri(url));
-                request.ContentType = "application/json";
-                request.Method = "GET";
-                using (WebResponse response = request.GetResponse())
+                JsonValue utotalJSONList = Get(url);
+                foreach (JsonValue utotalJSON in utotalJSONList)
                 {
-                    using (Stream stream = response.GetResponseStream())
-                    {
-                        JsonValue o = JsonValue.Load(stream);
-                        foreach (JsonValue g in o)
-                        {
-                            UTotal t = UploadTotal(g);
-                            items.Add(t);
-                        }
-                    }
+                    UTotal utotal = UploadTotal(utotalJSON);
+                    items.Add(utotal);
                 }
             }
             catch (Exception e)
@@ -407,23 +264,14 @@ namespace share
         public static List<UTotal> LoadTotalListByEvent(int eventId)
         {
             List<UTotal> items = new List<UTotal>();
-            string url = (m_IsHome ? m_HomeURL : m_HostURL) + "api/UTotalsApi/ByEvent/" + eventId;
+            string url = Hosting.Current + "api/UTotalsApi/ByEvent/" + eventId;
             try
             {
-                HttpWebRequest request = (HttpWebRequest)WebRequest.Create(new Uri(url));
-                request.ContentType = "application/json";
-                request.Method = "GET";
-                using (WebResponse response = request.GetResponse())
+                JsonValue utotalJSONList = Get(url);
+                foreach (JsonValue utotalJSON in utotalJSONList)
                 {
-                    using (Stream stream = response.GetResponseStream())
-                    {
-                        JsonValue o = JsonValue.Load(stream);
-                        foreach (JsonValue g in o)
-                        {
-                            UTotal t = UploadTotal(g);
-                            items.Add(t);
-                        }
-                    }
+                    UTotal utotal = UploadTotal(utotalJSON);
+                    items.Add(utotal);
                 }
             }
             catch (Exception e)
@@ -437,35 +285,13 @@ namespace share
         {
             try
             {
-                UGroup ugroup = Server.LoadFullGroupDetails(id);
-                ugroup.UUserId = Server.GetCurrentUserId();
-                if (string.IsNullOrWhiteSpace(ugroup.UUserId))
+                UGroup o = Server.LoadFullGroupDetails(id);
+                o.uUserId = Server.GetCurrentUserId();
+                if (string.IsNullOrWhiteSpace(o.uUserId))
                     return false;
 
-                MemoryStream stream = new MemoryStream();
-                DataContractJsonSerializer serializer = new DataContractJsonSerializer(typeof(UGroup));
-                serializer.WriteObject(stream, ugroup);
-                stream.Position = 0;
-                StreamReader sr = new StreamReader(stream);
-                string postData = sr.ReadToEnd();
-
-                string url = (m_IsHome ? m_HomeURL : m_HostURL) + "api/UGroupsApi/Export";
-                HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
-                request.Method = "POST";
-                byte[] byteArray = Encoding.UTF8.GetBytes(postData);
-                request.ContentType = "application/json";
-                request.ContentLength = byteArray.Length;
-                Stream dataStream = request.GetRequestStream();
-                dataStream.Write(byteArray, 0, byteArray.Length);
-                dataStream.Close();
-                
-                WebResponse response = request.GetResponse();
-                dataStream = response.GetResponseStream();
-                StreamReader reader = new StreamReader(dataStream);
-                string result = reader.ReadToEnd();
-                reader.Close();
-                dataStream.Close();
-                response.Close();
+                string url = Hosting.Current + "api/UGroupsApi/Export";
+                Post(url, o);
             }
             catch (Exception e)
             {
@@ -475,22 +301,13 @@ namespace share
         }
         public bool ImportGroup(int id)
         {
-            string url = (m_IsHome ? m_HomeURL : m_HostURL) + "api/UGroupsApi/Import/" + id.ToString();
+            string url = Hosting.Current + "api/UGroupsApi/Import/" + id.ToString();
             try
             {
-                HttpWebRequest request = (HttpWebRequest)WebRequest.Create(new Uri(url));
-                request.ContentType = "application/json";
-                request.Method = "GET";
-                using (WebResponse response = request.GetResponse())
-                {
-                    using (Stream stream = response.GetResponseStream())
-                    {
-                        JsonValue o = JsonValue.Load(stream);
-                        UGroup g = UploadGroup(o);
-                        Server.UploadGroup(g);
-                        return true;
-                    }
-                }
+                JsonValue ugroupJSON = Get(url);
+                UGroup ugroup = UploadGroup(ugroupJSON);
+                Server.UploadGroup(ugroup);
+                return true;
             }
             catch (Exception e)
             {
@@ -503,69 +320,20 @@ namespace share
         {
             try
             {
-                MemoryStream stream = new MemoryStream();
-                DataContractJsonSerializer serializer = new DataContractJsonSerializer(typeof(T));
-                serializer.WriteObject(stream, o);
-                stream.Position = 0;
-                StreamReader sr = new StreamReader(stream);
-                string postData = sr.ReadToEnd();
-
-                string url = (m_IsHome ? m_HomeURL : m_HostURL) + "api/" + o.Controller;
-                HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
-                request.Method = "POST";
-                byte[] byteArray = Encoding.UTF8.GetBytes(postData);
-                request.ContentType = "application/json";
-                request.ContentLength = byteArray.Length;
-                Stream dataStream = request.GetRequestStream();
-                dataStream.Write(byteArray, 0, byteArray.Length);
-                dataStream.Close();
-
-                WebResponse response = request.GetResponse();
-                dataStream = response.GetResponseStream();
-                StreamReader reader = new StreamReader(dataStream);
-                string result = reader.ReadToEnd();
-                reader.Close();
-                dataStream.Close();
-                response.Close();
-
-                int id;
-                if (int.TryParse(result, out id))
-                {
-                }
+                string url = Hosting.Current + "api/" + o.Controller;
+                Post(url, o);
             }
-            catch (Exception e)
+            catch (Exception ex)
             {
-                var error = e;
+                var error = ex;
             }
         }
         public static void UpdateObject<T>(T o) where T : UObject
         {
             try
             {
-                MemoryStream stream = new MemoryStream();
-                DataContractJsonSerializer serializer = new DataContractJsonSerializer(typeof(T));
-                serializer.WriteObject(stream, o);
-                stream.Position = 0;
-                StreamReader sr = new StreamReader(stream);
-                string postData = sr.ReadToEnd();
-
-                string url = (m_IsHome ? m_HomeURL : m_HostURL) + "api/" + o.Controller + "/" + o.Id;
-                HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
-                request.Method = "PUT";
-                byte[] byteArray = Encoding.UTF8.GetBytes(postData);
-                request.ContentType = "application/json";
-                request.ContentLength = byteArray.Length;
-                Stream dataStream = request.GetRequestStream();
-                dataStream.Write(byteArray, 0, byteArray.Length);
-                dataStream.Close();
-
-                WebResponse response = request.GetResponse();
-                dataStream = response.GetResponseStream();
-                StreamReader reader = new StreamReader(dataStream);
-                string result = reader.ReadToEnd();
-                reader.Close();
-                dataStream.Close();
-                response.Close();
+                string url = Hosting.Current + "api/" + o.Controller + "/" + o.id;
+                string result = Put(url, o);
             }
             catch (Exception e)
             {
@@ -574,7 +342,7 @@ namespace share
         }
         public static void DeleteObject<T>(T o) where T : UObject
         {
-            string url = (m_IsHome ? m_HomeURL : m_HostURL) + "api/" + o.Controller + "/" + o.Id.ToString();
+            string url = Hosting.Current + "api/" + o.Controller + "/" + o.id.ToString();
             try
             {
                 HttpWebRequest request = (HttpWebRequest)HttpWebRequest.Create(new Uri(url));
@@ -597,7 +365,7 @@ namespace share
         {
             T item = Activator.CreateInstance(typeof(T)) as T;
 
-            string url = (m_IsHome ? m_HomeURL : m_HostURL) + "api/" + item.Controller + "/" + id.ToString();
+            string url = Hosting.Current + "api/" + item.Controller + "/" + id.ToString();
             try
             {
                 HttpWebRequest request = (HttpWebRequest)WebRequest.Create(new Uri(url));
@@ -646,33 +414,33 @@ namespace share
         private static UGroup UploadGroup(JsonValue o)
         {
             UGroup ugroup = new UGroup();
-            ugroup.Id = o["id"];
-            ugroup.Name = o["name"];
-            ugroup.Password = o["password"];
-            ugroup.UUserId = o["uUserId"];
+            ugroup.id = o["id"];
+            ugroup.name = o["name"];
+            ugroup.password = o["password"];
+            ugroup.uUserId = o["uUserId"];
 
             if (o.ContainsKey("uEvents") && o["uEvents"] != null)
             {
-                ugroup.UEvents = new List<UEvent>();
+                ugroup.uEvents = new List<UEvent>();
                 foreach (JsonValue e in o["uEvents"])
                 {
-                    ugroup.UEvents.Add(UploadEvent(e));
+                    ugroup.uEvents.Add(UploadEvent(e));
                 }
             }
             if (o.ContainsKey("uMembers") && o["uMembers"] != null)
             {
-                ugroup.UMembers = new List<UMember>();
+                ugroup.uMembers = new List<UMember>();
                 foreach (JsonValue m in o["uMembers"])
                 {
-                    ugroup.UMembers.Add(UploadMember(m));
+                    ugroup.uMembers.Add(UploadMember(m));
                 }
             }
             if (o.ContainsKey("uDebts") && o["uDebts"] != null)
             {
-                ugroup.UDebts = new List<UDebt>();
+                ugroup.uDebts = new List<UDebt>();
                 foreach (JsonValue d in o["uDebts"])
                 {
-                    ugroup.UDebts.Add(UploadDebt(d));
+                    ugroup.uDebts.Add(UploadDebt(d));
                 }
             }
             return ugroup;
@@ -680,7 +448,7 @@ namespace share
         private static UEvent UploadEvent(JsonValue o)
         {
             UEvent uevent = new UEvent();
-            uevent.Id = o["id"];
+            uevent.id = o["id"];
             uevent.Name = o["name"];
             uevent.UGroupId = o["uGroupId"];
             uevent.UEventTypeId = o["uEventTypeId"];
@@ -708,7 +476,7 @@ namespace share
         private static UMember UploadMember(JsonValue o)
         {
             UMember umember = new UMember();
-            umember.Id = o["id"];
+            umember.id = o["id"];
             umember.Name = o["name"];
             umember.UGroupId = o["uGroupId"];
             return umember;
@@ -716,7 +484,7 @@ namespace share
         private static UDebt UploadDebt(JsonValue o)
         {
             UDebt udebt = new UDebt();
-            udebt.Id = o["id"];
+            udebt.id = o["id"];
             udebt.Name = o["name"];
             udebt.Amount = o["amount"];
             udebt.UGroupId = o["uGroupId"];
@@ -730,7 +498,7 @@ namespace share
         private static UBill UploadBill(JsonValue o)
         {
             UBill ubill = new UBill();
-            ubill.Id = o["id"];
+            ubill.id = o["id"];
             ubill.UEventId = o["uEventId"];
             ubill.UMemberId = o["uMemberId"];
             ubill.Amount = o["amount"];
@@ -740,7 +508,7 @@ namespace share
         private static UPayment UploadPayment(JsonValue o)
         {
             UPayment upayment = new UPayment();
-            upayment.Id = o["id"];
+            upayment.id = o["id"];
             upayment.UEventId = o["uEventId"];
             upayment.UMemberId = o["uMemberId"];
             upayment.Amount = o["amount"];
@@ -764,6 +532,106 @@ namespace share
             obj = (T)serializer.ReadObject(ms);
             ms.Close();
             return obj;
+        }
+
+        private static string Post(string url, object data)
+        {
+            string result = null;
+            Stream stream = null;
+            WebResponse response = null;
+            StreamReader reader = null;
+            try
+            {
+                WebRequest request = WebRequest.Create(url);
+                request.Method = "POST";
+                request.ContentType = "application/json";
+                stream = request.GetRequestStream();
+                DataContractJsonSerializer serializer = new DataContractJsonSerializer(data.GetType());
+                serializer.WriteObject(stream, data);
+                stream.Close();
+
+                response = request.GetResponse();
+                stream = response.GetResponseStream();
+                reader = new StreamReader(stream);
+                result = reader.ReadToEnd();
+            }
+            catch(Exception ex)
+            {
+                Exception e = ex;
+            }
+            finally
+            {
+                if(reader != null)
+                    reader.Close();
+                if (stream != null)
+                    stream.Close();
+                if (response != null)
+                    response.Close();
+            }
+            return result;
+        }
+        private static JsonValue Get(string url)
+        {
+            JsonValue result = null;
+            Stream stream = null;
+            WebResponse response = null;
+            try
+            {
+                WebRequest request = WebRequest.Create(new Uri(url));
+                request.ContentType = "application/json";
+                request.Method = "GET";
+                response = request.GetResponse();
+                stream = response.GetResponseStream();
+                result = JsonValue.Load(stream);
+            }
+            catch(Exception ex)
+            {
+                Exception e = ex;
+            }
+            finally
+            {
+                if (stream != null)
+                    stream.Close();
+                if (response != null)
+                    response.Close();
+            }
+            return result;
+        }
+        private static string Put(string url, object data)
+        {
+            string result = null;
+            Stream stream = null;
+            WebResponse response = null;
+            StreamReader reader = null;
+            try
+            {
+                WebRequest request = WebRequest.Create(url);
+                request.Method = "PUT";
+                request.ContentType = "application/json";
+                stream = request.GetRequestStream();
+                DataContractJsonSerializer serializer = new DataContractJsonSerializer(data.GetType());
+                serializer.WriteObject(stream, data);
+                stream.Close();
+
+                response = request.GetResponse();
+                stream = response.GetResponseStream();
+                reader = new StreamReader(stream);
+                result = reader.ReadToEnd();
+            }
+            catch (Exception ex)
+            {
+                Exception e = ex;
+            }
+            finally
+            {
+                if (reader != null)
+                    reader.Close();
+                if (stream != null)
+                    stream.Close();
+                if (response != null)
+                    response.Close();
+            }
+            return result;
         }
     }
 }

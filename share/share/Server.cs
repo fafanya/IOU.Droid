@@ -99,50 +99,50 @@ namespace share
 
         private static void FillExample()
         {
-            UGroup g = new UGroup() { Name = "Поездка в Прагу" };
+            UGroup g = new UGroup() { name = "Поездка в Прагу" };
             CreateObject(g);
 
-            UEvent e1 = new UEvent() { Name = "Такси", UGroupId = g.Id, UEventTypeId = UEventType.tCommon };
+            UEvent e1 = new UEvent() { Name = "Такси", UGroupId = g.id, UEventTypeId = UEventType.tCommon };
             CreateObject(e1);
-            UEvent e2 = new UEvent() { Name = "Кафе", UGroupId = g.Id, UEventTypeId = UEventType.tOwn };
+            UEvent e2 = new UEvent() { Name = "Кафе", UGroupId = g.id, UEventTypeId = UEventType.tOwn };
             CreateObject(e2);
-            UEvent e3 = new UEvent() { Name = "Музей", UGroupId = g.Id, UEventTypeId = UEventType.tPartly };
+            UEvent e3 = new UEvent() { Name = "Музей", UGroupId = g.id, UEventTypeId = UEventType.tPartly };
             CreateObject(e3);
 
-            UMember m1 = new UMember() { Name = "Петя", UGroupId = g.Id };
+            UMember m1 = new UMember() { Name = "Петя", UGroupId = g.id };
             CreateObject(m1);
-            UMember m2 = new UMember() { Name = "Вася", UGroupId = g.Id };
+            UMember m2 = new UMember() { Name = "Вася", UGroupId = g.id };
             CreateObject(m2);
-            UMember m3 = new UMember() { Name = "Коля", UGroupId = g.Id };
+            UMember m3 = new UMember() { Name = "Коля", UGroupId = g.id };
             CreateObject(m3);
 
-            UDebt d1 = new UDebt() { Name = "Пиво", UGroupId = g.Id, LenderId = m3.Id,
-                DebtorId = m2.Id, Amount = 19.05 };
+            UDebt d1 = new UDebt() { Name = "Пиво", UGroupId = g.id, LenderId = m3.id,
+                DebtorId = m2.id, Amount = 19.05 };
             CreateObject(d1);
 
-            UBill b1 = new UBill() { UEventId = e2.Id, UMemberId = m1.Id, Amount = 80 };
+            UBill b1 = new UBill() { UEventId = e2.id, UMemberId = m1.id, Amount = 80 };
             CreateObject(b1);
-            UBill b2 = new UBill() { UEventId = e2.Id, UMemberId = m2.Id, Amount = 60 };
+            UBill b2 = new UBill() { UEventId = e2.id, UMemberId = m2.id, Amount = 60 };
             CreateObject(b2);
-            UBill b3 = new UBill() { UEventId = e2.Id, UMemberId = m3.Id, Amount = 100 };
+            UBill b3 = new UBill() { UEventId = e2.id, UMemberId = m3.id, Amount = 100 };
             CreateObject(b3);
 
-            UBill b4 = new UBill() { UEventId = e3.Id, UMemberId = m2.Id, Amount = 0 };
+            UBill b4 = new UBill() { UEventId = e3.id, UMemberId = m2.id, Amount = 0 };
             CreateObject(b4);
-            UBill b5 = new UBill() { UEventId = e3.Id, UMemberId = m3.Id, Amount = 0 };
+            UBill b5 = new UBill() { UEventId = e3.id, UMemberId = m3.id, Amount = 0 };
             CreateObject(b5);
 
-            UPayment p1 = new UPayment() { UEventId = e1.Id, UMemberId = m1.Id, Amount = 60 };
+            UPayment p1 = new UPayment() { UEventId = e1.id, UMemberId = m1.id, Amount = 60 };
             CreateObject(p1);
 
-            UPayment p2 = new UPayment() { UEventId = e2.Id, UMemberId = m1.Id, Amount = 100 };
+            UPayment p2 = new UPayment() { UEventId = e2.id, UMemberId = m1.id, Amount = 100 };
             CreateObject(p2);
-            UPayment p3 = new UPayment() { UEventId = e2.Id, UMemberId = m3.Id, Amount = 100 };
+            UPayment p3 = new UPayment() { UEventId = e2.id, UMemberId = m3.id, Amount = 100 };
             CreateObject(p3);
 
-            UPayment p4 = new UPayment() { UEventId = e3.Id, UMemberId = m3.Id, Amount = 35 };
+            UPayment p4 = new UPayment() { UEventId = e3.id, UMemberId = m3.id, Amount = 35 };
             CreateObject(p4);
-            UPayment p5 = new UPayment() { UEventId = e3.Id, UMemberId = m2.Id, Amount = 15 };
+            UPayment p5 = new UPayment() { UEventId = e3.id, UMemberId = m2.id, Amount = 15 };
             CreateObject(p5);
         }
 
@@ -253,9 +253,9 @@ namespace share
             {
                 foreach(UEvent item in result)
                 {
-                    item.UBills = LoadBillList(item.Id, isFull: isFull);
-                    item.UPayments = LoadPaymentList(item.Id, isFull: isFull);
-                    item.UMembers = LoadMemberList(eventId: item.Id, isFull: isFull);
+                    item.UBills = LoadBillList(item.id, isFull: isFull);
+                    item.UPayments = LoadPaymentList(item.id, isFull: isFull);
+                    item.UMembers = LoadMemberList(eventId: item.id, isFull: isFull);
                 }
             }
 
@@ -278,10 +278,10 @@ namespace share
             {
                 foreach(UMember item in result)
                 {
-                    item.UBills = LoadBillList(memberId: item.Id);
-                    item.UPayments = LoadPaymentList(memberId: item.Id);
-                    item.LenderUDebts = LoadDebtList(lenderId: item.Id);
-                    item.DebtorUDebts = LoadDebtList(debtorId: item.Id);
+                    item.UBills = LoadBillList(memberId: item.id);
+                    item.UPayments = LoadPaymentList(memberId: item.id);
+                    item.LenderUDebts = LoadDebtList(lenderId: item.id);
+                    item.DebtorUDebts = LoadDebtList(debtorId: item.id);
                 }
             }
             return result;
@@ -372,45 +372,44 @@ namespace share
         {
             UGroup item = LoadObjectDetails<UGroup>(groupId);
 
-            item.UDebts = LoadDebtList(item.Id, isFull: true);
-            item.UEvents = LoadEventList(item.Id, isFull: true);
-            item.UMembers = LoadMemberList(item.Id, isFull: true);
+            item.uDebts = LoadDebtList(item.id, isFull: true);
+            item.uEvents = LoadEventList(item.id, isFull: true);
+            item.uMembers = LoadMemberList(item.id, isFull: true);
 
             return item;
         }
-        public static List<UTotal> LoadTotalDebtList(int eventId = 0, int groupId = 0)
+
+        public static List<UTotal> LoadTotalListByEvent(int eventId)
         {
             List<UTotal> result;
 
-            if(eventId != 0)
+            UEvent e = LoadObjectDetails<UEvent>(eventId);
+            if(e.UGroupId == 0)
             {
-                UEvent e = LoadObjectDetails<UEvent>(eventId);
-                if(e.UGroupId == 0)
-                {
-                    List<UMember> members = LoadMemberList(eventId: eventId);
-                    List<UBill> bills = LoadBillList(eventId);
-                    List<UPayment> payments = LoadPaymentList(eventId);
-                    result = Algorithm.RecountEventTotalDebtList(eventId, members, bills, payments);
-                }
-                else
-                {
-                    List<UMember> members = LoadMemberList(groupId);
-                    List<UBill> bills = LoadBillList(eventId);
-                    List<UPayment> payments = LoadPaymentList(eventId);
-                    result = Algorithm.RecountEventTotalDebtList(eventId, members, bills, payments);
-                }
+                List<UMember> members = LoadMemberList(eventId: eventId);
+                List<UBill> bills = LoadBillList(eventId);
+                List<UPayment> payments = LoadPaymentList(eventId);
+                result = Algorithm.RecountEventTotalDebtList(eventId, members, bills, payments);
             }
             else
             {
-                List<UMember> members = LoadMemberList(groupId);
-                List<UDebt> debts = LoadDebtList(groupId);
-                List<UEvent> events = LoadEventList(groupId);
-                List<UBill> bills = LoadBillList(groupId: groupId);
-                List<UPayment> payments = LoadPaymentList(groupId: groupId);
-                result = Algorithm.RecountGroupTotalDebtList(members, debts, bills, events, payments);
+                List<UMember> members = LoadMemberList(e.UGroupId);
+                List<UBill> bills = LoadBillList(eventId);
+                List<UPayment> payments = LoadPaymentList(eventId);
+                result = Algorithm.RecountEventTotalDebtList(eventId, members, bills, payments);
             }
 
             return result;
+        }
+
+        public static List<UTotal> LoadTotalListByGroup(int groupId)
+        {
+            List<UMember> members = LoadMemberList(groupId);
+            List<UDebt> debts = LoadDebtList(groupId);
+            List<UEvent> events = LoadEventList(groupId);
+            List<UBill> bills = LoadBillList(groupId: groupId);
+            List<UPayment> payments = LoadPaymentList(groupId: groupId);
+            return Algorithm.RecountGroupTotalDebtList(members, debts, bills, events, payments);
         }
 
         public static string CreateUser(string id, string email)
@@ -498,36 +497,36 @@ namespace share
                 Dictionary<int, int> eID = new Dictionary<int, int>();
                 Dictionary<int, int> mID = new Dictionary<int, int>();
 
-                gID.Add(g.Id, UploadObject(g));
-                if (g.UMembers != null)
+                gID.Add(g.id, UploadObject(g));
+                if (g.uMembers != null)
                 {
-                    foreach (UMember m in g.UMembers)
+                    foreach (UMember m in g.uMembers)
                     {
-                        m.UGroupId = gID[g.Id];
-                        mID.Add(m.Id, UploadObject(m));
+                        m.UGroupId = gID[g.id];
+                        mID.Add(m.id, UploadObject(m));
                     }
                 }
-                if (g.UDebts != null)
+                if (g.uDebts != null)
                 {
-                    foreach (UDebt d in g.UDebts)
+                    foreach (UDebt d in g.uDebts)
                     {
-                        d.UGroupId = gID[g.Id];
+                        d.UGroupId = gID[g.id];
                         d.LenderId = mID[d.LenderId];
                         d.DebtorId = mID[d.DebtorId];
                         UploadObject(d);
                     }
                 }
-                if (g.UEvents != null)
+                if (g.uEvents != null)
                 {
-                    foreach (UEvent e in g.UEvents)
+                    foreach (UEvent e in g.uEvents)
                     {
-                        e.UGroupId = gID[g.Id];
-                        eID.Add(e.Id, UploadObject(e));
+                        e.UGroupId = gID[g.id];
+                        eID.Add(e.id, UploadObject(e));
                         if (e.UBills != null)
                         {
                             foreach (UBill b in e.UBills)
                             {
-                                b.UEventId = eID[e.Id];
+                                b.UEventId = eID[e.id];
                                 b.UMemberId = mID[b.UMemberId];
                                 UploadObject(b);
                             }
@@ -536,7 +535,7 @@ namespace share
                         {
                             foreach (UPayment p in e.UPayments)
                             {
-                                p.UEventId = eID[e.Id];
+                                p.UEventId = eID[e.id];
                                 p.UMemberId = mID[p.UMemberId];
                                 UploadObject(p);
                             }
@@ -598,7 +597,7 @@ namespace share
             string commandText = null;
             if (id != null)
             {
-                item.Id = id.Value;
+                item.id = id.Value;
                 commandText = item.DetailsQuery;
             }
 
@@ -629,7 +628,7 @@ namespace share
             try
             {
                 string commandText = GetCreateCommand(uobject);
-                uobject.Id = ExecuteCommand(commandText);
+                uobject.id = ExecuteCommand(commandText);
             }
             catch(Exception ex)
             {
@@ -693,7 +692,7 @@ namespace share
         public static void DeleteObject(UObject uobject)
         {
             string commandText = "DELETE FROM " + uobject.Table +
-                " WHERE " + uobject.Table + ".ID = " + uobject.Id + " ;";
+                " WHERE " + uobject.Table + ".ID = " + uobject.id + " ;";
             ExecuteCommand(commandText);
         }
         public static void UpdateObject(UObject uobject)
@@ -731,7 +730,7 @@ namespace share
                     commandText += ", ";
                 }
             }
-            commandText += " WHERE " + uobject.Table + ".ID = " + uobject.Id + " ;";
+            commandText += " WHERE " + uobject.Table + ".ID = " + uobject.id + " ;";
             ExecuteCommand(commandText);
         }
         #endregion

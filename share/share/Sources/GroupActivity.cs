@@ -36,7 +36,7 @@ namespace share
             }
             if(group != null)
             {
-                SupportActionBar.Title = group.Name;
+                SupportActionBar.Title = group.name;
             }
 
             SupportActionBar.SetDisplayHomeAsUpEnabled(true);

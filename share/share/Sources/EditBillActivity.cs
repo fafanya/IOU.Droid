@@ -45,7 +45,7 @@ namespace share
             m_Bill.UEventId = eventId;
             m_Bill.Amount = 0.0;
 
-            UEvent m_Event = Server.LoadObjectDetails<UEvent>(eventId);
+            m_Event = Server.LoadObjectDetails<UEvent>(eventId);
             List<UMember> memberItems;
             if (m_Event.UGroupId != 0)
             {

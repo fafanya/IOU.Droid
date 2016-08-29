@@ -19,7 +19,7 @@ namespace share
 
         public override long GetItemId(int position)
         {
-            return items[position].Id;
+            return items[position].id;
         }
 
         public override UGroup this[int position]
@@ -46,9 +46,9 @@ namespace share
             TextView title = view.FindViewById<TextView>(Resource.Id.result_name);
             TextView name = view.FindViewById<TextView>(Resource.Id.result_second_line);
 
-            name.Text = group.Name;
+            name.Text = group.name;
 
-            if (string.IsNullOrWhiteSpace(group.UUserId))
+            if (string.IsNullOrWhiteSpace(group.uUserId))
             {
                 title.Text = "в телефоне";
                 image.SetImageResource(Resource.Drawable.smartphone);
@@ -56,7 +56,7 @@ namespace share
             else
             {
                 title.Text = "в интернете";
-                name.Text += " [ID:" + group.Id + "]";
+                name.Text += " [ID:" + group.id + "]";
                 image.SetImageResource(Resource.Drawable.internet);
             }
 

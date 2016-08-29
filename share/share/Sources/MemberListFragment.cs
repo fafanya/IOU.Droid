@@ -114,7 +114,7 @@ namespace share
                 if (item.ItemId == 1)
                 {
                     var intent = new Intent(Activity, typeof(EditMemberActivity));
-                    intent.PutExtra("Key", o.Id);
+                    intent.PutExtra("Key", o.id);
                     intent.PutExtra("EditMode", m_EditMode);
                     StartActivityForResult(intent, 1);
                 }
@@ -134,7 +134,7 @@ namespace share
                 {
                     if (m_EditMode == EditMode.itEditInternet)
                     {
-                        Client.SelectMember(o.Id);
+                        Client.SelectMember(o.id);
                     }
                 }
                 return true;

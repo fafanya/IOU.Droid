@@ -49,7 +49,7 @@ namespace share
             }
             else
             {
-                memberItems = Server.LoadMemberList(eventId: uevent.Id);
+                memberItems = Server.LoadMemberList(eventId: uevent.id);
             }
 
             m_spMember.Adapter = new DebtorListAdapter(this, memberItems.ToArray());
@@ -82,7 +82,7 @@ namespace share
             }
             else
             {
-                memberItems = Server.LoadMemberList(eventId: uevent.Id);
+                memberItems = Server.LoadMemberList(eventId: uevent.id);
             }
 
             m_spMember.Adapter = new DebtorListAdapter(this, memberItems.ToArray());
