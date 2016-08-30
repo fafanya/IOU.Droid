@@ -1,15 +1,7 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
 using Android.App;
-using Android.Content;
-using Android.OS;
-using Android.Runtime;
 using Android.Views;
-using Android.Widget;
-
+using Android.Content;
 using Android.Support.V7.App;
 
 namespace share
@@ -21,19 +13,19 @@ namespace share
 
         protected void BtnOK_Click(object sender, EventArgs e)
         {
-            if(m_EditMode == EditMode.itCreateLocal)
+            if(m_EditMode == EditMode.itCreateLocalDB)
             {
                 FinishCreateLocal();
             }
-            else if(m_EditMode == EditMode.itCreateInternet)
+            else if(m_EditMode == EditMode.itCreateWebApi)
             {
                 FinishCreateInternet();
             }
-            else if(m_EditMode == EditMode.itEditLocal)
+            else if(m_EditMode == EditMode.itEditLocalDB)
             {
                 FinishEditLocal();
             }
-            else if(m_EditMode == EditMode.itEditInternet)
+            else if(m_EditMode == EditMode.itEditWebApi)
             {
                 FinishEditInternet();
             }
@@ -55,19 +47,19 @@ namespace share
         {
             SetEditModeAndKey();
 
-            if (m_EditMode == EditMode.itCreateLocal)
+            if (m_EditMode == EditMode.itCreateLocalDB)
             {
                 StartCreateLocal();
             }
-            else if (m_EditMode == EditMode.itCreateInternet)
+            else if (m_EditMode == EditMode.itCreateWebApi)
             {
                 StartCreateInternet();
             }
-            else if (m_EditMode == EditMode.itEditLocal)
+            else if (m_EditMode == EditMode.itEditLocalDB)
             {
                 StartEditLocal();
             }
-            else if (m_EditMode == EditMode.itEditInternet)
+            else if (m_EditMode == EditMode.itEditWebApi)
             {
                 StartEditInternet();
             }
@@ -110,9 +102,9 @@ namespace share
     public class EditMode
     {
         public static int itUnexpected = 0;
-        public static int itCreateLocal = 1;
-        public static int itCreateInternet = 2;
-        public static int itEditLocal = 3;
-        public static int itEditInternet = 4;
+        public static int itCreateLocalDB = 1;
+        public static int itCreateWebApi = 2;
+        public static int itEditLocalDB = 3;
+        public static int itEditWebApi = 4;
     }
 }

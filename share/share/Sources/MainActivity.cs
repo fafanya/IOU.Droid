@@ -28,7 +28,7 @@ namespace share
             SupportActionBar.SetHomeAsUpIndicator(Resource.Drawable.ic_menu);
             SupportActionBar.SetDisplayHomeAsUpEnabled(true);
 
-            string email = Server.GetCurrentUserEmail();
+            string email = LocalDBController.GetCurrentUserEmail();
             if (string.IsNullOrWhiteSpace(email))
             {
                 SupportActionBar.Title = "Менеджер долгов";
@@ -56,8 +56,20 @@ namespace share
                 }
                 else if(e.MenuItem.ItemId == Resource.Id.nav_login)
                 {
-                    var intent = new Intent(this, typeof(LoginActivity));
-                    StartActivity(intent);
+                    string userId = LocalDBController.GetCurrentUserId();
+                    if (string.IsNullOrWhiteSpace(userId))
+                    {
+                        var intent = new Intent(this, typeof(LoginActivity));
+                        StartActivity(intent);
+                    }
+                    else
+                    {
+                        AlertDialog alertDialog;
+                        alertDialog = new AlertDialog.Builder(this).Create();
+                        alertDialog.SetTitle("Попытка входа");
+                        alertDialog.SetMessage("Выйдите из текущего профиля");
+                        alertDialog.Show();
+                    }
                 }
                 else if(e.MenuItem.ItemId == Resource.Id.nav_exit)
                 {
@@ -76,7 +88,7 @@ namespace share
 
         private void InitializeApp()
         {
-            Server.Initialize();
+            LocalDBController.Initialize();
         }
 
         public override bool OnOptionsItemSelected(IMenuItem item)
@@ -84,7 +96,7 @@ namespace share
             switch (item.ItemId)
             {
                 case Android.Resource.Id.Home:
-                    m_DrawerLayout.OpenDrawer(Android.Support.V4.View.GravityCompat.Start);
+                    m_DrawerLayout.OpenDrawer(GravityCompat.Start);
                     return true;
             }
             return base.OnOptionsItemSelected(item);
@@ -93,7 +105,7 @@ namespace share
         protected override void OnResume()
         {
             base.OnResume();
-            string email = Server.GetCurrentUserEmail();
+            string email = LocalDBController.GetCurrentUserEmail();
             if (string.IsNullOrWhiteSpace(email))
             {
                 SupportActionBar.Title = "Менеджер долгов";
@@ -106,17 +118,14 @@ namespace share
 
         private void setupViewPager(ViewPager viewPager)
         {
-            ViewPagerAdapter adapter = new ViewPagerAdapter(SupportFragmentManager);
-
-            Bundle args = new Bundle();
-            args.PutInt("Group_ID", 0);
-
-            EventListFragment eventListFragment = new EventListFragment();
             GroupListFragment groupListFragment = new GroupListFragment();
 
+            EventListFragment eventListFragment = new EventListFragment();
+            Bundle args = new Bundle();
+            args.PutInt("EditMode", EditMode.itEditLocalDB);
             eventListFragment.Arguments = args;
-            groupListFragment.Arguments = args;
 
+            ViewPagerAdapter adapter = new ViewPagerAdapter(SupportFragmentManager);
             adapter.addFragment(groupListFragment, new Java.Lang.String("Группы\nМероприятий"));
             adapter.addFragment(eventListFragment, new Java.Lang.String("Отдельные\nМероприятия"));
 

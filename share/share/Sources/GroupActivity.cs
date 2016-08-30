@@ -26,13 +26,13 @@ namespace share
             m_EditMode = Intent.GetIntExtra("EditMode", EditMode.itUnexpected);
 
             UGroup group = null;
-            if (m_EditMode == EditMode.itEditLocal)
+            if (m_EditMode == EditMode.itEditLocalDB)
             {
-                group = Server.LoadObjectDetails<UGroup>(m_Key);
+                group = LocalDBController.LoadObjectDetails<UGroup>(m_Key);
             }
-            else if (m_EditMode == EditMode.itEditInternet)
+            else if (m_EditMode == EditMode.itEditWebApi)
             {
-                group = Client.LoadObjectDetails<UGroup>(m_Key);
+                group = WebApiController.LoadObjectDetails<UGroup>(m_Key);
             }
             if(group != null)
             {

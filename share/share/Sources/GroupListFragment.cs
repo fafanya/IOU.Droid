@@ -31,8 +31,8 @@ namespace share
         private void Refresh()
         {
             List<UGroup> items = new List<UGroup>();
-            List<UGroup> localitems = Server.LoadGroupList();
-            List<UGroup> outerItems = Client.LoadGroupList();
+            List<UGroup> localitems = LocalDBController.LoadGroupList();
+            List<UGroup> outerItems = WebApiController.LoadGroupList();
             items.AddRange(localitems);
             items.AddRange(outerItems);
 
@@ -71,11 +71,11 @@ namespace share
             intent.PutExtra("Key", g.Id);
             if (string.IsNullOrWhiteSpace(g.UUserId))
             {
-                intent.PutExtra("EditMode", EditMode.itEditLocal);
+                intent.PutExtra("EditMode", EditMode.itEditLocalDB);
             }
             else
             {
-                intent.PutExtra("EditMode", EditMode.itEditInternet);
+                intent.PutExtra("EditMode", EditMode.itEditWebApi);
             }
             StartActivity(intent);
         }
@@ -95,15 +95,15 @@ namespace share
         {
             base.OnCreateContextMenu(menu, v, menuInfo);
             menu.SetHeaderTitle("Меню");
-            menu.Add(4, 1, 0, "Изменить");
-            menu.Add(4, 2, 0, "Удалить");
-            menu.Add(4, 3, 0, "Экспорт");
-            menu.Add(4, 4, 0, "Импорт");
+            menu.Add(0, 1, 0, "Изменить");
+            menu.Add(0, 2, 0, "Удалить");
+            menu.Add(0, 3, 0, "Экспорт");
+            menu.Add(0, 4, 0, "Импорт");
         }
 
         public override bool OnContextItemSelected(IMenuItem item)
         {
-            if (item.GroupId == 4)
+            if (item.GroupId == 0)
             {
                 AdapterView.AdapterContextMenuInfo info = item.MenuInfo as AdapterView.AdapterContextMenuInfo;
                 UGroup g = m_ListAdapter[info.Position];
@@ -113,11 +113,11 @@ namespace share
                     intent.PutExtra("Key", g.Id);
                     if (string.IsNullOrWhiteSpace(g.UUserId))
                     {
-                        intent.PutExtra("EditMode", EditMode.itEditLocal);
+                        intent.PutExtra("EditMode", EditMode.itEditLocalDB);
                     }
                     else
                     {
-                        intent.PutExtra("EditMode", EditMode.itEditInternet);
+                        intent.PutExtra("EditMode", EditMode.itEditWebApi);
                     }
                     StartActivityForResult(intent, 1);
                 }
@@ -125,11 +125,11 @@ namespace share
                 {
                     if (string.IsNullOrWhiteSpace(g.UUserId))
                     {
-                        Server.DeleteObject(g);
+                        LocalDBController.DeleteObject(g);
                     }
                     else
                     {
-                        Client.DeleteObject(g);
+                        WebApiController.DeleteObject(g);
                     }
                     Refresh();
                 }
@@ -154,7 +154,7 @@ namespace share
 
         private async void ExportGroup(int id)
         {
-            Client client = new Client();
+            WebApiController client = new WebApiController();
             if (await Task.Run(() => client.ExportGroup(id)))
             {
                 Refresh();
@@ -163,7 +163,7 @@ namespace share
 
         private async void ImportGroup(int id)
         {
-            Client client = new Client();
+            WebApiController client = new WebApiController();
             if (await Task.Run(() => client.ImportGroup(id)))
             {
                 Refresh();

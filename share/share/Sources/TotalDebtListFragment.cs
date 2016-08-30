@@ -42,26 +42,26 @@ namespace share
             m_EditMode = Arguments.GetInt("EditMode", EditMode.itUnexpected);
 
             List<UTotal> items;
-            if (m_EditMode == EditMode.itEditInternet)
+            if (m_EditMode == EditMode.itEditWebApi)
             {
                 if (eventId != 0)
                 {
-                    items = Client.LoadTotalListByEvent(eventId);
+                    items = WebApiController.LoadTotalListByEvent(eventId);
                 }
                 else
                 {
-                    items = Client.LoadTotalListByGroup(groupId);
+                    items = WebApiController.LoadTotalListByGroup(groupId);
                 }
             }
             else
             {
                 if (eventId != 0)
                 {
-                    items = Server.LoadTotalListByEvent(eventId);
+                    items = LocalDBController.LoadTotalListByEvent(eventId);
                 }
                 else
                 {
-                    items = Server.LoadTotalListByGroup(groupId);
+                    items = LocalDBController.LoadTotalListByGroup(groupId);
                 }
             }
 

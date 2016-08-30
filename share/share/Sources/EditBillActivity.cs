@@ -45,15 +45,15 @@ namespace share
             m_Bill.UEventId = eventId;
             m_Bill.Amount = 0.0;
 
-            m_Event = Server.LoadObjectDetails<UEvent>(eventId);
+            m_Event = LocalDBController.LoadObjectDetails<UEvent>(eventId);
             List<UMember> memberItems;
             if (m_Event.UGroupId != 0)
             {
-                memberItems = Server.LoadMemberList(m_Event.UGroupId);
+                memberItems = LocalDBController.LoadMemberList(m_Event.UGroupId);
             }
             else
             {
-                memberItems = Server.LoadMemberList(eventId: eventId);
+                memberItems = LocalDBController.LoadMemberList(eventId: eventId);
             }
             m_spMember.Adapter = new DebtorListAdapter(this, memberItems.ToArray());
 
@@ -75,8 +75,8 @@ namespace share
             m_Bill.UEventId = eventId;
             m_Bill.Amount = 0.0;
 
-            m_Event = Client.LoadObjectDetails<UEvent>(eventId);
-            List<UMember> memberItems = Client.LoadMemberList(m_Event.UGroupId);
+            m_Event = WebApiController.LoadObjectDetails<UEvent>(eventId);
+            List<UMember> memberItems = WebApiController.LoadMemberList(m_Event.UGroupId);
             m_spMember.Adapter = new DebtorListAdapter(this, memberItems.ToArray());
 
             if (m_Event.UEventTypeId == UEventType.tOwn)
@@ -92,17 +92,17 @@ namespace share
 
         protected override void StartEditLocal()
         {
-            m_Bill = Server.LoadObjectDetails<UBill>(m_Key);
+            m_Bill = LocalDBController.LoadObjectDetails<UBill>(m_Key);
             
-            m_Event = Server.LoadObjectDetails<UEvent>(m_Bill.UEventId);
+            m_Event = LocalDBController.LoadObjectDetails<UEvent>(m_Bill.UEventId);
             List<UMember> memberItems;
             if (m_Event.UGroupId != 0)
             {
-                memberItems = Server.LoadMemberList(m_Event.UGroupId);
+                memberItems = LocalDBController.LoadMemberList(m_Event.UGroupId);
             }
             else
             {
-                memberItems = Server.LoadMemberList(eventId: m_Event.UGroupId);
+                memberItems = LocalDBController.LoadMemberList(eventId: m_Event.UGroupId);
             }
             m_spMember.Adapter = new DebtorListAdapter(this, memberItems.ToArray());
 
@@ -128,10 +128,10 @@ namespace share
 
         protected override void StartEditInternet()
         {
-            m_Bill = Client.LoadObjectDetails<UBill>(m_Key);
+            m_Bill = WebApiController.LoadObjectDetails<UBill>(m_Key);
 
-            m_Event = Client.LoadObjectDetails<UEvent>(m_Bill.UEventId);
-            List<UMember> memberItems = Client.LoadMemberList(m_Event.UGroupId);
+            m_Event = WebApiController.LoadObjectDetails<UEvent>(m_Bill.UEventId);
+            List<UMember> memberItems = WebApiController.LoadMemberList(m_Event.UGroupId);
             m_spMember.Adapter = new DebtorListAdapter(this, memberItems.ToArray());
             for (int position = 0; position < m_spMember.Adapter.Count; position++)
             {
@@ -157,40 +157,40 @@ namespace share
         {
             if (m_Event.UEventTypeId == UEventType.tOwn)
             {
-                m_Bill.Amount = double.Parse(m_etBillAmount.Text, System.Globalization.CultureInfo.InvariantCulture);
+                m_Bill.Amount = Convertors.StringToDouble(m_etBillAmount.Text);
             }
             m_Bill.UMemberId = (int)(m_spMember.SelectedItemId);
-            Server.CreateObject(m_Bill);
+            LocalDBController.CreateObject(m_Bill);
         }
 
         protected override void FinishCreateInternet()
         {
             if (m_Event.UEventTypeId == UEventType.tOwn)
             {
-                m_Bill.Amount = double.Parse(m_etBillAmount.Text, System.Globalization.CultureInfo.InvariantCulture);
+                m_Bill.Amount = Convertors.StringToDouble(m_etBillAmount.Text);
             }
             m_Bill.UMemberId = (int)(m_spMember.SelectedItemId);
-            Client.CreateObject(m_Bill);
+            WebApiController.CreateObject(m_Bill);
         }
 
         protected override void FinishEditLocal()
         {
             if (m_Event.UEventTypeId == UEventType.tOwn)
             {
-                m_Bill.Amount = double.Parse(m_etBillAmount.Text, System.Globalization.CultureInfo.InvariantCulture);
+                m_Bill.Amount = Convertors.StringToDouble(m_etBillAmount.Text);
             }
             m_Bill.UMemberId = (int)(m_spMember.SelectedItemId);
-            Server.UpdateObject(m_Bill);
+            LocalDBController.UpdateObject(m_Bill);
         }
 
         protected override void FinishEditInternet()
         {
             if (m_Event.UEventTypeId == UEventType.tOwn)
             {
-                m_Bill.Amount = double.Parse(m_etBillAmount.Text, System.Globalization.CultureInfo.InvariantCulture);
+                m_Bill.Amount = Convertors.StringToDouble(m_etBillAmount.Text);
             }
             m_Bill.UMemberId = (int)(m_spMember.SelectedItemId);
-            Client.UpdateObject(m_Bill);
+            WebApiController.UpdateObject(m_Bill);
         }
     }
 }

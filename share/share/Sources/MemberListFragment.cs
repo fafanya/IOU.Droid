@@ -33,19 +33,19 @@ namespace share
             m_EditMode = Arguments.GetInt("EditMode", EditMode.itUnexpected);
 
             List<UMember> items;
-            if (m_EditMode == EditMode.itEditInternet)
+            if (m_EditMode == EditMode.itEditWebApi)
             {
-                items = Client.LoadMemberList(m_GroupId);
+                items = WebApiController.LoadMemberList(m_GroupId);
             }
             else
             {
                 if (m_EventId > 0)
                 {
-                    items = Server.LoadMemberList(eventId: m_EventId);
+                    items = LocalDBController.LoadMemberList(eventId: m_EventId);
                 }
                 else
                 {
-                    items = Server.LoadMemberList(groupId: m_GroupId);
+                    items = LocalDBController.LoadMemberList(groupId: m_GroupId);
                 }
             }
             m_ListAdapter = new MemberListAdapter(Activity, items.ToArray());
@@ -86,13 +86,13 @@ namespace share
             Intent intent = new Intent(Activity, typeof(EditMemberActivity));
             intent.PutExtra("Group_ID", m_GroupId);
             intent.PutExtra("Event_ID", m_EventId);
-            if(m_EditMode == EditMode.itEditLocal)
+            if(m_EditMode == EditMode.itEditLocalDB)
             {
-                intent.PutExtra("EditMode", EditMode.itCreateLocal);
+                intent.PutExtra("EditMode", EditMode.itCreateLocalDB);
             }
             else
             {
-                intent.PutExtra("EditMode", EditMode.itCreateInternet);
+                intent.PutExtra("EditMode", EditMode.itCreateWebApi);
             }
             StartActivityForResult(intent, 0);
         }
@@ -100,13 +100,13 @@ namespace share
         {
             base.OnCreateContextMenu(menu, v, menuInfo);
             menu.SetHeaderTitle("Меню");
-            menu.Add(1, 1, 0, "Изменить");
-            menu.Add(1, 2, 0, "Удалить");
-            menu.Add(1, 3, 0, "Отметить себя");
+            menu.Add(0, 1, 0, "Изменить");
+            menu.Add(0, 2, 0, "Удалить");
+            menu.Add(0, 3, 0, "Отметить себя");
         }
         public override bool OnContextItemSelected(IMenuItem item)
         {
-            if (item.GroupId == 1)
+            if (item.GroupId == 0)
             {
                 var info = item.MenuInfo as AdapterView.AdapterContextMenuInfo;
                 UObject o = m_ListAdapter[info.Position];
@@ -120,21 +120,21 @@ namespace share
                 }
                 else if (item.ItemId == 2)
                 {
-                    if (m_EditMode == EditMode.itEditInternet)
+                    if (m_EditMode == EditMode.itEditWebApi)
                     {
-                        Client.DeleteObject(o);
+                        WebApiController.DeleteObject(o);
                     }
                     else
                     {
-                        Server.DeleteObject(o);
+                        LocalDBController.DeleteObject(o);
                     }
                     Refresh();
                 }
                 else if (item.ItemId == 3)
                 {
-                    if (m_EditMode == EditMode.itEditInternet)
+                    if (m_EditMode == EditMode.itEditWebApi)
                     {
-                        Client.SelectMember(o.Id);
+                        WebApiController.SelectMember(o.Id);
                     }
                 }
                 return true;

@@ -26,13 +26,13 @@ namespace share
             m_EditMode = Intent.GetIntExtra("EditMode", EditMode.itUnexpected);
 
             UEvent uevent;
-            if (m_EditMode == EditMode.itEditInternet)
+            if (m_EditMode == EditMode.itEditWebApi)
             {
-                uevent = Client.LoadObjectDetails<UEvent>(m_Key);
+                uevent = WebApiController.LoadObjectDetails<UEvent>(m_Key);
             }
             else
             {
-                uevent = Server.LoadObjectDetails<UEvent>(m_Key);
+                uevent = LocalDBController.LoadObjectDetails<UEvent>(m_Key);
             }
             SupportActionBar.Title = uevent.Name + " (Ñ÷¸ò: " + uevent.EventTypeName + ")";
 

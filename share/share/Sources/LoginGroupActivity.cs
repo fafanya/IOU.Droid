@@ -57,7 +57,7 @@ namespace share
             m.UGroupId = Convert.ToInt32(m_etId.Text);
             m.Password = m_etPassword.Text;
 
-            if (Client.LoginInGroup(m))
+            if (WebApiController.LoginInGroup(m))
             {
                 var intent = new Intent(this, typeof(SelectMemberActivity));
                 intent.PutExtra("Group_ID", m.UGroupId);

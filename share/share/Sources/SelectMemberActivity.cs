@@ -28,7 +28,7 @@ namespace share
             Button btnCancel = FindViewById<Button>(Resource.Id.btnCancel);
 
             int groupId = Intent.GetIntExtra("Group_ID", 0);
-            List<UMember> memberItems = Client.LoadMemberList(groupId);
+            List<UMember> memberItems = WebApiController.LoadMemberList(groupId);
             m_spMember.Adapter = new DebtorListAdapter(this, memberItems.ToArray());
 
             btnOK.Click += BtnOK_Click;
@@ -55,7 +55,7 @@ namespace share
         {
             int memberId = (int)(m_spMember.SelectedItemId);
 
-            if (Client.SelectMember(memberId))
+            if (WebApiController.SelectMember(memberId))
             {
                 SetResult(Result.Ok);
                 Finish();

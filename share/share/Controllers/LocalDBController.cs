@@ -1,27 +1,19 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Data;
 using Mono.Data.Sqlite;
 using System.IO;
-using System.Reflection;
-
-using Android.App;
-using Android.Content;
-using Android.Widget;
-
-using System.Runtime.InteropServices;
-using System.Threading.Tasks;
 
 namespace share
 {
-    public class Server
+    public class LocalDBController
     {
+        private static string m_LocalDBName = "udb43.db";
         public static void Initialize()
         {
             string folder = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
-            string path = Path.Combine(folder, UTransaction.GetDBName());
+            string path = Path.Combine(folder, m_LocalDBName);
             if (!File.Exists(path))
             {
                 SqliteConnection.CreateFile(path);
@@ -95,8 +87,6 @@ namespace share
             }
         }
 
-        
-
         private static void FillExample()
         {
             UGroup g = new UGroup() { Name = "Поездка в Прагу" };
@@ -149,7 +139,7 @@ namespace share
         private static SqliteDataReader GetReader(string commandText)
         {
             string folder = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
-            string path = Path.Combine(folder, UTransaction.GetDBName());
+            string path = Path.Combine(folder, m_LocalDBName);
             string connectionString = string.Format("Data Source={0};Version=3;", path);
 
             SqliteConnection connection = new SqliteConnection(connectionString);
@@ -168,7 +158,7 @@ namespace share
             try
             {
                 string folder = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
-                string path = Path.Combine(folder, UTransaction.GetDBName());
+                string path = Path.Combine(folder, m_LocalDBName);
                 string connectionString = string.Format("Data Source={0};Version=3;", path);
 
                 connection = new SqliteConnection(connectionString);
@@ -193,48 +183,6 @@ namespace share
                 connection.Close();
             }
             return id;
-        }
-
-        private static UTransaction m_GlobalTransaction = null;
-        private static int _ExecuteCommand(string commandText)
-        {
-            long lastId = 0;
-
-            if (m_GlobalTransaction == null)
-            {
-                using(UTransaction localTransaction = new UTransaction())
-                {
-                    SqliteConnection connection = localTransaction.Connection;
-
-                    SqliteCommand command = connection.CreateCommand();
-                    command.CommandText = commandText;
-                    command.CommandType = CommandType.Text;
-                    command.ExecuteNonQuery();
-
-                    SqliteCommand commandLastID = connection.CreateCommand();
-                    commandLastID.CommandText = "select last_insert_rowid()";
-                    commandLastID.CommandType = CommandType.Text;
-                    lastId = (long)commandLastID.ExecuteScalar();
-
-                    localTransaction.Commit();
-                }
-            }
-            else
-            {
-                SqliteConnection connection = m_GlobalTransaction.Connection;
-
-                SqliteCommand command = connection.CreateCommand();
-                command.CommandText = commandText;
-                command.CommandType = CommandType.Text;
-                command.ExecuteNonQuery();
-
-                SqliteCommand commandLastID = connection.CreateCommand();
-                commandLastID.CommandText = "select last_insert_rowid()";
-                commandLastID.CommandType = CommandType.Text;
-                lastId = (long)commandLastID.ExecuteScalar();
-            }
-
-            return (int)lastId;
         }
 
         public static List<UGroup> LoadGroupList()
@@ -401,7 +349,6 @@ namespace share
 
             return result;
         }
-
         public static List<UTotal> LoadTotalListByGroup(int groupId)
         {
             List<UMember> members = LoadMemberList(groupId);
@@ -412,19 +359,23 @@ namespace share
             return Algorithm.RecountGroupTotalDebtList(members, debts, bills, events, payments);
         }
 
-        public static string CreateUser(string id, string email)
+        public static bool CreateUser(string id, string email)
         {
+            if (!string.IsNullOrWhiteSpace(GetCurrentUserId()))
+            {
+                return false;
+            }
             try
             {
                 string commandText = "INSERT INTO USER (ID, Email) VALUES (\""+id+"\", \""+email+"\");";
                 ExecuteCommand(commandText);
-                return id;
+                return true;
             }
             catch (Exception ex)
             {
                 var error = ex;
             }
-            return null;
+            return false;
         }
 
         public static string GetCurrentUserId()
@@ -479,31 +430,31 @@ namespace share
             }
         }
 
-        static SqliteConnection m_UploadConnection = null;
         public static void UploadGroup(UGroup g)
         {
             SqliteTransaction transaction = null;
+            SqliteConnection connection = null;
             try
             {
                 string folder = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
-                string path = Path.Combine(folder, UTransaction.GetDBName());
+                string path = Path.Combine(folder, m_LocalDBName);
                 string connectionString = string.Format("Data Source={0};Version=3;", path);
 
-                m_UploadConnection = new SqliteConnection(connectionString);
-                m_UploadConnection.Open();
-                transaction = m_UploadConnection.BeginTransaction();
+                connection = new SqliteConnection(connectionString);
+                connection.Open();
+                transaction = connection.BeginTransaction();
 
                 Dictionary<int, int> gID = new Dictionary<int, int>();
                 Dictionary<int, int> eID = new Dictionary<int, int>();
                 Dictionary<int, int> mID = new Dictionary<int, int>();
 
-                gID.Add(g.Id, UploadObject(g));
+                gID.Add(g.Id, UploadObject(g, connection));
                 if (g.UMembers != null)
                 {
                     foreach (UMember m in g.UMembers)
                     {
                         m.UGroupId = gID[g.Id];
-                        mID.Add(m.Id, UploadObject(m));
+                        mID.Add(m.Id, UploadObject(m, connection));
                     }
                 }
                 if (g.UDebts != null)
@@ -513,7 +464,7 @@ namespace share
                         d.UGroupId = gID[g.Id];
                         d.LenderId = mID[d.LenderId];
                         d.DebtorId = mID[d.DebtorId];
-                        UploadObject(d);
+                        UploadObject(d, connection);
                     }
                 }
                 if (g.UEvents != null)
@@ -521,14 +472,14 @@ namespace share
                     foreach (UEvent e in g.UEvents)
                     {
                         e.UGroupId = gID[g.Id];
-                        eID.Add(e.Id, UploadObject(e));
+                        eID.Add(e.Id, UploadObject(e, connection));
                         if (e.UBills != null)
                         {
                             foreach (UBill b in e.UBills)
                             {
                                 b.UEventId = eID[e.Id];
                                 b.UMemberId = mID[b.UMemberId];
-                                UploadObject(b);
+                                UploadObject(b, connection);
                             }
                         }
                         if (e.UPayments != null)
@@ -537,7 +488,7 @@ namespace share
                             {
                                 p.UEventId = eID[e.Id];
                                 p.UMemberId = mID[p.UMemberId];
-                                UploadObject(p);
+                                UploadObject(p, connection);
                             }
                         }
                     }
@@ -552,19 +503,20 @@ namespace share
             }
             finally
             {
-                m_UploadConnection.Close();
+                if (connection != null)
+                    connection.Close();
             }
         }
-        public static int UploadObject(UObject uobject)
+        public static int UploadObject(UObject uobject, SqliteConnection connection)
         {
             string commandText = GetCreateCommand(uobject);
 
-            SqliteCommand command = m_UploadConnection.CreateCommand();
+            SqliteCommand command = connection.CreateCommand();
             command.CommandText = commandText;
             command.CommandType = CommandType.Text;
             command.ExecuteNonQuery();
 
-            SqliteCommand commandLastID = m_UploadConnection.CreateCommand();
+            SqliteCommand commandLastID = connection.CreateCommand();
             commandLastID.CommandText = "select last_insert_rowid()";
             commandLastID.CommandType = CommandType.Text;
             return (int)(long)commandLastID.ExecuteScalar();

@@ -31,13 +31,13 @@ namespace share
             m_EditMode = Arguments.GetInt("EditMode", EditMode.itUnexpected);
 
             List<UEvent> items;
-            if (m_EditMode == EditMode.itEditInternet)
+            if (m_EditMode == EditMode.itEditWebApi)
             {
-                items = Client.LoadEventList(m_UGroupId);
+                items = WebApiController.LoadEventList(m_UGroupId);
             }
             else
             {
-                items = Server.LoadEventList(m_UGroupId);
+                items = LocalDBController.LoadEventList(m_UGroupId);
             }
 
             m_ListAdapter = new EventListAdapter(Activity, items.ToArray());
@@ -66,14 +66,6 @@ namespace share
             RegisterForContextMenu(ListView);
         }
 
-        public override void OnCreateContextMenu(IContextMenu menu, View v, IContextMenuContextMenuInfo menuInfo)
-        {
-            base.OnCreateContextMenu(menu, v, menuInfo);
-            menu.SetHeaderTitle("Меню");
-            menu.Add(0, 1, 0, "Изменить");
-            menu.Add(0, 2, 0, "Удалить");
-        }
-
         public override void OnActivityResult(int requestCode, int resultCode, Intent data)
         {
             base.OnActivityResult(requestCode, resultCode, data);
@@ -95,20 +87,28 @@ namespace share
         {
             Intent intent = new Intent(Activity, typeof(EditEventActivity));
             intent.PutExtra("Group_ID", m_UGroupId);
-            if(m_EditMode == EditMode.itEditInternet)
+            if(m_EditMode == EditMode.itEditWebApi)
             {
-                intent.PutExtra("EditMode", EditMode.itCreateInternet);
+                intent.PutExtra("EditMode", EditMode.itCreateWebApi);
             }
             else
             {
-                intent.PutExtra("EditMode", EditMode.itCreateLocal);
+                intent.PutExtra("EditMode", EditMode.itCreateLocalDB);
             }
             StartActivityForResult(intent, 0);
         }
 
+        public override void OnCreateContextMenu(IContextMenu menu, View v, IContextMenuContextMenuInfo menuInfo)
+        {
+            base.OnCreateContextMenu(menu, v, menuInfo);
+            menu.SetHeaderTitle("Меню");
+            menu.Add(1, 1, 0, "Изменить");
+            menu.Add(1, 2, 0, "Удалить");
+        }
+
         public override bool OnContextItemSelected(IMenuItem item)
         {
-            if (item.GroupId == 0)
+            if (item.GroupId == 1)
             {
                 var info = item.MenuInfo as AdapterView.AdapterContextMenuInfo;
                 UObject o = m_ListAdapter[info.Position];
@@ -122,13 +122,13 @@ namespace share
                 }
                 else if (item.ItemId == 2)
                 {
-                    if (m_EditMode == EditMode.itEditInternet)
+                    if (m_EditMode == EditMode.itEditWebApi)
                     {
-                        Client.DeleteObject(o);
+                        WebApiController.DeleteObject(o);
                     }
                     else
                     {
-                        Server.DeleteObject(o);
+                        LocalDBController.DeleteObject(o);
                     }
                     Refresh();
                 }

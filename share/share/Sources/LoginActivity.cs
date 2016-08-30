@@ -56,7 +56,7 @@ namespace share
             m.Email = m_etEmail.Text;
             m.Password = m_etPassword.Text;
 
-            Client.Login(m);
+            WebApiController.Login(m);
 
             SetResult(Android.App.Result.Ok);
             Finish();

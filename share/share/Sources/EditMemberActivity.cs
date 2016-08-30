@@ -50,14 +50,14 @@ namespace share
 
         protected override void StartEditLocal()
         {
-            m_Member = Server.LoadObjectDetails<UMember>(m_Key);
+            m_Member = LocalDBController.LoadObjectDetails<UMember>(m_Key);
             m_etName.Text = m_Member.Name;
             SupportActionBar.Title = m_Member.Name;
         }
 
         protected override void StartEditInternet()
         {
-            m_Member = Client.LoadObjectDetails<UMember>(m_Key);
+            m_Member = WebApiController.LoadObjectDetails<UMember>(m_Key);
             m_etName.Text = m_Member.Name;
             SupportActionBar.Title = m_Member.Name;
         }
@@ -65,25 +65,25 @@ namespace share
         protected override void FinishCreateLocal()
         {
             m_Member.Name = m_etName.Text;
-            Server.CreateObject(m_Member);
+            LocalDBController.CreateObject(m_Member);
         }
 
         protected override void FinishCreateInternet()
         {
             m_Member.Name = m_etName.Text;
-            Client.CreateObject(m_Member);
+            WebApiController.CreateObject(m_Member);
         }
 
         protected override void FinishEditLocal()
         {
             m_Member.Name = m_etName.Text;
-            Server.UpdateObject(m_Member);
+            LocalDBController.UpdateObject(m_Member);
         }
 
         protected override void FinishEditInternet()
         {
             m_Member.Name = m_etName.Text;
-            Client.UpdateObject(m_Member);
+            WebApiController.UpdateObject(m_Member);
         }
     }
 }

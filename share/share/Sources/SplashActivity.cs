@@ -21,7 +21,7 @@ namespace share
 
             Task startupWork = new Task(() =>
             {
-                Server.Initialize();
+                LocalDBController.Initialize();
             });
 
             startupWork.ContinueWith(t =>

@@ -106,7 +106,7 @@ namespace share
         {
             List<CustomMember> cMembers = new List<CustomMember>();
 
-            UEvent e =  Server.LoadObjectDetails<UEvent>(eventId);
+            UEvent e =  LocalDBController.LoadObjectDetails<UEvent>(eventId);
 
             foreach (UMember m in members)
             {

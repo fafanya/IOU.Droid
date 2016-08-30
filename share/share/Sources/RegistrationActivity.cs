@@ -60,7 +60,7 @@ namespace share
             m.Password        = m_etRegPassword.Text;
             m.ConfirmPassword = m_etConfirmRegPassword.Text;
 
-            Client.Registrate(m);
+            WebApiController.Registrate(m);
             
             SetResult(Android.App.Result.Ok);
             Finish();

@@ -25,16 +25,16 @@ namespace share
             m_UEventId = Arguments.GetInt("Event_ID", 0);
             m_EditMode = Arguments.GetInt("EditMode", EditMode.itUnexpected);
 
-            UEvent uevent = Server.LoadObjectDetails<UEvent>(m_UEventId);
+            UEvent uevent = LocalDBController.LoadObjectDetails<UEvent>(m_UEventId);
 
             List<UBill> items;
-            if (m_EditMode == EditMode.itEditInternet)
+            if (m_EditMode == EditMode.itEditWebApi)
             {
-                items = Client.LoadBillList(m_UEventId);
+                items = WebApiController.LoadBillList(m_UEventId);
             }
             else
             {
-                items = Server.LoadBillList(m_UEventId);
+                items = LocalDBController.LoadBillList(m_UEventId);
             }
 
             m_ListAdapter = new BillListAdapter(Activity, items.ToArray(), uevent.UEventTypeId != UEventType.tPartly);
@@ -83,13 +83,13 @@ namespace share
         {
             Intent intent = new Intent(Activity, typeof(EditBillActivity));
             intent.PutExtra("Event_ID", m_UEventId);
-            if (m_EditMode == EditMode.itEditInternet)
+            if (m_EditMode == EditMode.itEditWebApi)
             {
-                intent.PutExtra("EditMode", EditMode.itCreateInternet);
+                intent.PutExtra("EditMode", EditMode.itCreateWebApi);
             }
             else
             {
-                intent.PutExtra("EditMode", EditMode.itCreateLocal);
+                intent.PutExtra("EditMode", EditMode.itCreateLocalDB);
             }
             StartActivityForResult(intent, 0);
         }
@@ -98,8 +98,8 @@ namespace share
         {
             base.OnCreateContextMenu(menu, v, menuInfo);
             menu.SetHeaderTitle("Меню");
-            menu.Add(2, 1, 0, "Изменить");
-            menu.Add(2, 2, 0, "Удалить");
+            menu.Add(1, 1, 0, "Изменить");
+            menu.Add(1, 2, 0, "Удалить");
         }
 
         public override bool OnContextItemSelected(IMenuItem item)
@@ -118,13 +118,13 @@ namespace share
                 }
                 else if (item.ItemId == 2)
                 {
-                    if (m_EditMode == EditMode.itEditInternet)
+                    if (m_EditMode == EditMode.itEditWebApi)
                     {
-                        Client.DeleteObject(o);
+                        WebApiController.DeleteObject(o);
                     }
                     else
                     {
-                        Server.DeleteObject(o);
+                        LocalDBController.DeleteObject(o);
                     }
                     Refresh();
                 }

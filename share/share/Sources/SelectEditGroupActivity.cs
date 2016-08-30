@@ -52,14 +52,14 @@ namespace share
         private void BtnCreate_Click(object sender, EventArgs e)
         {
             var intent = new Intent(this, typeof(EditGroupActivity));
-            intent.PutExtra("EditMode", EditMode.itCreateLocal);
+            intent.PutExtra("EditMode", EditMode.itCreateLocalDB);
             StartActivityForResult(intent, 1);
         }
 
         private void BtnInternet_Click(object sender, EventArgs e)
         {
             var intent = new Intent(this, typeof(EditGroupActivity));
-            intent.PutExtra("EditMode", EditMode.itCreateInternet);
+            intent.PutExtra("EditMode", EditMode.itCreateWebApi);
             StartActivityForResult(intent, 1);
         }
 

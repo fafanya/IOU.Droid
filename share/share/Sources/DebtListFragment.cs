@@ -1,12 +1,8 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 using Android.Content;
 using Android.OS;
-using Android.Runtime;
-using Android.Util;
 using Android.Views;
 using Android.Widget;
 using Android.Support.Design.Widget;
@@ -35,13 +31,13 @@ namespace share
             m_EditMode = Arguments.GetInt("EditMode", EditMode.itUnexpected);
 
             List<UDebt> items;
-            if (m_EditMode == EditMode.itEditInternet)
+            if (m_EditMode == EditMode.itEditWebApi)
             {
-                items = Client.LoadDebtList(m_UGroupId);
+                items = WebApiController.LoadDebtList(m_UGroupId);
             }
             else
             {
-                items = Server.LoadDebtList(m_UGroupId);
+                items = LocalDBController.LoadDebtList(m_UGroupId);
             }
 
             m_ListAdapter = new DebtListAdapter(Activity, items.ToArray());
@@ -83,13 +79,13 @@ namespace share
             Intent intent = new Intent(Activity, typeof(EditDebtActivity));
             intent.PutExtra("Group_ID", m_UGroupId);
             intent.PutExtra("Group_ID", m_UGroupId);
-            if (m_EditMode == EditMode.itEditInternet)
+            if (m_EditMode == EditMode.itEditWebApi)
             {
-                intent.PutExtra("EditMode", EditMode.itCreateInternet);
+                intent.PutExtra("EditMode", EditMode.itCreateWebApi);
             }
             else
             {
-                intent.PutExtra("EditMode", EditMode.itCreateLocal);
+                intent.PutExtra("EditMode", EditMode.itCreateLocalDB);
             }
             StartActivityForResult(intent, 0);
         }
@@ -118,13 +114,13 @@ namespace share
                 }
                 else if (item.ItemId == 2)
                 {
-                    if (m_EditMode == EditMode.itEditInternet)
+                    if (m_EditMode == EditMode.itEditWebApi)
                     {
-                        Client.DeleteObject(o);
+                        WebApiController.DeleteObject(o);
                     }
                     else
                     {
-                        Server.DeleteObject(o);
+                        LocalDBController.DeleteObject(o);
                     }
                     Refresh();
                 }

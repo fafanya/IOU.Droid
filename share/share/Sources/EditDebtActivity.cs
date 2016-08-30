@@ -1,15 +1,6 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-using Android.Support.V7.App;
-using Android.Content;
 using Android.OS;
-using Android.Runtime;
-using Android.Views;
 using Android.Widget;
-using System.Globalization;
+using Android.Content;
 
 namespace share
 {
@@ -53,8 +44,8 @@ namespace share
             m_Debt.UGroupId = uGroupId;
             SupportActionBar.Title = "Добавить долг";
             
-            var debtorItems = Server.LoadMemberList(uGroupId);
-            var lenderItems = Server.LoadMemberList(uGroupId);
+            var debtorItems = LocalDBController.LoadMemberList(uGroupId);
+            var lenderItems = LocalDBController.LoadMemberList(uGroupId);
             m_spDebtor.Adapter = new DebtorListAdapter(this, debtorItems.ToArray());
             m_spLender.Adapter = new LenderListAdapter(this, lenderItems.ToArray());
         }
@@ -67,8 +58,8 @@ namespace share
             m_Debt.UGroupId = uGroupId;
             SupportActionBar.Title = "Добавить долг";
 
-            var debtorItems = Client.LoadMemberList(uGroupId);
-            var lenderItems = Client.LoadMemberList(uGroupId);
+            var debtorItems = WebApiController.LoadMemberList(uGroupId);
+            var lenderItems = WebApiController.LoadMemberList(uGroupId);
             m_spDebtor.Adapter = new DebtorListAdapter(this, debtorItems.ToArray());
             m_spLender.Adapter = new LenderListAdapter(this, lenderItems.ToArray());
         }
@@ -77,13 +68,13 @@ namespace share
         {
             int uGroupId = Intent.GetIntExtra("Group_ID", 0);
 
-            m_Debt = Server.LoadObjectDetails<UDebt>(m_Key);
+            m_Debt = LocalDBController.LoadObjectDetails<UDebt>(m_Key);
             m_etName.Text = m_Debt.Name;
             m_etDebtAmount.Text = m_Debt.Amount.ToString();
             SupportActionBar.Title = m_Debt.Name;
             
-            var debtorItems = Server.LoadMemberList(uGroupId);
-            var lenderItems = Server.LoadMemberList(uGroupId);
+            var debtorItems = LocalDBController.LoadMemberList(uGroupId);
+            var lenderItems = LocalDBController.LoadMemberList(uGroupId);
             m_spDebtor.Adapter = new DebtorListAdapter(this, debtorItems.ToArray());
             m_spLender.Adapter = new LenderListAdapter(this, lenderItems.ToArray());
 
@@ -110,13 +101,13 @@ namespace share
         {
             int uGroupId = Intent.GetIntExtra("Group_ID", 0);
 
-            m_Debt = Client.LoadObjectDetails<UDebt>(m_Key);
+            m_Debt = WebApiController.LoadObjectDetails<UDebt>(m_Key);
             m_etName.Text = m_Debt.Name;
             m_etDebtAmount.Text = m_Debt.Amount.ToString();
             SupportActionBar.Title = m_Debt.Name;
             
-            var debtorItems = Client.LoadMemberList(uGroupId);
-            var lenderItems = Client.LoadMemberList(uGroupId);
+            var debtorItems = WebApiController.LoadMemberList(uGroupId);
+            var lenderItems = WebApiController.LoadMemberList(uGroupId);
             m_spDebtor.Adapter = new DebtorListAdapter(this, debtorItems.ToArray());
             m_spLender.Adapter = new LenderListAdapter(this, lenderItems.ToArray());
 
@@ -145,7 +136,7 @@ namespace share
             m_Debt.Amount = Convertors.StringToDouble(m_etDebtAmount.Text);
             m_Debt.DebtorId = (int)(m_spDebtor.SelectedItemId);
             m_Debt.LenderId = (int)(m_spLender.SelectedItemId);
-            Server.CreateObject(m_Debt);
+            LocalDBController.CreateObject(m_Debt);
         }
 
         protected override void FinishCreateInternet()
@@ -154,7 +145,7 @@ namespace share
             m_Debt.Amount = Convertors.StringToDouble(m_etDebtAmount.Text);
             m_Debt.DebtorId = (int)(m_spDebtor.SelectedItemId);
             m_Debt.LenderId = (int)(m_spLender.SelectedItemId);
-            Client.CreateObject(m_Debt);
+            WebApiController.CreateObject(m_Debt);
         }
 
         protected override void FinishEditLocal()
@@ -163,7 +154,7 @@ namespace share
             m_Debt.Amount = Convertors.StringToDouble(m_etDebtAmount.Text);
             m_Debt.DebtorId = (int)(m_spDebtor.SelectedItemId);
             m_Debt.LenderId = (int)(m_spLender.SelectedItemId);
-            Server.UpdateObject(m_Debt);
+            LocalDBController.UpdateObject(m_Debt);
         }
 
         protected override void FinishEditInternet()
@@ -172,7 +163,7 @@ namespace share
             m_Debt.Amount = Convertors.StringToDouble(m_etDebtAmount.Text);
             m_Debt.DebtorId = (int)(m_spDebtor.SelectedItemId);
             m_Debt.LenderId = (int)(m_spLender.SelectedItemId);
-            Client.UpdateObject(m_Debt);
+            WebApiController.UpdateObject(m_Debt);
         }
     }
 }

@@ -47,7 +47,7 @@ namespace share
 
         private void BtnOK_Click(object sender, EventArgs e)
         {
-            Client.Logout();
+            WebApiController.Logout();
 
             SetResult(Android.App.Result.Ok);
             Finish();

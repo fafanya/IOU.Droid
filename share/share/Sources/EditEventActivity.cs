@@ -46,7 +46,7 @@ namespace share
             m_Event.UEventTypeId = 1;
             SupportActionBar.Title = "Новое событие";
 
-            List<UEventType> items = Server.LoadEventTypeList();
+            List<UEventType> items = LocalDBController.LoadEventTypeList();
             if (m_Event.UGroupId == 0)
             {
                 items.RemoveAll(x => x.Id == 3);
@@ -73,7 +73,7 @@ namespace share
             m_Event.UEventTypeId = 1;
             SupportActionBar.Title = "Новое событие";
 
-            List<UEventType> items = Server.LoadEventTypeList();
+            List<UEventType> items = LocalDBController.LoadEventTypeList();
             m_EventTypeListAdapter = new EventTypeListAdapter(this, items.ToArray());
             m_spEventType.Adapter = m_EventTypeListAdapter;
 
@@ -89,11 +89,11 @@ namespace share
 
         protected override void StartEditLocal()
         {
-            m_Event = Server.LoadObjectDetails<UEvent>(m_Key);
+            m_Event = LocalDBController.LoadObjectDetails<UEvent>(m_Key);
             m_etName.Text = m_Event.Name;
             SupportActionBar.Title = m_Event.Name;
 
-            List<UEventType> items = Server.LoadEventTypeList();
+            List<UEventType> items = LocalDBController.LoadEventTypeList();
             if (m_Event.UGroupId == 0)
             {
                 items.RemoveAll(x => x.Id == 3);
@@ -114,11 +114,11 @@ namespace share
 
         protected override void StartEditInternet()
         {
-            m_Event = Client.LoadObjectDetails<UEvent>(m_Key);
+            m_Event = WebApiController.LoadObjectDetails<UEvent>(m_Key);
             m_etName.Text = m_Event.Name;
             SupportActionBar.Title = m_Event.Name;
 
-            List<UEventType> items = Server.LoadEventTypeList();
+            List<UEventType> items = LocalDBController.LoadEventTypeList();
             m_EventTypeListAdapter = new EventTypeListAdapter(this, items.ToArray());
             m_spEventType.Adapter = m_EventTypeListAdapter;
 
@@ -136,28 +136,28 @@ namespace share
         {
             m_Event.Name = m_etName.Text;
             m_Event.UEventTypeId = (int)(m_spEventType.SelectedItemId);
-            Server.CreateObject(m_Event);
+            LocalDBController.CreateObject(m_Event);
         }
 
         protected override void FinishCreateInternet()
         {
             m_Event.Name = m_etName.Text;
             m_Event.UEventTypeId = (int)(m_spEventType.SelectedItemId);
-            Client.CreateObject(m_Event);
+            WebApiController.CreateObject(m_Event);
         }
 
         protected override void FinishEditLocal()
         {
             m_Event.Name = m_etName.Text;
             m_Event.UEventTypeId = (int)(m_spEventType.SelectedItemId);
-            Server.UpdateObject(m_Event);
+            LocalDBController.UpdateObject(m_Event);
         }
 
         protected override void FinishEditInternet()
         {
             m_Event.Name = m_etName.Text;
             m_Event.UEventTypeId = (int)(m_spEventType.SelectedItemId);
-            Client.UpdateObject(m_Event);
+            WebApiController.UpdateObject(m_Event);
         }
     }
 }

@@ -15,7 +15,7 @@ namespace share
 
         public static string DoubleToString(double input)
         {
-            string output = input.ToString("0.00", System.Globalization.CultureInfo.InvariantCulture);
+            string output = input.ToString("0.00", CultureInfo.InvariantCulture);
             return output;
         }
     }

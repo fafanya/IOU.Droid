@@ -1,12 +1,8 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 using Android.Content;
 using Android.OS;
-using Android.Runtime;
-using Android.Util;
 using Android.Views;
 using Android.Widget;
 using Android.Support.Design.Widget;
@@ -39,13 +35,13 @@ namespace share
             m_EditMode = Arguments.GetInt("EditMode", EditMode.itUnexpected);
 
             List<UPayment> items;
-            if (m_EditMode == EditMode.itEditInternet)
+            if (m_EditMode == EditMode.itEditWebApi)
             {
-                items = Client.LoadPaymentList(m_UEventId);
+                items = WebApiController.LoadPaymentList(m_UEventId);
             }
             else
             {
-                items = Server.LoadPaymentList(m_UEventId);
+                items = LocalDBController.LoadPaymentList(m_UEventId);
             }
 
             m_ListAdapter = new PaymentListAdapter(Activity, items.ToArray());
@@ -85,13 +81,13 @@ namespace share
         {
             Intent intent = new Intent(Activity, typeof(EditPaymentActivity));
             intent.PutExtra("Event_ID", m_UEventId);
-            if (m_EditMode == EditMode.itEditInternet)
+            if (m_EditMode == EditMode.itEditWebApi)
             {
-                intent.PutExtra("EditMode", EditMode.itCreateInternet);
+                intent.PutExtra("EditMode", EditMode.itCreateWebApi);
             }
             else
             {
-                intent.PutExtra("EditMode", EditMode.itCreateLocal);
+                intent.PutExtra("EditMode", EditMode.itCreateLocalDB);
             }
             StartActivityForResult(intent, 0);
         }
@@ -99,12 +95,12 @@ namespace share
         {
             base.OnCreateContextMenu(menu, v, menuInfo);
             menu.SetHeaderTitle("Меню");
-            menu.Add(1, 1, 0, "Изменить");
-            menu.Add(1, 2, 0, "Удалить");
+            menu.Add(2, 1, 0, "Изменить");
+            menu.Add(2, 2, 0, "Удалить");
         }
         public override bool OnContextItemSelected(IMenuItem item)
         {
-            if (item.GroupId == 1)
+            if (item.GroupId == 2)
             {
                 var info = item.MenuInfo as AdapterView.AdapterContextMenuInfo;
                 UObject o = m_ListAdapter[info.Position];
@@ -118,13 +114,13 @@ namespace share
                 }
                 else if (item.ItemId == 2)
                 {
-                    if (m_EditMode == EditMode.itEditInternet)
+                    if (m_EditMode == EditMode.itEditWebApi)
                     {
-                        Client.DeleteObject(o);
+                        WebApiController.DeleteObject(o);
                     }
                     else
                     {
-                        Server.DeleteObject(o);
+                        LocalDBController.DeleteObject(o);
                     }
                     Refresh();
                 }
