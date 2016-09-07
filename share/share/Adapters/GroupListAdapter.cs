@@ -9,37 +9,38 @@ namespace share
 {
     public class GroupListAdapter : BaseAdapter<UGroup>
     {
-        UGroup[] items;
-        Activity context;
+        private UGroup[] m_Items;
+        private Activity m_Context;
+
         public GroupListAdapter(Activity context, UGroup[] items) : base()
         {
-            this.context = context;
-            this.items = items;
+            m_Context = context;
+            m_Items = items;
         }
 
         public override long GetItemId(int position)
         {
-            return items[position].Id;
+            return m_Items[position].Id;
         }
 
         public override UGroup this[int position]
         {
-            get { return items[position]; }
+            get { return m_Items[position]; }
         }
 
         public override int Count
         {
-            get { return items.Length; }
+            get { return m_Items.Length; }
         }
 
         public override View GetView(int position, View convertView, ViewGroup parent)
         {
-            UGroup group = items[position];
+            UGroup group = m_Items[position];
 
             View view = convertView;
             if (view == null)
             {
-                view = context.LayoutInflater.Inflate(Resource.Drawable.group_item, null, false);
+                view = m_Context.LayoutInflater.Inflate(Resource.Drawable.group_item, null, false);
             }
 
             ImageView image = view.FindViewById<ImageView>(Resource.Id.result_icon);

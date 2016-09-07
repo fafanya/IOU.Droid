@@ -86,11 +86,6 @@ namespace share
             tabLayout.SetupWithViewPager(viewPager);
         }
 
-        private void InitializeApp()
-        {
-            LocalDBController.Initialize();
-        }
-
         public override bool OnOptionsItemSelected(IMenuItem item)
         {
             switch (item.ItemId)

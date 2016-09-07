@@ -102,7 +102,7 @@
     <Compile Include="Adapters\TotalDebtListAdapter.cs" />
     <Compile Include="Adapters\ViewPagerAdapter.cs" />
     <Compile Include="Algorithm\Algorithm.cs" />
-    <Compile Include="Convertors.cs" />
+    <Compile Include="Utils\Convertors.cs" />
     <Compile Include="HttpClient\HttpClient.cs" />
     <Compile Include="Sources\AboutActivity.cs" />
     <Compile Include="Sources\BillListFragment.cs" />
@@ -133,7 +133,8 @@
     <Compile Include="Sources\SplashActivity.cs" />
     <Compile Include="Sources\TotalDebtListFragment.cs" />
     <Compile Include="Controllers\LocalDBController.cs" />
-    <Compile Include="UObject.cs" />
+    <Compile Include="Utils\UTransaction.cs" />
+    <Compile Include="Utils\UObject.cs" />
     <Compile Include="ViewModels\LoginViewModel.cs" />
     <Compile Include="ViewModels\RegisterViewModel.cs" />
   </ItemGroup>

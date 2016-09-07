@@ -31,9 +31,9 @@ namespace share
         private void Refresh()
         {
             List<UGroup> items = new List<UGroup>();
-            List<UGroup> localitems = LocalDBController.LoadGroupList();
+            List<UGroup> localItems = LocalDBController.LoadGroupList();
             List<UGroup> outerItems = WebApiController.LoadGroupList();
-            items.AddRange(localitems);
+            items.AddRange(localItems);
             items.AddRange(outerItems);
 
             m_ListAdapter = new GroupListAdapter(Activity, items.ToArray());

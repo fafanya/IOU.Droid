@@ -9,79 +9,38 @@ namespace share
 {
     public class LocalDBController
     {
-        private static string m_LocalDBName = "udb43.db";
         public static void Initialize()
         {
-            string folder = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
-            string path = Path.Combine(folder, m_LocalDBName);
+            string path = UTransaction.GetDBPath();
             if (!File.Exists(path))
             {
                 SqliteConnection.CreateFile(path);
-                string connectionString = string.Format("Data Source={0};Version=3;", path);
-                using (SqliteConnection connection = new SqliteConnection(connectionString))
+                UTransaction transaction = new UTransaction();
+                try
                 {
-                    if (connection == null)
-                        return;
-
-                    connection.Open();
-                    using (SqliteTransaction transaction = connection.BeginTransaction())
-                    {
-                        using (SqliteCommand command = connection.CreateCommand())
-                        {
-                            command.CommandText = "CREATE TABLE USER (ID TEXT NOT NULL PRIMARY KEY, Email TEXT NOT NULL);";
-                            command.CommandType = CommandType.Text;
-                            command.ExecuteNonQuery();
-
-                            command.CommandText = "CREATE TABLE GROUPS (ID INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE, " +
-                                "Name TEXT NOT NULL, Password TEXT);";
-                            command.CommandType = CommandType.Text;
-                            command.ExecuteNonQuery();
-
-                            command.CommandText = "CREATE TABLE IF NOT EXISTS EVENT (ID INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE, " +
-                                "Group_ID INTEGER NOT NULL, EventType_ID INTEGER NOT NULL, Name TEXT NOT NULL);";
-                            command.CommandType = CommandType.Text;
-                            command.ExecuteNonQuery();
-
-                            command.CommandText = "CREATE TABLE IF NOT EXISTS EVENTTYPE (ID INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE, " +
-                                "Name TEXT NOT NULL);";
-                            command.CommandType = CommandType.Text;
-                            command.ExecuteNonQuery();
-
-                            command.CommandText = "CREATE TABLE IF NOT EXISTS MEMBER (ID INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE," +
-                                "Group_ID INTEGER NOT NULL, Event_ID INTEGER, Name TEXT NOT NULL);";
-                            command.CommandType = CommandType.Text;
-                            command.ExecuteNonQuery();
-
-                            command.CommandText = "CREATE TABLE IF NOT EXISTS DEBT (ID INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE," +
-                                "Group_ID INTEGER NOT NULL, Name TEXT NOT NULL, Debtor_ID INTEGER NOT NULL, Lender_ID INTEGER NOT NULL, Amount REAL NOT NULL);";
-                            command.CommandType = CommandType.Text;
-                            command.ExecuteNonQuery();
-
-                            command.CommandText = "CREATE TABLE IF NOT EXISTS BILL (ID INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE," +
-                                "Event_ID INTEGER NOT NULL, Member_ID INTEGER NOT NULL, Amount REAL);";
-                            command.CommandType = CommandType.Text;
-                            command.ExecuteNonQuery();
-
-                            command.CommandText = "CREATE TABLE IF NOT EXISTS PAYMENT (ID INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE," +
-                                "Event_ID INTEGER NOT NULL, Member_ID INTEGER NOT NULL, Amount REAL NOT NULL);";
-                            command.CommandType = CommandType.Text;
-                            command.ExecuteNonQuery();
-
-                            command.CommandText = "INSERT INTO EVENTTYPE (ID, Name) VALUES (1, \"Личный\");";
-                            command.CommandType = CommandType.Text;
-                            command.ExecuteNonQueryAsync();
-
-                            command.CommandText = "INSERT INTO EVENTTYPE (ID, Name) VALUES (2, \"Общий\");";
-                            command.CommandType = CommandType.Text;
-                            command.ExecuteNonQueryAsync();
-
-                            command.CommandText = "INSERT INTO EVENTTYPE (ID, Name) VALUES (3, \"Полуобщий\");";
-                            command.CommandType = CommandType.Text;
-                            command.ExecuteNonQueryAsync();
-                        }
-                        transaction.Commit();
-                    }
-                    connection.Close();
+                    transaction.ExecuteCommand("CREATE TABLE USER (ID TEXT NOT NULL PRIMARY KEY, Email TEXT NOT NULL);");
+                    transaction.ExecuteCommand("CREATE TABLE GROUPS (ID INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE, " +
+                                    "Name TEXT NOT NULL, Password TEXT);");
+                    transaction.ExecuteCommand("CREATE TABLE IF NOT EXISTS EVENT (ID INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE, " +
+                                    "Group_ID INTEGER NOT NULL, EventType_ID INTEGER NOT NULL, Name TEXT NOT NULL);");
+                    transaction.ExecuteCommand("CREATE TABLE IF NOT EXISTS EVENTTYPE (ID INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE, " +
+                                    "Name TEXT NOT NULL);");
+                    transaction.ExecuteCommand("CREATE TABLE IF NOT EXISTS MEMBER (ID INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE," +
+                                    "Group_ID INTEGER NOT NULL, Event_ID INTEGER, Name TEXT NOT NULL);");
+                    transaction.ExecuteCommand("CREATE TABLE IF NOT EXISTS DEBT (ID INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE," +
+                                    "Group_ID INTEGER NOT NULL, Name TEXT NOT NULL, Debtor_ID INTEGER NOT NULL, Lender_ID INTEGER NOT NULL, Amount REAL NOT NULL);");
+                    transaction.ExecuteCommand("CREATE TABLE IF NOT EXISTS BILL (ID INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE," +
+                                    "Event_ID INTEGER NOT NULL, Member_ID INTEGER NOT NULL, Amount REAL);");
+                    transaction.ExecuteCommand("CREATE TABLE IF NOT EXISTS PAYMENT (ID INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE," +
+                                    "Event_ID INTEGER NOT NULL, Member_ID INTEGER NOT NULL, Amount REAL NOT NULL);");
+                    transaction.ExecuteCommand("INSERT INTO EVENTTYPE (ID, Name) VALUES (1, \"Личный\");");
+                    transaction.ExecuteCommand("INSERT INTO EVENTTYPE (ID, Name) VALUES (2, \"Общий\");");
+                    transaction.ExecuteCommand("INSERT INTO EVENTTYPE (ID, Name) VALUES (3, \"Полуобщий\");");
+                    transaction.Commit();
+                }
+                catch
+                {
+                    transaction.Rollback();
                 }
                 FillExample();
             }
@@ -138,11 +97,7 @@ namespace share
 
         private static SqliteDataReader GetReader(string commandText)
         {
-            string folder = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
-            string path = Path.Combine(folder, m_LocalDBName);
-            string connectionString = string.Format("Data Source={0};Version=3;", path);
-
-            SqliteConnection connection = new SqliteConnection(connectionString);
+            SqliteConnection connection = new SqliteConnection(UTransaction.GetConnectionString());
             connection.Open();
 
             SqliteCommand command = connection.CreateCommand();
@@ -153,34 +108,17 @@ namespace share
         }
         private static int ExecuteCommand(string commandText)
         {
-            SqliteConnection connection = null;
+            UTransaction transaction = new UTransaction();
             int id = 0;
             try
             {
-                string folder = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
-                string path = Path.Combine(folder, m_LocalDBName);
-                string connectionString = string.Format("Data Source={0};Version=3;", path);
-
-                connection = new SqliteConnection(connectionString);
-                connection.Open();
-
-                SqliteCommand command = connection.CreateCommand();
-                command.CommandText = commandText;
-                command.CommandType = CommandType.Text;
-                command.ExecuteNonQuery();
-
-                SqliteCommand commandLastID = connection.CreateCommand();
-                commandLastID.CommandText = "select last_insert_rowid()";
-                commandLastID.CommandType = CommandType.Text;
-                id = (int)(long)commandLastID.ExecuteScalar();
+                transaction.ExecuteCommand(commandText);
+                id = transaction.GetLastID();
+                transaction.Commit();
             }
-            catch(Exception ex)
+            catch
             {
-                throw ex;
-            }
-            finally
-            {
-                connection.Close();
+                transaction.Rollback();
             }
             return id;
         }
@@ -329,25 +267,19 @@ namespace share
 
         public static List<UTotal> LoadTotalListByEvent(int eventId)
         {
-            List<UTotal> result;
-
+            List<UMember> members;
             UEvent e = LoadObjectDetails<UEvent>(eventId);
             if(e.UGroupId == 0)
             {
-                List<UMember> members = LoadMemberList(eventId: eventId);
-                List<UBill> bills = LoadBillList(eventId);
-                List<UPayment> payments = LoadPaymentList(eventId);
-                result = Algorithm.RecountEventTotalDebtList(eventId, members, bills, payments);
+                members = LoadMemberList(eventId: eventId);
             }
             else
             {
-                List<UMember> members = LoadMemberList(e.UGroupId);
-                List<UBill> bills = LoadBillList(eventId);
-                List<UPayment> payments = LoadPaymentList(eventId);
-                result = Algorithm.RecountEventTotalDebtList(eventId, members, bills, payments);
+                members = LoadMemberList(e.UGroupId);
             }
-
-            return result;
+            List<UBill> bills = LoadBillList(eventId);
+            List<UPayment> payments = LoadPaymentList(eventId);
+            return Algorithm.RecountEventTotalDebtList(eventId, members, bills, payments);
         }
         public static List<UTotal> LoadTotalListByGroup(int groupId)
         {
@@ -432,29 +364,20 @@ namespace share
 
         public static void UploadGroup(UGroup g)
         {
-            SqliteTransaction transaction = null;
-            SqliteConnection connection = null;
+            UTransaction transaction = new UTransaction();
             try
             {
-                string folder = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
-                string path = Path.Combine(folder, m_LocalDBName);
-                string connectionString = string.Format("Data Source={0};Version=3;", path);
-
-                connection = new SqliteConnection(connectionString);
-                connection.Open();
-                transaction = connection.BeginTransaction();
-
                 Dictionary<int, int> gID = new Dictionary<int, int>();
                 Dictionary<int, int> eID = new Dictionary<int, int>();
                 Dictionary<int, int> mID = new Dictionary<int, int>();
 
-                gID.Add(g.Id, UploadObject(g, connection));
+                gID.Add(g.Id, UploadObject(g, transaction));
                 if (g.UMembers != null)
                 {
                     foreach (UMember m in g.UMembers)
                     {
                         m.UGroupId = gID[g.Id];
-                        mID.Add(m.Id, UploadObject(m, connection));
+                        mID.Add(m.Id, UploadObject(m, transaction));
                     }
                 }
                 if (g.UDebts != null)
@@ -464,7 +387,7 @@ namespace share
                         d.UGroupId = gID[g.Id];
                         d.LenderId = mID[d.LenderId];
                         d.DebtorId = mID[d.DebtorId];
-                        UploadObject(d, connection);
+                        UploadObject(d, transaction);
                     }
                 }
                 if (g.UEvents != null)
@@ -472,14 +395,14 @@ namespace share
                     foreach (UEvent e in g.UEvents)
                     {
                         e.UGroupId = gID[g.Id];
-                        eID.Add(e.Id, UploadObject(e, connection));
+                        eID.Add(e.Id, UploadObject(e, transaction));
                         if (e.UBills != null)
                         {
                             foreach (UBill b in e.UBills)
                             {
                                 b.UEventId = eID[e.Id];
                                 b.UMemberId = mID[b.UMemberId];
-                                UploadObject(b, connection);
+                                UploadObject(b, transaction);
                             }
                         }
                         if (e.UPayments != null)
@@ -488,7 +411,7 @@ namespace share
                             {
                                 p.UEventId = eID[e.Id];
                                 p.UMemberId = mID[p.UMemberId];
-                                UploadObject(p, connection);
+                                UploadObject(p, transaction);
                             }
                         }
                     }
@@ -496,30 +419,16 @@ namespace share
 
                 transaction.Commit();
             }
-            catch(Exception ex)
+            catch
             {
-                var error = ex;
                 transaction.Rollback();
             }
-            finally
-            {
-                if (connection != null)
-                    connection.Close();
-            }
         }
-        public static int UploadObject(UObject uobject, SqliteConnection connection)
+        public static int UploadObject(UObject uobject, UTransaction transaction)
         {
             string commandText = GetCreateCommand(uobject);
-
-            SqliteCommand command = connection.CreateCommand();
-            command.CommandText = commandText;
-            command.CommandType = CommandType.Text;
-            command.ExecuteNonQuery();
-
-            SqliteCommand commandLastID = connection.CreateCommand();
-            commandLastID.CommandText = "select last_insert_rowid()";
-            commandLastID.CommandType = CommandType.Text;
-            return (int)(long)commandLastID.ExecuteScalar();
+            transaction.ExecuteCommand(commandText);
+            return transaction.GetLastID();
         }
 
         #region Common Part
@@ -542,16 +451,12 @@ namespace share
             }
             return result;
         }
-        public static T LoadObjectDetails<T>(int? id = null) where T : UObject
+        public static T LoadObjectDetails<T>(int id) where T : UObject
         {
             T item = Activator.CreateInstance(typeof(T)) as T;
 
-            string commandText = null;
-            if (id != null)
-            {
-                item.Id = id.Value;
-                commandText = item.DetailsQuery;
-            }
+            item.Id = id;
+            string commandText = item.DetailsQuery;
 
             bool isExist = false;
             SqliteDataReader reader = GetReader(commandText);
