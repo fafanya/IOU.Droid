@@ -7,7 +7,7 @@ using System.IO;
 
 namespace share
 {
-    public class LocalDBController
+    public static class LocalDBController
     {
         public static void Initialize()
         {
@@ -123,6 +123,11 @@ namespace share
             return id;
         }
 
+        public static List<UUser> LoadUserList()
+        {
+            string commandText = "SELECT * FROM USER;";
+            return LoadObjectList<UUser>(commandText);
+        }
         public static List<UGroup> LoadGroupList()
         {
             string commandText = "SELECT * FROM GROUPS;";
@@ -253,18 +258,6 @@ namespace share
             string commandText = "SELECT * FROM EVENTTYPE;";
             return LoadObjectList<UEventType>(commandText);
         }
-
-        public static UGroup LoadFullGroupDetails(int groupId)
-        {
-            UGroup item = LoadObjectDetails<UGroup>(groupId);
-
-            item.UDebts = LoadDebtList(item.Id, isFull: true);
-            item.UEvents = LoadEventList(item.Id, isFull: true);
-            item.UMembers = LoadMemberList(item.Id, isFull: true);
-
-            return item;
-        }
-
         public static List<UTotal> LoadTotalListByEvent(int eventId)
         {
             List<UMember> members;
@@ -291,77 +284,16 @@ namespace share
             return Algorithm.RecountGroupTotalDebtList(members, debts, bills, events, payments);
         }
 
-        public static bool CreateUser(string id, string email)
+        public static UGroup LoadFullGroupDetails(int groupId)
         {
-            if (!string.IsNullOrWhiteSpace(GetCurrentUserId()))
-            {
-                return false;
-            }
-            try
-            {
-                string commandText = "INSERT INTO USER (ID, Email) VALUES (\""+id+"\", \""+email+"\");";
-                ExecuteCommand(commandText);
-                return true;
-            }
-            catch (Exception ex)
-            {
-                var error = ex;
-            }
-            return false;
+            UGroup item = LoadObjectDetails<UGroup>(groupId);
+
+            item.UDebts = LoadDebtList(item.Id, isFull: true);
+            item.UEvents = LoadEventList(item.Id, isFull: true);
+            item.UMembers = LoadMemberList(item.Id, isFull: true);
+
+            return item;
         }
-
-        public static string GetCurrentUserId()
-        {
-            string commandText = "SELECT * FROM USER;";
-            SqliteDataReader reader = GetReader(commandText);
-            List<UUser> result = new List<UUser>();
-            while (reader.Read())
-            {
-                UUser item = new UUser();
-
-                item.email = reader["Email"].ToString();
-                item.id = reader["ID"].ToString();
-
-                result.Add(item);
-            }
-
-            if(result.Count != 0)
-            {
-                return result.FirstOrDefault().id;
-            }
-            return null;
-        }
-        public static string GetCurrentUserEmail()
-        {
-            string commandText = "SELECT * FROM USER;";
-            SqliteDataReader reader = GetReader(commandText);
-            List<UUser> result = new List<UUser>();
-            while (reader.Read())
-            {
-                UUser item = new UUser();
-
-                item.email = reader["Email"].ToString();
-                item.id = reader["ID"].ToString();
-
-                result.Add(item);
-            }
-
-            if (result.Count != 0)
-            {
-                return result.FirstOrDefault().email;
-            }
-            return null;
-        }
-        public static void Logout()
-        {
-            string userId = GetCurrentUserId();
-            if (!string.IsNullOrWhiteSpace(userId))
-            {
-                string commandText = "DELETE FROM USER WHERE USER.ID = \"" + userId + "\" ;";
-                ExecuteCommand(commandText);
-            }
-        }
-
         public static void UploadGroup(UGroup g)
         {
             UTransaction transaction = new UTransaction();
@@ -424,15 +356,15 @@ namespace share
                 transaction.Rollback();
             }
         }
-        public static int UploadObject(UObject uobject, UTransaction transaction)
+        public static int UploadObject<T>(T o, UTransaction transaction)where T:UObject
         {
-            string commandText = GetCreateCommand(uobject);
+            string commandText = GetCreateCommand(o);
             transaction.ExecuteCommand(commandText);
             return transaction.GetLastID();
         }
 
         #region Common Part
-        public static List<T> LoadObjectList<T>(string commandText) where T : UObject
+        private static List<T> LoadObjectList<T>(string commandText) where T : UObject
         {
             SqliteDataReader reader = GetReader(commandText);
             List<T> result = new List<T>();
@@ -450,6 +382,143 @@ namespace share
                 result.Add(item);
             }
             return result;
+        }
+        private static string GetCreateCommand<T>(T uobject) where T:UObject
+        {
+            string commandText = "INSERT INTO " + uobject.Table + " (";
+
+            int iterator = 0;
+            foreach (var p in uobject.EditableFields)
+            {
+                iterator++;
+                if (p.Value is int)
+                {
+                    if (p.Key == "ID")
+                        continue;
+                }
+
+                commandText += p.Key;
+                if (iterator != uobject.EditableFields.Count)
+                {
+                    commandText += ", ";
+                }
+            }
+            commandText += ") VALUES (";
+            iterator = 0;
+            foreach (var p in uobject.EditableFields)
+            {
+                iterator++;
+                if (p.Value is int)
+                {
+                    if (p.Key == "ID")
+                        continue;
+                }
+
+                object value = p.Value;
+                if (value == null || value == DBNull.Value)
+                {
+                    commandText += "NULL";
+                }
+                else if (value is double)
+                {
+                    commandText += Convertors.DoubleToString(Convert.ToDouble(value));
+                }
+                else
+                {
+                    if (value is string)
+                    {
+                        commandText += "\"" + p.Value + "\"";
+                    }
+                    else
+                    {
+                        commandText += p.Value;
+                    }
+                }
+
+                if (iterator != uobject.EditableFields.Count)
+                {
+                    commandText += ", ";
+                }
+            }
+            commandText += ");";
+            return commandText;
+        }
+
+        public static void CreateObject<T>(T o) where T : UObject
+        {
+            try
+            {
+                string commandText = GetCreateCommand(o);
+                o.Id = ExecuteCommand(commandText);
+            }
+            catch (Exception ex)
+            {
+                var error = ex;
+            }
+        }
+        public static void UpdateObject<T>(T o) where T : UObject
+        {
+            string commandText = "UPDATE " + o.Table + " SET ";
+            int iterator = 0;
+            foreach (string key in o.EditableFields.Keys)
+            {
+                iterator++;
+                object value = o.EditableFields[key];
+                commandText += key + "=";
+                if (value == null || value == DBNull.Value)
+                {
+                    commandText += "NULL";
+                }
+                else
+                {
+                    if (value is string)
+                    {
+                        commandText += "\"" + o.EditableFields[key] + "\"";
+                    }
+                    else if (value is double)
+                    {
+                        commandText += Convertors.DoubleToString(Convert.ToDouble(value));
+                    }
+                    else
+                    {
+                        commandText += o.EditableFields[key];
+                    }
+                }
+
+
+                if (iterator != o.EditableFields.Count)
+                {
+                    commandText += ", ";
+                }
+            }
+
+            object id = o.EditableFields["ID"];
+            if (id is string)
+            {
+                commandText += " WHERE " + o.Table + ".ID = \"" + id + "\" ;";
+            }
+            else
+            {
+                commandText += " WHERE " + o.Table + ".ID = " + id + " ;";
+            }
+
+            commandText += " WHERE " + o.Table + ".ID = " + o.Id + " ;";
+            ExecuteCommand(commandText);
+        }
+        public static void DeleteObject<T>(T o) where T : UObject
+        {
+            object id = o.EditableFields["ID"];
+            string commandText;
+            if(id is string)
+            {
+                commandText = "DELETE FROM " + o.Table + " WHERE " + o.Table + ".ID = \"" + id + "\" ;";
+            }
+            else
+            {
+                commandText = "DELETE FROM " + o.Table + " WHERE " + o.Table + ".ID = " + id + " ;";
+            }
+
+            ExecuteCommand(commandText);
         }
         public static T LoadObjectDetails<T>(int id) where T : UObject
         {
@@ -479,116 +548,6 @@ namespace share
                 }
             }
             return isExist ? item : null;
-        }
-        public static void CreateObject(UObject uobject)
-        {
-            try
-            {
-                string commandText = GetCreateCommand(uobject);
-                uobject.Id = ExecuteCommand(commandText);
-            }
-            catch(Exception ex)
-            {
-                var error = ex;
-            }
-        }
-        private static string GetCreateCommand(UObject uobject)
-        {
-            string commandText = "INSERT INTO " + uobject.Table + " (";
-
-            int iterator = 0;
-            foreach (string key in uobject.EditableFields.Keys)
-            {
-                iterator++;
-                if (key == "ID")
-                    continue;
-
-                commandText += key;
-                if (iterator != uobject.EditableFields.Count)
-                {
-                    commandText += ", ";
-                }
-            }
-            commandText += ") VALUES (";
-            iterator = 0;
-            foreach (string key in uobject.EditableFields.Keys)
-            {
-                iterator++;
-                if (key == "ID")
-                    continue;
-
-                object value = uobject.EditableFields[key];
-                if (value == null || value == DBNull.Value)
-                {
-                    commandText += "NULL";
-                }
-                else if (value is double)
-                {
-                    commandText += Convertors.DoubleToString(Convert.ToDouble(value));
-                }
-                else
-                {
-                    if (value is string)
-                    {
-                        commandText += "\"" + uobject.EditableFields[key] + "\"";
-                    }
-                    else
-                    {
-                        commandText += uobject.EditableFields[key];
-                    }
-                }
-
-                if (iterator != uobject.EditableFields.Count)
-                {
-                    commandText += ", ";
-                }
-            }
-            commandText += ");";
-            return commandText;
-        }
-        public static void DeleteObject(UObject uobject)
-        {
-            string commandText = "DELETE FROM " + uobject.Table +
-                " WHERE " + uobject.Table + ".ID = " + uobject.Id + " ;";
-            ExecuteCommand(commandText);
-        }
-        public static void UpdateObject(UObject uobject)
-        {
-            string commandText = "UPDATE " + uobject.Table + " SET ";
-            int iterator = 0;
-            foreach (string key in uobject.EditableFields.Keys)
-            {
-                iterator++;
-                object value = uobject.EditableFields[key];
-                commandText += key + "=";
-                if (value == null || value == DBNull.Value)
-                {
-                    commandText += "NULL";
-                }
-                else
-                {
-                    if (value is string)
-                    {
-                        commandText += "\"" + uobject.EditableFields[key] + "\"";
-                    }
-                    else if (value is double)
-                    {
-                        commandText += Convertors.DoubleToString(Convert.ToDouble(value));
-                    }
-                    else
-                    {
-                        commandText += uobject.EditableFields[key];
-                    }
-                }
-
-
-                if (iterator != uobject.EditableFields.Count)
-                {
-                    commandText += ", ";
-                }
-            }
-            commandText += " WHERE " + uobject.Table + ".ID = " + uobject.Id + " ;";
-            ExecuteCommand(commandText);
         }
         #endregion
     }

@@ -1,14 +1,12 @@
 using System;
 using System.IO;
 using System.Net;
-using System.Text;
 using System.Json;
 using System.Collections.Generic;
-using System.Runtime.Serialization.Json;
 
 namespace share
 {
-    public class WebApiController
+    public static class WebApiController
     {
         public class Hosting
         {
@@ -20,7 +18,7 @@ namespace share
             {
                 get
                 {
-                    return Hosting.m_Host;
+                    return Hosting.m_Work;
                 }
             }
         }
@@ -30,10 +28,9 @@ namespace share
             try
             {
                 string url = Hosting.Current + "api/AccountApi/Register";
-                string result = HttpClient.Post(url, m);
-
-                UUser uUser = Deserialize<UUser>(result);
-                LocalDBController.CreateUser(uUser.id, uUser.email);
+                JsonValue result = HttpClient.Post(url, m);
+                UUser uUser = UploadUser(result);
+                LocalDBController.CreateObject(uUser);
                 return true;
             }
             catch (Exception e)
@@ -48,10 +45,9 @@ namespace share
             try
             {
                 string url = Hosting.Current + "api/AccountApi/Login";
-                string result = HttpClient.Post(url, m);
-
-                UUser uUser = Deserialize<UUser>(result);
-                LocalDBController.CreateUser(uUser.id, uUser.email);
+                JsonValue result = HttpClient.Post(url, m);
+                UUser uUser = UploadUser(result);
+                LocalDBController.CreateObject(uUser);
                 return true;
             }
             catch (Exception e)
@@ -64,7 +60,11 @@ namespace share
         {
             try
             {
-                LocalDBController.Logout();
+                UUser uUser = LocalDBController.LoadUserList()[0];
+                if (!string.IsNullOrWhiteSpace(uUser.Id))
+                {
+                    LocalDBController.DeleteObject(uUser);
+                }
             }
             catch
             {
@@ -99,7 +99,7 @@ namespace share
             {
                 SelectViewModel m = new SelectViewModel();
                 m.UMemberId = memberId;
-                m.UUserId = LocalDBController.GetCurrentUserId();
+                m.UUserId = LocalDBController.LoadUserList()[0].Id;
 
                 string url = Hosting.Current + "api/UMembersApi/Select";
                 string result = HttpClient.Post(url, m);
@@ -118,42 +118,28 @@ namespace share
             return false;
         }
 
-        public static List<UMember> LoadMemberList(int groupId)
+        public static List<UGroup> LoadGroupList()
         {
-            List<UMember> items = new List<UMember>();
-            string url = Hosting.Current + "api/UMembersApi/ByGroup/" + groupId;
+            List<UGroup> items = new List<UGroup>();
             try
             {
-                JsonValue umemberJSONList = HttpClient.Get(url);
-                foreach (JsonValue umemberJSON in umemberJSONList)
+                string userId = LocalDBController.LoadUserList()[0].Id;
+                if (userId == null)
+                    return items;
+
+                string url = Hosting.Current + "api/UGroupsApi/ByUser/" + userId;
+                JsonValue ugroupJSONList = HttpClient.Get(url);
+                foreach (JsonValue ugroupJSON in ugroupJSONList)
                 {
-                    UMember umember = UploadMember(umemberJSON);
-                    items.Add(umember);
+                    UGroup ugroup = UploadGroup(ugroupJSON);
+                    items.Add(ugroup);
                 }
             }
             catch (Exception e)
             {
                 var error = e;
             }
-            return items;
-        }
-        public static List<UEvent> LoadEventList(int groupId)
-        {
-            List<UEvent> items = new List<UEvent>();
-            string url = Hosting.Current + "api/UEventsApi/ByGroup/" + groupId;
-            try
-            {
-                JsonValue ueventJSONList = HttpClient.Get(url);
-                foreach (JsonValue ueventJSON in ueventJSONList)
-                {
-                    UEvent uevent = UploadEvent(ueventJSON);
-                    items.Add(uevent);
-                }
-            }
-            catch (Exception e)
-            {
-                var error = e;
-            }
+
             return items;
         }
         public static List<UDebt> LoadDebtList(int groupId)
@@ -167,25 +153,6 @@ namespace share
                 {
                     UDebt udebtJ = UploadDebt(udebtJSON);
                     items.Add(udebtJ);
-                }
-            }
-            catch (Exception e)
-            {
-                var error = e;
-            }
-            return items;
-        }
-        public static List<UPayment> LoadPaymentList(int eventId)
-        {
-            List<UPayment> items = new List<UPayment>();
-            string url = Hosting.Current + "api/UPaymentsApi/ByEvent/" + eventId;
-            try
-            {
-                JsonValue upaymentJSONList = HttpClient.Get(url);
-                foreach (JsonValue upaymentJSON in upaymentJSONList)
-                {
-                    UPayment upayment = UploadPayment(upaymentJSON);
-                    items.Add(upayment);
                 }
             }
             catch (Exception e)
@@ -213,28 +180,61 @@ namespace share
             }
             return items;
         }
-        public static List<UGroup> LoadGroupList()
+        public static List<UEvent> LoadEventList(int groupId)
         {
-            List<UGroup> items = new List<UGroup>();
+            List<UEvent> items = new List<UEvent>();
+            string url = Hosting.Current + "api/UEventsApi/ByGroup/" + groupId;
             try
             {
-                string userId = LocalDBController.GetCurrentUserId();
-                if (userId == null)
-                    return items;
-
-                string url = Hosting.Current + "api/UGroupsApi/ByUser/" + userId;
-                JsonValue ugroupJSONList = HttpClient.Get(url);
-                foreach (JsonValue ugroupJSON in ugroupJSONList)
+                JsonValue ueventJSONList = HttpClient.Get(url);
+                foreach (JsonValue ueventJSON in ueventJSONList)
                 {
-                    UGroup ugroup = UploadGroup(ugroupJSON);
-                    items.Add(ugroup);
+                    UEvent uevent = UploadEvent(ueventJSON);
+                    items.Add(uevent);
                 }
             }
             catch (Exception e)
             {
                 var error = e;
             }
-
+            return items;
+        }
+        public static List<UMember> LoadMemberList(int groupId)
+        {
+            List<UMember> items = new List<UMember>();
+            string url = Hosting.Current + "api/UMembersApi/ByGroup/" + groupId;
+            try
+            {
+                JsonValue umemberJSONList = HttpClient.Get(url);
+                foreach (JsonValue umemberJSON in umemberJSONList)
+                {
+                    UMember umember = UploadMember(umemberJSON);
+                    items.Add(umember);
+                }
+            }
+            catch (Exception e)
+            {
+                var error = e;
+            }
+            return items;
+        }
+        public static List<UPayment> LoadPaymentList(int eventId)
+        {
+            List<UPayment> items = new List<UPayment>();
+            string url = Hosting.Current + "api/UPaymentsApi/ByEvent/" + eventId;
+            try
+            {
+                JsonValue upaymentJSONList = HttpClient.Get(url);
+                foreach (JsonValue upaymentJSON in upaymentJSONList)
+                {
+                    UPayment upayment = UploadPayment(upaymentJSON);
+                    items.Add(upayment);
+                }
+            }
+            catch (Exception e)
+            {
+                var error = e;
+            }
             return items;
         }
         public static List<UTotal> LoadTotalListByGroup(int groupId)
@@ -276,12 +276,12 @@ namespace share
             return items;
         }
 
-        public bool ExportGroup(int id)
+        public static bool ExportGroup(int id)
         {
             try
             {
                 UGroup o = LocalDBController.LoadFullGroupDetails(id);
-                o.UUserId = LocalDBController.GetCurrentUserId();
+                o.UUserId = LocalDBController.LoadUserList()[0].Id;
                 if (string.IsNullOrWhiteSpace(o.UUserId))
                     return false;
 
@@ -294,7 +294,7 @@ namespace share
             }
             return true;
         }
-        public bool ImportGroup(int id)
+        public static bool ImportGroup(int id)
         {
             string url = Hosting.Current + "api/UGroupsApi/Import/" + id.ToString();
             try
@@ -328,7 +328,7 @@ namespace share
             try
             {
                 string url = Hosting.Current + "api/" + o.Controller + "/" + o.Id;
-                string result = HttpClient.Put(url, o);
+                HttpClient.Put(url, o);
             }
             catch (Exception e)
             {
@@ -339,8 +339,8 @@ namespace share
         {
             try
             {
-                string url = Hosting.Current + "api/" + o.Controller + "/" + o.Id.ToString();
-                string result = HttpClient.Delete(url);
+                string url = Hosting.Current + "api/" + o.Controller + "/" + o.Id;
+                HttpClient.Delete(url);
             }
             catch (Exception er)
             {
@@ -400,7 +400,8 @@ namespace share
         private static UGroup UploadGroup(JsonValue o)
         {
             UGroup ugroup = new UGroup();
-            ugroup.Id = o["id"];
+            int id = o["id"];
+            ugroup.Id = id;
             ugroup.Name = o["name"];
             ugroup.Password = o["password"];
             ugroup.UUserId = o["uUserId"];
@@ -434,7 +435,8 @@ namespace share
         private static UEvent UploadEvent(JsonValue o)
         {
             UEvent uevent = new UEvent();
-            uevent.Id = o["id"];
+            int id = o["id"];
+            uevent.Id = id;
             uevent.Name = o["name"];
             uevent.UGroupId = o["uGroupId"];
             uevent.UEventTypeId = o["uEventTypeId"];
@@ -462,7 +464,8 @@ namespace share
         private static UMember UploadMember(JsonValue o)
         {
             UMember umember = new UMember();
-            umember.Id = o["id"];
+            int id = o["id"];
+            umember.Id = id;
             umember.Name = o["name"];
             umember.UGroupId = o["uGroupId"];
             return umember;
@@ -470,7 +473,8 @@ namespace share
         private static UDebt UploadDebt(JsonValue o)
         {
             UDebt udebt = new UDebt();
-            udebt.Id = o["id"];
+            int id = o["id"];
+            udebt.Id = id;
             udebt.Name = o["name"];
             udebt.Amount = o["amount"];
             udebt.UGroupId = o["uGroupId"];
@@ -484,7 +488,8 @@ namespace share
         private static UBill UploadBill(JsonValue o)
         {
             UBill ubill = new UBill();
-            ubill.Id = o["id"];
+            int id = o["id"];
+            ubill.Id = id;
             ubill.UEventId = o["uEventId"];
             ubill.UMemberId = o["uMemberId"];
             ubill.Amount = o["amount"];
@@ -494,7 +499,8 @@ namespace share
         private static UPayment UploadPayment(JsonValue o)
         {
             UPayment upayment = new UPayment();
-            upayment.Id = o["id"];
+            int id = o["id"];
+            upayment.Id = id;
             upayment.UEventId = o["uEventId"];
             upayment.UMemberId = o["uMemberId"];
             upayment.Amount = o["amount"];
@@ -509,27 +515,13 @@ namespace share
             utotal.LenderName = o["lenderName"];
             return utotal;
         }
-
-        private static T Deserialize<T>(string json)
+        private static UUser UploadUser(JsonValue o)
         {
-            T obj = default(T);
-            MemoryStream ms = null;
-            try
-            {
-                ms = new MemoryStream(Encoding.Unicode.GetBytes(json));
-                DataContractJsonSerializer serializer = new DataContractJsonSerializer(typeof(T));
-                obj = (T)serializer.ReadObject(ms);
-            }
-            catch(Exception ex)
-            {
-                Exception e = ex;
-            }
-            finally
-            {
-                if (ms != null)
-                    ms.Close();
-            }
-            return obj;
+            UUser uuser = new UUser();
+            string id = o["id"];
+            uuser.Id = id;
+            uuser.Email = o["email"];
+            return uuser;
         }
     }
 }

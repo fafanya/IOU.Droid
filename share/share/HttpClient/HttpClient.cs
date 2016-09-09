@@ -6,54 +6,24 @@ using System.Runtime.Serialization.Json;
 
 namespace share
 {
-    public class HttpClient
+    public static class HttpClient
     {
-        public static string Post(string url, object data)
-        {
-            string result = null;
-            Stream stream = null;
-            WebResponse response = null;
-            StreamReader reader = null;
-            try
-            {
-                WebRequest request = WebRequest.Create(url);
-                request.Method = "POST";
-                request.ContentType = "application/json";
-                stream = request.GetRequestStream();
-                DataContractJsonSerializer serializer = new DataContractJsonSerializer(data.GetType());
-                serializer.WriteObject(stream, data);
-                stream.Close();
-
-                response = request.GetResponse();
-                stream = response.GetResponseStream();
-                reader = new StreamReader(stream);
-                result = reader.ReadToEnd();
-            }
-            catch (Exception ex)
-            {
-                Exception e = ex;
-            }
-            finally
-            {
-                if (reader != null)
-                    reader.Close();
-                if (stream != null)
-                    stream.Close();
-                if (response != null)
-                    response.Close();
-            }
-            return result;
-        }
-        public static JsonValue Get(string url)
+        public static JsonValue Post(string url, object data)
         {
             JsonValue result = null;
             Stream stream = null;
             WebResponse response = null;
             try
             {
-                WebRequest request = WebRequest.Create(new Uri(url));
+                WebRequest request = WebRequest.Create(url);
                 request.ContentType = "application/json";
-                request.Method = "GET";
+
+                request.Method = "POST";
+                stream = request.GetRequestStream();
+                DataContractJsonSerializer serializer = new DataContractJsonSerializer(data.GetType());
+                serializer.WriteObject(stream, data);
+                stream.Close();
+
                 response = request.GetResponse();
                 stream = response.GetResponseStream();
                 result = JsonValue.Load(stream);
@@ -71,26 +41,21 @@ namespace share
             }
             return result;
         }
-        public static string Put(string url, object data)
+        public static JsonValue Get(string url)
         {
-            string result = null;
+            JsonValue result = null;
             Stream stream = null;
             WebResponse response = null;
-            StreamReader reader = null;
             try
             {
                 WebRequest request = WebRequest.Create(url);
-                request.Method = "PUT";
                 request.ContentType = "application/json";
-                stream = request.GetRequestStream();
-                DataContractJsonSerializer serializer = new DataContractJsonSerializer(data.GetType());
-                serializer.WriteObject(stream, data);
-                stream.Close();
+
+                request.Method = "GET";
 
                 response = request.GetResponse();
                 stream = response.GetResponseStream();
-                reader = new StreamReader(stream);
-                result = reader.ReadToEnd();
+                result = JsonValue.Load(stream);
             }
             catch (Exception ex)
             {
@@ -98,8 +63,6 @@ namespace share
             }
             finally
             {
-                if (reader != null)
-                    reader.Close();
                 if (stream != null)
                     stream.Close();
                 if (response != null)
@@ -107,21 +70,25 @@ namespace share
             }
             return result;
         }
-        public static string Delete(string url)
+        public static JsonValue Put(string url, object data)
         {
             string result = null;
             Stream stream = null;
             WebResponse response = null;
-            StreamReader reader = null;
             try
             {
-                WebRequest request = WebRequest.Create(new Uri(url));
+                WebRequest request = WebRequest.Create(url);
                 request.ContentType = "application/json";
-                request.Method = "DELETE";
+
+                request.Method = "PUT";
+                stream = request.GetRequestStream();
+                DataContractJsonSerializer serializer = new DataContractJsonSerializer(data.GetType());
+                serializer.WriteObject(stream, data);
+                stream.Close();
+
                 response = request.GetResponse();
                 stream = response.GetResponseStream();
-                reader = new StreamReader(stream);
-                result = reader.ReadToEnd();
+                result = JsonValue.Load(stream);
             }
             catch (Exception ex)
             {
@@ -129,8 +96,35 @@ namespace share
             }
             finally
             {
-                if (reader != null)
-                    reader.Close();
+                if (stream != null)
+                    stream.Close();
+                if (response != null)
+                    response.Close();
+            }
+            return result;
+        }
+        public static JsonValue Delete(string url)
+        {
+            string result = null;
+            Stream stream = null;
+            WebResponse response = null;
+            try
+            {
+                WebRequest request = WebRequest.Create(new Uri(url));
+                request.ContentType = "application/json";
+
+                request.Method = "DELETE";
+
+                response = request.GetResponse();
+                stream = response.GetResponseStream();
+                result = JsonValue.Load(stream);
+            }
+            catch (Exception ex)
+            {
+                Exception e = ex;
+            }
+            finally
+            {
                 if (stream != null)
                     stream.Close();
                 if (response != null)

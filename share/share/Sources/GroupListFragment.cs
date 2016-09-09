@@ -154,8 +154,7 @@ namespace share
 
         private async void ExportGroup(int id)
         {
-            WebApiController client = new WebApiController();
-            if (await Task.Run(() => client.ExportGroup(id)))
+            if (await Task.Run(() => WebApiController.ExportGroup(id)))
             {
                 Refresh();
             }
@@ -163,8 +162,7 @@ namespace share
 
         private async void ImportGroup(int id)
         {
-            WebApiController client = new WebApiController();
-            if (await Task.Run(() => client.ImportGroup(id)))
+            if (await Task.Run(() => WebApiController.ImportGroup(id)))
             {
                 Refresh();
             }

@@ -50,7 +50,7 @@ namespace share
         protected override void FinishCreateInternet()
         {
             m_Group.Name = m_etName.Text;
-            m_Group.UUserId = LocalDBController.GetCurrentUserId();
+            m_Group.UUserId = LocalDBController.LoadUserList()[0].Id;
             WebApiController.CreateObject(m_Group);
         }
 

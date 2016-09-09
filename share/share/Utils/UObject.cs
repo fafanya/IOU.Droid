@@ -136,7 +136,8 @@ namespace share
         {
             get
             {
-                return "SELECT E.*, ET.Name as EventTypeName FROM EVENT E, EVENTTYPE ET WHERE E.EventType_ID = ET.ID AND E.ID = " + Id + ";";
+                return "SELECT E.*, ET.Name as EventTypeName FROM EVENT E, EVENTTYPE ET WHERE E.EventType_ID = ET.ID AND E.ID = " 
+                    + Id + ";";
             }
         }
     }
@@ -478,11 +479,14 @@ namespace share
     public class UObject
     {
         [DataMember]
-        public int Id
+        public dynamic Id
         {
             get
             {
-                return Convert.ToInt32(EditableFields["ID"]);
+                var value = EditableFields["ID"];
+                if (value is string)
+                    return Convert.ToString(value);
+                return Convert.ToInt32(value);
             }
             set
             {
@@ -521,9 +525,24 @@ namespace share
         public double Amount { get; set; }
     }
 
-    public class UUser
+    public class UUser : UObject
     {
-        public string id { get; set; }
-        public string email { get; set; }
+        public UUser()
+        {
+            Table = "USER";
+            Controller = "AccountsApi";
+            EditableFields.Add("Email", null);
+        }
+        public string Email
+        {
+            get
+            {
+                return Convert.ToString(EditableFields["Email"]);
+            }
+            set
+            {
+                EditableFields["Email"] = value;
+            }
+        }
     }
 }

@@ -52,6 +52,7 @@
     <AndroidLinkMode>SdkOnly</AndroidLinkMode>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Microsoft.CSharp" />
     <Reference Include="Mono.Android" />
     <Reference Include="Mono.Data.Sqlite" />
     <Reference Include="mscorlib" />
@@ -90,7 +91,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Adapters\BillListAdapter.cs" />
-    <Compile Include="Adapters\CommonListAdapter.cs" />
     <Compile Include="Adapters\DebtListAdapter.cs" />
     <Compile Include="Adapters\DebtorListAdapter.cs" />
     <Compile Include="Adapters\EventListAdapter.cs" />

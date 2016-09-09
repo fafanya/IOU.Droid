@@ -5,6 +5,7 @@ using Android.Support.V7.App;
 using Android.Support.V4.View;
 using Android.Support.V7.Widget;
 using Android.Support.Design.Widget;
+using System.Linq;
 
 namespace share
 {
@@ -28,14 +29,14 @@ namespace share
             SupportActionBar.SetHomeAsUpIndicator(Resource.Drawable.ic_menu);
             SupportActionBar.SetDisplayHomeAsUpEnabled(true);
 
-            string email = LocalDBController.GetCurrentUserEmail();
-            if (string.IsNullOrWhiteSpace(email))
+            UUser uUser = LocalDBController.LoadUserList().FirstOrDefault();
+            if(uUser != null)
             {
-                SupportActionBar.Title = "Менеджер долгов";
+                SupportActionBar.Title = uUser.Email;
             }
             else
             {
-                SupportActionBar.Title = email;
+                SupportActionBar.Title = "Менеджер долгов";
             }
 
             m_DrawerLayout = FindViewById<Android.Support.V4.Widget.DrawerLayout>(Resource.Id.drawer_layout);
@@ -56,8 +57,8 @@ namespace share
                 }
                 else if(e.MenuItem.ItemId == Resource.Id.nav_login)
                 {
-                    string userId = LocalDBController.GetCurrentUserId();
-                    if (string.IsNullOrWhiteSpace(userId))
+                    UUser currentUser = LocalDBController.LoadUserList().FirstOrDefault();
+                    if (uUser == null)
                     {
                         var intent = new Intent(this, typeof(LoginActivity));
                         StartActivity(intent);
@@ -100,14 +101,14 @@ namespace share
         protected override void OnResume()
         {
             base.OnResume();
-            string email = LocalDBController.GetCurrentUserEmail();
-            if (string.IsNullOrWhiteSpace(email))
+            UUser uUser = LocalDBController.LoadUserList().FirstOrDefault();
+            if (uUser != null)
             {
-                SupportActionBar.Title = "Менеджер долгов";
+                SupportActionBar.Title = uUser.Email;
             }
             else
             {
-                SupportActionBar.Title = email;
+                SupportActionBar.Title = "Менеджер долгов";
             }
         }
 
