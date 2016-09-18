@@ -32,7 +32,8 @@ namespace share
         {
             m_SqliteCommand.CommandText = "select last_insert_rowid()";
             m_SqliteCommand.CommandType = CommandType.Text;
-            return (int)(long)m_SqliteCommand.ExecuteScalar();
+            int result = (int)(long)m_SqliteCommand.ExecuteScalar();
+            return result;
         }
         public void ExecuteCommand(string commandText)
         {

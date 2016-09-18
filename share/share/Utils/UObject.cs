@@ -321,7 +321,7 @@ namespace share
             EditableFields.Add("Event_ID", 0);
             EditableFields.Add("Member_ID", 0);
             EditableFields.Add("Amount", 0.0);
-            ReadOnlyFields.Add("Name", null);
+            ReadOnlyFields.Add("MemberName", null);
         }
         [DataMember]
         public int UEventId
@@ -364,7 +364,11 @@ namespace share
         {
             get
             {
-                return Convert.ToString(ReadOnlyFields["Name"]);
+                return Convert.ToString(ReadOnlyFields["MemberName"]);
+            }
+            set
+            {
+                ReadOnlyFields["MemberName"] = value;
             }
         }
 
@@ -387,7 +391,7 @@ namespace share
             EditableFields.Add("Event_ID", 0);
             EditableFields.Add("Member_ID", 0);
             EditableFields.Add("Amount", 0.0);
-            ReadOnlyFields.Add("Name", null);
+            ReadOnlyFields.Add("MemberName", null);
         }
         [DataMember]
         public int UEventId
@@ -430,7 +434,11 @@ namespace share
         {
             get
             {
-                return Convert.ToString(ReadOnlyFields["Name"]);
+                return Convert.ToString(ReadOnlyFields["MemberName"]);
+            }
+            set
+            {
+                ReadOnlyFields["MemberName"] = value;
             }
         }
 
@@ -517,9 +525,8 @@ namespace share
         }
     }
 
-    public class UTotal
+    public class UTotal : UObject
     {
-        public int Id { get; set; }
         public string DebtorName { get; set; }
         public string LenderName { get; set; }
         public double Amount { get; set; }

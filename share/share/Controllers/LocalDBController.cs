@@ -20,19 +20,19 @@ namespace share
                 {
                     transaction.ExecuteCommand("CREATE TABLE USER (ID TEXT NOT NULL PRIMARY KEY, Email TEXT NOT NULL);");
                     transaction.ExecuteCommand("CREATE TABLE GROUPS (ID INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE, " +
-                                    "Name TEXT NOT NULL, Password TEXT);");
+                        "Name TEXT NOT NULL, Password TEXT);");
                     transaction.ExecuteCommand("CREATE TABLE IF NOT EXISTS EVENT (ID INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE, " +
-                                    "Group_ID INTEGER NOT NULL, EventType_ID INTEGER NOT NULL, Name TEXT NOT NULL);");
+                        "Group_ID INTEGER NOT NULL, EventType_ID INTEGER NOT NULL, Name TEXT NOT NULL);");
                     transaction.ExecuteCommand("CREATE TABLE IF NOT EXISTS EVENTTYPE (ID INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE, " +
-                                    "Name TEXT NOT NULL);");
+                        "Name TEXT NOT NULL);");
                     transaction.ExecuteCommand("CREATE TABLE IF NOT EXISTS MEMBER (ID INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE," +
-                                    "Group_ID INTEGER NOT NULL, Event_ID INTEGER, Name TEXT NOT NULL);");
+                        "Group_ID INTEGER NOT NULL, Event_ID INTEGER, Name TEXT NOT NULL);");
                     transaction.ExecuteCommand("CREATE TABLE IF NOT EXISTS DEBT (ID INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE," +
-                                    "Group_ID INTEGER NOT NULL, Name TEXT NOT NULL, Debtor_ID INTEGER NOT NULL, Lender_ID INTEGER NOT NULL, Amount REAL NOT NULL);");
+                        "Group_ID INTEGER NOT NULL, Name TEXT NOT NULL, Debtor_ID INTEGER NOT NULL, Lender_ID INTEGER NOT NULL, Amount REAL NOT NULL);");
                     transaction.ExecuteCommand("CREATE TABLE IF NOT EXISTS BILL (ID INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE," +
-                                    "Event_ID INTEGER NOT NULL, Member_ID INTEGER NOT NULL, Amount REAL);");
+                        "Event_ID INTEGER NOT NULL, Member_ID INTEGER NOT NULL, Amount REAL);");
                     transaction.ExecuteCommand("CREATE TABLE IF NOT EXISTS PAYMENT (ID INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE," +
-                                    "Event_ID INTEGER NOT NULL, Member_ID INTEGER NOT NULL, Amount REAL NOT NULL);");
+                        "Event_ID INTEGER NOT NULL, Member_ID INTEGER NOT NULL, Amount REAL NOT NULL);");
                     transaction.ExecuteCommand("INSERT INTO EVENTTYPE (ID, Name) VALUES (1, \"Личный\");");
                     transaction.ExecuteCommand("INSERT INTO EVENTTYPE (ID, Name) VALUES (2, \"Общий\");");
                     transaction.ExecuteCommand("INSERT INTO EVENTTYPE (ID, Name) VALUES (3, \"Полуобщий\");");
@@ -210,17 +210,17 @@ namespace share
             string commandText;
             if (eventId != 0)
             {
-                commandText = "SELECT B.*, M.Name FROM BILL B, MEMBER M WHERE M.ID = B.Member_ID"
+                commandText = "SELECT B.*, M.Name AS MemberName FROM BILL B, MEMBER M WHERE M.ID = B.Member_ID"
                     +" AND B.Event_ID = " + eventId + ";";
             }
             else if (memberId != 0)
             {
-                commandText = "SELECT B.*, M.Name FROM BILL B, MEMBER M WHERE M.ID = B.Member_ID"
-                    +" AND B.Member_ID = " + memberId + ";";
+                commandText = "SELECT B.*, M.Name AS MemberName FROM BILL B, MEMBER M WHERE M.ID = B.Member_ID"
+                    + " AND B.Member_ID = " + memberId + ";";
             }
             else if(groupId != 0)
             {
-                commandText = "SELECT B.*, M.Name FROM BILL B, MEMBER M, EVENT E WHERE M.ID = B.Member_ID"
+                commandText = "SELECT B.*, M.Name AS MemberName FROM BILL B, MEMBER M, EVENT E WHERE M.ID = B.Member_ID"
                     + " AND B.Event_ID = E.ID AND E.Group_ID = " + groupId + ";";
             }
             else
@@ -234,17 +234,17 @@ namespace share
             string commandText;
             if (eventId != 0)
             {
-                commandText = "SELECT P.*, M.Name FROM PAYMENT P, MEMBER M WHERE M.ID = P.Member_ID"
+                commandText = "SELECT P.*, M.Name AS MemberName FROM PAYMENT P, MEMBER M WHERE M.ID = P.Member_ID"
                     + " AND P.Event_ID = " + eventId + ";";
             }
             else if (memberId != 0)
             {
-                commandText = "SELECT P.*, M.Name FROM PAYMENT P, MEMBER M WHERE M.ID = P.Member_ID"
+                commandText = "SELECT P.*, M.Name AS MemberName FROM PAYMENT P, MEMBER M WHERE M.ID = P.Member_ID"
                     + " AND P.Member_ID = " + memberId + ";";
             }
             else if (groupId != 0)
             {
-                commandText = "SELECT P.*, M.Name FROM PAYMENT P, MEMBER M, EVENT E WHERE M.ID = P.Member_ID"
+                commandText = "SELECT P.*, M.Name AS MemberName FROM PAYMENT P, MEMBER M, EVENT E WHERE M.ID = P.Member_ID"
                     + " AND P.Event_ID = E.ID AND E.Group_ID = " + groupId + ";";
             }
             else
@@ -391,7 +391,7 @@ namespace share
             foreach (var p in uobject.EditableFields)
             {
                 iterator++;
-                if (p.Value is int)
+                if (!(p.Value is string))
                 {
                     if (p.Key == "ID")
                         continue;
@@ -408,7 +408,7 @@ namespace share
             foreach (var p in uobject.EditableFields)
             {
                 iterator++;
-                if (p.Value is int)
+                if (!(p.Value is string))
                 {
                     if (p.Key == "ID")
                         continue;
