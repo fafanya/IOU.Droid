@@ -1,5 +1,8 @@
 ﻿namespace share
 {
+    /// <summary>
+    /// Модель для логина
+    /// </summary>
     public class LoginViewModel
     {
         public string Email { get; set; }
