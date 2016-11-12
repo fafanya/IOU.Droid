@@ -34,7 +34,10 @@ namespace share
             List<UGroup> localItems = LocalDBController.LoadGroupList();
             List<UGroup> outerItems = WebApiController.LoadGroupList();
             items.AddRange(localItems);
-            items.AddRange(outerItems);
+            if (outerItems != null)
+            {
+                items.AddRange(outerItems);
+            }
 
             m_ListAdapter = new GroupListAdapter(Activity, items.ToArray());
             ListAdapter = m_ListAdapter;

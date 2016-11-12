@@ -121,12 +121,24 @@ namespace share
 
         public static List<UGroup> LoadGroupList()
         {
-            string userId = LocalDBController.LoadUserList()[0].Id;
-            if (userId == null)
-                return null;
+            string userId = null;
+            try
+            {
+                userId = LocalDBController.LoadUserList()[0].Id;
+            }
+            catch {
 
-            string url = Hosting.Current + "api/UGroupsApi/ByUser/" + userId;
-            return LoadObjectList<UGroup>(url);
+            }
+
+                if (userId == null)
+                    return null;
+
+
+                string url = Hosting.Current + "api/UGroupsApi/ByUser/" + userId;
+            
+                return LoadObjectList<UGroup>(url);
+            
+            
         }
         public static List<UDebt> LoadDebtList(int groupId)
         {
