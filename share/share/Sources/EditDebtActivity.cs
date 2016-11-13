@@ -66,15 +66,15 @@ namespace share
 
         protected override void StartEditLocal()
         {
-            int uGroupId = Intent.GetIntExtra("Group_ID", 0);
+            //int uGroupId = Intent.GetIntExtra("Group_ID", 0);
 
             m_Debt = LocalDBController.LoadObjectDetails<UDebt>(m_Key);
             m_etName.Text = m_Debt.Name;
             m_etDebtAmount.Text = m_Debt.Amount.ToString();
             SupportActionBar.Title = m_Debt.Name;
             
-            var debtorItems = LocalDBController.LoadMemberList(uGroupId);
-            var lenderItems = LocalDBController.LoadMemberList(uGroupId);
+            var debtorItems = LocalDBController.LoadMemberList(m_Debt.UGroupId);
+            var lenderItems = LocalDBController.LoadMemberList(m_Debt.UGroupId);
             m_spDebtor.Adapter = new DebtorListAdapter(this, debtorItems.ToArray());
             m_spLender.Adapter = new LenderListAdapter(this, lenderItems.ToArray());
 
