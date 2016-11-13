@@ -107,7 +107,7 @@ namespace share
 
                 if (item.ItemId == 1)
                 {
-                    var intent = new Intent(Activity, typeof(EditEventActivity));
+                    var intent = new Intent(Activity, typeof(EditDebtActivity));
                     intent.PutExtra("Key", o.Id);
                     intent.PutExtra("EditMode", m_EditMode);
                     StartActivityForResult(intent, 1);
