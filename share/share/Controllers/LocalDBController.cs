@@ -503,7 +503,6 @@ namespace share
                 commandText += " WHERE " + o.Table + ".ID = " + id + " ;";
             }
 
-            commandText += " WHERE " + o.Table + ".ID = " + o.Id + " ;";
             ExecuteCommand(commandText);
         }
         public static void DeleteObject<T>(T o) where T : UObject
