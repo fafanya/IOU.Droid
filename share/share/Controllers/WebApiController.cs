@@ -12,8 +12,8 @@ namespace share
         public class Hosting
         {
             public static string m_Work = "http://192.168.0.73:2562/";
-            public static string m_Home = "http://192.168.1.4:2562/";
-            public static string m_Host = "http://46.101.214.70/";
+            public static string m_Home = "http://192.168.1.4:2562/";//Айпишник домашнего компа
+            public static string m_Host = "http://46.101.214.70/";//Айпишник компа на хостинге Дениса
 
             public static string Current
             {
