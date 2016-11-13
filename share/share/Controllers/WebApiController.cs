@@ -128,7 +128,7 @@ namespace share
             }
             catch {
                 //2020327_Exception
-                // Попытка номер 2
+                // LOLD
             }
             if (userId == null)
                 return null;
