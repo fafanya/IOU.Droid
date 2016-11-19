@@ -3,7 +3,7 @@ using Android.App;
 using Android.Widget;
 using Android.Content;
 
-namespace share
+namespace IOU.Droid
 {
     [Activity(Label = "Участник", Theme = "@style/MyTheme")]
     public class EditMemberActivity : EditActivityEx

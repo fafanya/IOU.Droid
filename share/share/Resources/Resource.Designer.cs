@@ -9,9 +9,9 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-[assembly: global::Android.Runtime.ResourceDesignerAttribute("share.Resource", IsApplication=true)]
+[assembly: global::Android.Runtime.ResourceDesignerAttribute("IOU.Droid.Resource", IsApplication=true)]
 
-namespace share
+namespace IOU.Droid
 {
 	
 	

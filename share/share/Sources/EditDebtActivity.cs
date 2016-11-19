@@ -2,7 +2,7 @@ using Android.OS;
 using Android.Widget;
 using Android.Content;
 
-namespace share
+namespace IOU.Droid
 {
     [Android.App.Activity(Label = "Долг", Theme = "@style/MyTheme")]
     public class EditDebtActivity : EditActivityEx

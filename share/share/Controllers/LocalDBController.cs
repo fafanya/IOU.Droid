@@ -6,7 +6,7 @@ using System.Data;
 using Mono.Data.Sqlite;
 using System.IO;
 
-namespace share
+namespace IOU.Droid
 {
     public static class LocalDBController
     {

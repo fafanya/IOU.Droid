@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 
-namespace share
+namespace IOU.Droid
 {
     public class Algorithm
     {

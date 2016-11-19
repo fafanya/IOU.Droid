@@ -1,6 +1,6 @@
 using System.Globalization;
 
-namespace share
+namespace IOU.Droid
 {
     public static class Convertors
     {

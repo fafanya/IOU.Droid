@@ -5,7 +5,7 @@ using Android.App;
 using Android.Views;
 using Android.Widget;
 
-namespace share
+namespace IOU.Droid
 {
     public class GroupListAdapter : BaseAdapter<UGroup>
     {

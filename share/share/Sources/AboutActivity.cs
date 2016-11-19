@@ -10,7 +10,7 @@ using Android.Runtime;
 using Android.Views;
 using Android.Widget;
 
-namespace share
+namespace IOU.Droid
 {
     [Android.App.Activity(Label = "О приложении", Theme = "@style/MyTheme")]
     public class AboutActivity : AppCompatActivity

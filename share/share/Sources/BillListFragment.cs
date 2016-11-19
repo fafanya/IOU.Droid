@@ -7,7 +7,7 @@ using Android.Content;
 using Android.Support.V4.App;
 using Android.Support.Design.Widget;
 
-namespace share
+namespace IOU.Droid
 {
     public class BillListFragment : ListFragment
     {

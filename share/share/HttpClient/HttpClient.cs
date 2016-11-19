@@ -6,7 +6,7 @@ using System.Net;
 using System.Json;
 using System.Runtime.Serialization.Json;
 
-namespace share
+namespace IOU.Droid
 {
     public static class HttpClient
     {

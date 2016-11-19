@@ -6,7 +6,7 @@ using Android.Support.V7.App;
 using Android.Util;
 using System.Collections.Generic;
 
-namespace share
+namespace IOU.Droid
 {
     [Activity(Theme = "@style/MyTheme.Splash", MainLauncher = true, NoHistory = true, Label = "Общак", Icon = "@drawable/icon")]
     public class SplashActivity : AppCompatActivity

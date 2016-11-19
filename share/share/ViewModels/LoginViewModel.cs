@@ -1,4 +1,4 @@
-﻿namespace share
+﻿namespace IOU.Droid
 {
     /// <summary>
     /// Модель для логина

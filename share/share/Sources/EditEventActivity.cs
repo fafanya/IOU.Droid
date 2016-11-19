@@ -5,7 +5,7 @@ using Android.Widget;
 using Android.Content;
 using System.Collections.Generic;
 
-namespace share
+namespace IOU.Droid
 {
     [Activity(Label = "Событие", Theme = "@style/MyTheme")]
     public class EditEventActivity : EditActivityEx

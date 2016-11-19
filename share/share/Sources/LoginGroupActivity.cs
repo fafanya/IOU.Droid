@@ -11,7 +11,7 @@ using Android.App;
 using Android.Views;
 using Android.Widget;
 
-namespace share
+namespace IOU.Droid
 {
     [Activity(Label = "¬ход в группу", Theme = "@style/MyTheme")]
     public class LoginGroupActivity : AppCompatActivity

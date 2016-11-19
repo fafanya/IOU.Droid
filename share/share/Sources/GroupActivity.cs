@@ -6,7 +6,7 @@ using Android.Support.V4.View;
 using Android.Support.V7.Widget;
 using Android.Support.Design.Widget;
 
-namespace share
+namespace IOU.Droid
 {
     [Android.App.Activity(Theme = "@style/MyTheme")]
     public class GroupActivity : AppCompatActivity

@@ -4,7 +4,7 @@ using Android.Views;
 using Android.Content;
 using Android.Support.V7.App;
 
-namespace share
+namespace IOU.Droid
 {
     public abstract class EditActivityEx : EditActivity
     {

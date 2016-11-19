@@ -5,7 +5,7 @@ using Android.Views;
 using Android.Widget;
 using Android.Content;
 
-namespace share
+namespace IOU.Droid
 {
     [Activity(Label = "Ñ÷¸ò", Theme = "@style/MyTheme")]
     public class EditBillActivity : EditActivityEx

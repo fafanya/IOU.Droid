@@ -5,7 +5,7 @@ using System.Json;
 using System.Collections.Generic;
 using System.Reflection;
 
-namespace share
+namespace IOU.Droid
 {
     public static class WebApiController
     {

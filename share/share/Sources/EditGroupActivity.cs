@@ -2,7 +2,7 @@ using Android.OS;
 using Android.App;
 using Android.Widget;
 
-namespace share
+namespace IOU.Droid
 {
     [Activity(Label = "Группа", Theme = "@style/MyTheme")]
     public class EditGroupActivity : EditActivityEx

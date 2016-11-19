@@ -7,7 +7,7 @@ using Android.Widget;
 using Android.Content;
 using Android.Support.V7.App;
 
-namespace share
+namespace IOU.Droid
 {
     [Activity(Label = "Выбор участника", Theme = "@style/MyTheme")]
     public class SelectMemberActivity : AppCompatActivity

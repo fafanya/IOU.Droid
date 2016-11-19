@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
 
-namespace share
+namespace IOU.Droid
 {
     [DataContract]
     public class UGroup : UObject

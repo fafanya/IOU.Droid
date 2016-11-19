@@ -7,7 +7,7 @@ using Android.Support.V7.Widget;
 using Android.Support.Design.Widget;
 using System.Linq;
 
-namespace share
+namespace IOU.Droid
 {
     [Android.App.Activity(Label = "Менеджер долгов", Theme = "@style/MyTheme")]
     public class MainActivity : AppCompatActivity

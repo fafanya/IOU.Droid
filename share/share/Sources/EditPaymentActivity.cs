@@ -5,7 +5,7 @@ using Android.App;
 using Android.Widget;
 using Android.Content;
 
-namespace share
+namespace IOU.Droid
 {
     [Activity(Label = "Оплата", Theme = "@style/MyTheme")]
     public class EditPaymentActivity : EditActivityEx

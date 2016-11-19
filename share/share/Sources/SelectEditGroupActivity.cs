@@ -8,7 +8,7 @@ using Android.Runtime;
 using Android.Views;
 using Android.Widget;
 
-namespace share
+namespace IOU.Droid
 {
     [Activity(Label = "Добавление группы", Theme = "@style/MyTheme")]
     public class SelectEditGroupActivity : AppCompatActivity

@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using Android.Support.V4.App;
 
-namespace share
+namespace IOU.Droid
 {
     public class ViewPagerAdapter : FragmentPagerAdapter
     {

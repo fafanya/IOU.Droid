@@ -8,7 +8,7 @@ using Android.Widget;
 using Android.Support.Design.Widget;
 using Android.Support.V4.App;
 
-namespace share
+namespace IOU.Droid
 {
     public class PaymentListFragment : ListFragment
     {
