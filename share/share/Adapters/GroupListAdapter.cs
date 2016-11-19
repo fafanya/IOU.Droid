@@ -51,12 +51,12 @@ namespace share
 
             if (string.IsNullOrWhiteSpace(group.UUserId))
             {
-                title.Text = "в телефоне";
+                title.Text = m_Context.GetText(Resource.String.in_phone);
                 image.SetImageResource(Resource.Drawable.smartphone);
             }
             else
             {
-                title.Text = "в интернете";
+                title.Text = m_Context.GetText(Resource.String.on_internet);
                 name.Text += " [ID:" + group.Id + "]";
                 image.SetImageResource(Resource.Drawable.internet);
             }

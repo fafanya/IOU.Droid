@@ -45,7 +45,7 @@ namespace share
                 view = context.LayoutInflater.Inflate(Android.Resource.Layout.SimpleListItem1, null);
             }
             view.FindViewById<TextView>(Android.Resource.Id.Text1).Text = items[position].Name + 
-                " (Ñ÷¸ò: " + items[position].EventTypeName + ")";
+                " (" + context.GetText(Resource.String.bill) + ": " + items[position].EventTypeName + ")";
             return view;
         }
     }

@@ -94,9 +94,9 @@ namespace share
         public override void OnCreateContextMenu(IContextMenu menu, View v, IContextMenuContextMenuInfo menuInfo)
         {
             base.OnCreateContextMenu(menu, v, menuInfo);
-            menu.SetHeaderTitle("Меню");
-            menu.Add(2, 1, 0, "Изменить");
-            menu.Add(2, 2, 0, "Удалить");
+            menu.SetHeaderTitle(Resources.GetText(Resource.String.menu_item));
+            menu.Add(2, 1, 0, Resources.GetText(Resource.String.edit_item));
+            menu.Add(2, 2, 0, Resources.GetText(Resource.String.remove_item));
         }
         public override bool OnContextItemSelected(IMenuItem item)
         {

@@ -99,10 +99,10 @@ namespace share
         public override void OnCreateContextMenu(IContextMenu menu, View v, IContextMenuContextMenuInfo menuInfo)
         {
             base.OnCreateContextMenu(menu, v, menuInfo);
-            menu.SetHeaderTitle("Меню");
-            menu.Add(0, 1, 0, "Изменить");
-            menu.Add(0, 2, 0, "Удалить");
-            menu.Add(0, 3, 0, "Отметить себя");
+            menu.SetHeaderTitle(Resources.GetText(Resource.String.menu_item));
+            menu.Add(0, 1, 0, Resources.GetText(Resource.String.edit_item));
+            menu.Add(0, 2, 0, Resources.GetText(Resource.String.remove_item));
+            menu.Add(0, 3, 0, Resources.GetText(Resource.String.check_in));
         }
         public override bool OnContextItemSelected(IMenuItem item)
         {

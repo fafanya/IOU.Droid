@@ -32,7 +32,7 @@
                 android:layout_weight="1"
                 android:textSize="20sp"
                 android:textStyle="bold"
-                android:text="Почта: " />
+                android:text="@string/email_item" />
             <EditText
                 android:id="@+id/etEmail"
                 android:layout_height="wrap_content"
@@ -51,7 +51,7 @@
                 android:layout_weight="1"
                 android:textStyle="bold"
                 android:textSize="20sp"
-                android:text="Пароль: " />
+                android:text="@string/psw_item" />
             <EditText
                 android:id="@+id/etPassword"
                 android:layout_height="wrap_content"
@@ -70,7 +70,7 @@
                 android:layout_weight="1"
                 android:textStyle="bold"
                 android:textSize="20sp"
-                android:text="Пароль: " />
+                android:text="@string/psw_item" />
             <EditText
                 android:id="@+id/etConfirmPassword"
                 android:layout_height="wrap_content"

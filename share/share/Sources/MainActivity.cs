@@ -36,7 +36,7 @@ namespace share
             }
             else
             {
-                SupportActionBar.Title = "Менеджер долгов";
+                SupportActionBar.Title = Resources.GetText(Resource.String.desc);
             }
 
             m_DrawerLayout = FindViewById<Android.Support.V4.Widget.DrawerLayout>(Resource.Id.drawer_layout);
@@ -108,7 +108,7 @@ namespace share
             }
             else
             {
-                SupportActionBar.Title = "Менеджер долгов";
+                SupportActionBar.Title = Resources.GetText(Resource.String.app_name);
             }
         }
 
@@ -122,8 +122,8 @@ namespace share
             eventListFragment.Arguments = args;
 
             ViewPagerAdapter adapter = new ViewPagerAdapter(SupportFragmentManager);
-            adapter.addFragment(groupListFragment, new Java.Lang.String("Группы\nМероприятий"));
-            adapter.addFragment(eventListFragment, new Java.Lang.String("Отдельные\nМероприятия"));
+            adapter.addFragment(groupListFragment, new Java.Lang.String(Resources.GetText(Resource.String.groups_of_events)));
+            adapter.addFragment(eventListFragment, new Java.Lang.String(Resources.GetText(Resource.String.sep_events)));
 
             viewPager.Adapter = adapter;
         }

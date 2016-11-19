@@ -4,6 +4,7 @@ using Android.Content;
 using Android.OS;
 using Android.Support.V7.App;
 using Android.Util;
+using System.Collections.Generic;
 
 namespace share
 {
@@ -21,7 +22,17 @@ namespace share
 
             Task startupWork = new Task(() =>
             {
-                LocalDBController.Initialize();
+                List<string> example = new List<string>() {
+                    Resources.GetText(Resource.String.exam_group_name),
+                    Resources.GetText(Resource.String.exam_event1_name),
+                    Resources.GetText(Resource.String.exam_event2_name),
+                    Resources.GetText(Resource.String.exam_event3_name),
+                    Resources.GetText(Resource.String.exam_guy1_name),
+                    Resources.GetText(Resource.String.exam_guy2_name),
+                    Resources.GetText(Resource.String.exam_guy3_name),
+                    Resources.GetText(Resource.String.exam_debt_desc)
+                };
+                LocalDBController.Initialize(example);
             });
 
             startupWork.ContinueWith(t =>

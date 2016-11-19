@@ -37,7 +37,7 @@ namespace share
             m_Member = new UMember();
             m_Member.UGroupId = groupId;
             m_Member.UEventId = eventId;
-            SupportActionBar.Title = "Новый участник";
+            SupportActionBar.Title = Resources.GetText(Resource.String.new_participant);
         }
 
         protected override void StartCreateInternet()
@@ -45,7 +45,7 @@ namespace share
             int groupId = Intent.GetIntExtra("Group_ID", 0);
             m_Member = new UMember();
             m_Member.UGroupId = groupId;
-            SupportActionBar.Title = "Новый участник";
+            SupportActionBar.Title = Resources.GetText(Resource.String.new_participant);
         }
 
         protected override void StartEditLocal()

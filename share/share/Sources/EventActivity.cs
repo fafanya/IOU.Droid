@@ -34,7 +34,7 @@ namespace share
             {
                 uevent = LocalDBController.LoadObjectDetails<UEvent>(m_Key);
             }
-            SupportActionBar.Title = uevent.Name + " (—чЄт: " + uevent.EventTypeName + ")";
+            SupportActionBar.Title = uevent.Name + " (" + Resources.GetText(Resource.String.bill) + ": " + uevent.EventTypeName + ")";
 
             SupportActionBar.SetDisplayHomeAsUpEnabled(true);
             SupportActionBar.SetDisplayShowHomeEnabled(true);
@@ -67,20 +67,20 @@ namespace share
             {
                 MemberListFragment memberListFragment = new MemberListFragment();
                 memberListFragment.Arguments = args;
-                adapter.addFragment(memberListFragment, new Java.Lang.String("Ћюди"));
+                adapter.addFragment(memberListFragment, new Java.Lang.String(Resources.GetText(Resource.String.people)));
             }
 
             if (uevent.UEventTypeId == UEventType.tOwn)
             {
                 BillListFragment billListFragment = new BillListFragment();
                 billListFragment.Arguments = args;
-                adapter.addFragment(billListFragment, new Java.Lang.String("—чета"));
+                adapter.addFragment(billListFragment, new Java.Lang.String(Resources.GetText(Resource.String.bills)));
             }
             if (uevent.UEventTypeId == UEventType.tPartly)
             {
                 BillListFragment billListFragment = new BillListFragment();
                 billListFragment.Arguments = args;
-                adapter.addFragment(billListFragment, new Java.Lang.String("—остав\n”частников"));
+                adapter.addFragment(billListFragment, new Java.Lang.String(Resources.GetText(Resource.String.participants)));
             }
 
             TotalDebtListFragment totalDebtListFragment = new TotalDebtListFragment();
@@ -89,8 +89,8 @@ namespace share
             totalDebtListFragment.Arguments = args;
             paymentListFragment.Arguments = args;
             
-            adapter.addFragment(paymentListFragment, new Java.Lang.String("ќплаты"));
-            adapter.addFragment(totalDebtListFragment, new Java.Lang.String("»того"));
+            adapter.addFragment(paymentListFragment, new Java.Lang.String(Resources.GetText(Resource.String.payments)));
+            adapter.addFragment(totalDebtListFragment, new Java.Lang.String(Resources.GetText(Resource.String.total)));
 
             viewPager.Adapter = adapter;
         }

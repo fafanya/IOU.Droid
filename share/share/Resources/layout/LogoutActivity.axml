@@ -32,7 +32,7 @@
                 android:layout_weight="1"
                 android:textSize="20sp"
                 android:textStyle="bold"
-                android:text="Выйти?" />
+                android:text="@string/logout_req" />
         </LinearLayout>
         <LinearLayout
             android:layout_width="match_parent"

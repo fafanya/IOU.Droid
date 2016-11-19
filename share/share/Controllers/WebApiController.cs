@@ -127,8 +127,6 @@ namespace share
                 userId = LocalDBController.LoadUserList()[0].Id;
             }
             catch {
-                //2020327_Exception
-                // LOLD
             }
             if (userId == null)
                 return null;

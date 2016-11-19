@@ -32,7 +32,7 @@
                 android:layout_weight="1"
                 android:textSize="20sp"
                 android:textStyle="bold"
-                android:text="Участник: " />
+                android:text="@string/participant_colon" />
             <Spinner
                 android:id="@+id/spMember"
                 android:layout_height="wrap_content"

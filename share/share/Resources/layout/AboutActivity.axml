@@ -32,7 +32,7 @@
                 android:layout_weight="1"
                 android:textSize="20sp"
                 android:textStyle="bold"
-                android:text="Лучшее приложение для общака. Серьёзно" />
+                android:text="@string/about_desc" />
         </LinearLayout>
     </LinearLayout>
 </android.support.design.widget.CoordinatorLayout>

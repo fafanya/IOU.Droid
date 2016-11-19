@@ -63,7 +63,7 @@ namespace share
             }
             else
             {
-                SupportActionBar.Title = "Участник";
+                SupportActionBar.Title = Resources.GetText(Resource.String.participant);
                 m_ll.Visibility = ViewStates.Gone;
             }
         }
@@ -85,7 +85,7 @@ namespace share
             }
             else
             {
-                SupportActionBar.Title = "Участник";
+                SupportActionBar.Title = Resources.GetText(Resource.String.participant);
                 m_ll.Visibility = ViewStates.Gone;
             }
         }
@@ -121,7 +121,7 @@ namespace share
             }
             else
             {
-                SupportActionBar.Title = "Участник";
+                SupportActionBar.Title = Resources.GetText(Resource.String.participant);
                 m_ll.Visibility = ViewStates.Gone;
             }
         }
@@ -148,7 +148,7 @@ namespace share
             }
             else
             {
-                SupportActionBar.Title = "Участник";
+                SupportActionBar.Title = Resources.GetText(Resource.String.participant);
                 m_ll.Visibility = ViewStates.Gone;
             }
         }

@@ -32,7 +32,7 @@
                 android:layout_weight="1"
                 android:textStyle="bold"
                 android:textSize="20sp"
-                android:text="Название: " />
+                android:text="@string/name_item" />
             <EditText
                 android:id="@+id/etDebtName"
                 android:layout_height="wrap_content"
@@ -51,7 +51,7 @@
                 android:layout_weight="1"
                 android:textStyle="bold"
                 android:textSize="20sp"
-                android:text="Должник: " />
+                android:text="@string/debtor_colon" />
             <Spinner
                 android:id="@+id/spDebtor"
                 android:layout_height="wrap_content"
@@ -70,7 +70,7 @@
                 android:layout_weight="1"
                 android:textStyle="bold"
                 android:textSize="20sp"
-                android:text="Кредитор: " />
+                android:text="@string/creditor_colon" />
             <Spinner
                 android:id="@+id/spLender"
                 android:layout_height="wrap_content"
@@ -89,7 +89,7 @@
                 android:layout_weight="1"
                 android:textStyle="bold"
                 android:textSize="20sp"
-                android:text="Сумма: " />
+                android:text="@string/sum_colon" />
             <EditText
                 android:id="@+id/etDebtAmount"
                 android:layout_height="wrap_content"

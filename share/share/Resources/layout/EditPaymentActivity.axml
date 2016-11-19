@@ -32,7 +32,7 @@
                 android:layout_weight="1"
                 android:textStyle="bold"
                 android:textSize="20sp"
-                android:text="Участник: " />
+                android:text="@string/participant_colon" />
             <Spinner
                 android:id="@+id/spPaymentMember"
                 android:layout_height="wrap_content"
@@ -51,7 +51,7 @@
                 android:layout_weight="1"
                 android:textStyle="bold"
                 android:textSize="20sp"
-                android:text="Сумма: " />
+                android:text="@string/sum_colon" />
             <EditText
                 android:id="@+id/etPaymentAmount"
                 android:layout_height="wrap_content"

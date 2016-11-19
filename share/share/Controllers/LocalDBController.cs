@@ -10,7 +10,7 @@ namespace share
 {
     public static class LocalDBController
     {
-        public static void Initialize()
+        public static void Initialize(List<string> example)
         {
             string path = UTransaction.GetDBPath();
             if (!File.Exists(path))
@@ -43,30 +43,30 @@ namespace share
                 {
                     transaction.Rollback();
                 }
-                FillExample();
+                FillExample(example);
             }
         }
 
-        private static void FillExample()
+        private static void FillExample(List<string> example)
         {
-            UGroup g = new UGroup() { Name = "Поездка в Прагу" };
+            UGroup g = new UGroup() { Name = example[0] };
             CreateObject(g);
 
-            UEvent e1 = new UEvent() { Name = "Такси", UGroupId = g.Id, UEventTypeId = UEventType.tCommon };
+            UEvent e1 = new UEvent() { Name = example[1], UGroupId = g.Id, UEventTypeId = UEventType.tCommon };
             CreateObject(e1);
-            UEvent e2 = new UEvent() { Name = "Кафе", UGroupId = g.Id, UEventTypeId = UEventType.tOwn };
+            UEvent e2 = new UEvent() { Name = example[2], UGroupId = g.Id, UEventTypeId = UEventType.tOwn };
             CreateObject(e2);
-            UEvent e3 = new UEvent() { Name = "Музей", UGroupId = g.Id, UEventTypeId = UEventType.tPartly };
+            UEvent e3 = new UEvent() { Name = example[3], UGroupId = g.Id, UEventTypeId = UEventType.tPartly };
             CreateObject(e3);
 
-            UMember m1 = new UMember() { Name = "Петя", UGroupId = g.Id };
+            UMember m1 = new UMember() { Name = example[4], UGroupId = g.Id };
             CreateObject(m1);
-            UMember m2 = new UMember() { Name = "Вася", UGroupId = g.Id };
+            UMember m2 = new UMember() { Name = example[5], UGroupId = g.Id };
             CreateObject(m2);
-            UMember m3 = new UMember() { Name = "Коля", UGroupId = g.Id };
+            UMember m3 = new UMember() { Name = example[6], UGroupId = g.Id };
             CreateObject(m3);
 
-            UDebt d1 = new UDebt() { Name = "Пиво", UGroupId = g.Id, LenderId = m3.Id,
+            UDebt d1 = new UDebt() { Name = example[7], UGroupId = g.Id, LenderId = m3.Id,
                 DebtorId = m2.Id, Amount = 19.05 };
             CreateObject(d1);
 

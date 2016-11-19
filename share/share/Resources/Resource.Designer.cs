@@ -2855,11 +2855,26 @@ namespace share
 			// aapt resource value: 0x7f070012
 			public const int abc_toolbar_collapse_description = 2131165202;
 			
+			// aapt resource value: 0x7f070039
+			public const int about = 2131165241;
+			
+			// aapt resource value: 0x7f07003d
+			public const int about_desc = 2131165245;
+			
 			// aapt resource value: 0x7f070019
 			public const int app_name = 2131165209;
 			
 			// aapt resource value: 0x7f070014
 			public const int appbar_scrolling_view_behavior = 2131165204;
+			
+			// aapt resource value: 0x7f070025
+			public const int bill = 2131165221;
+			
+			// aapt resource value: 0x7f070026
+			public const int bill_ast_colon = 2131165222;
+			
+			// aapt resource value: 0x7f070030
+			public const int bills = 2131165232;
 			
 			// aapt resource value: 0x7f070015
 			public const int bottom_sheet_behavior = 2131165205;
@@ -2885,6 +2900,66 @@ namespace share
 			// aapt resource value: 0x7f070016
 			public const int character_counter_pattern = 2131165206;
 			
+			// aapt resource value: 0x7f070038
+			public const int check_in = 2131165240;
+			
+			// aapt resource value: 0x7f070044
+			public const int com_bill_desc = 2131165252;
+			
+			// aapt resource value: 0x7f070040
+			public const int creditor_colon = 2131165248;
+			
+			// aapt resource value: 0x7f07003f
+			public const int debtor_colon = 2131165247;
+			
+			// aapt resource value: 0x7f070033
+			public const int debts = 2131165235;
+			
+			// aapt resource value: 0x7f070037
+			public const int desc = 2131165239;
+			
+			// aapt resource value: 0x7f07002a
+			public const int edit_item = 2131165226;
+			
+			// aapt resource value: 0x7f070046
+			public const int email_item = 2131165254;
+			
+			// aapt resource value: 0x7f070034
+			public const int events = 2131165236;
+			
+			// aapt resource value: 0x7f070056
+			public const int exam_debt_desc = 2131165270;
+			
+			// aapt resource value: 0x7f070050
+			public const int exam_event1_name = 2131165264;
+			
+			// aapt resource value: 0x7f070051
+			public const int exam_event2_name = 2131165265;
+			
+			// aapt resource value: 0x7f070052
+			public const int exam_event3_name = 2131165266;
+			
+			// aapt resource value: 0x7f07004f
+			public const int exam_group_name = 2131165263;
+			
+			// aapt resource value: 0x7f070053
+			public const int exam_guy1_name = 2131165267;
+			
+			// aapt resource value: 0x7f070054
+			public const int exam_guy2_name = 2131165268;
+			
+			// aapt resource value: 0x7f070055
+			public const int exam_guy3_name = 2131165269;
+			
+			// aapt resource value: 0x7f070036
+			public const int export_item = 2131165238;
+			
+			// aapt resource value: 0x7f070048
+			public const int group_id_item = 2131165256;
+			
+			// aapt resource value: 0x7f07004d
+			public const int groups_of_events = 2131165261;
+			
 			// aapt resource value: 0x7f07001a
 			public const int hint_email = 2131165210;
 			
@@ -2894,14 +2969,95 @@ namespace share
 			// aapt resource value: 0x7f07001b
 			public const int hint_password = 2131165211;
 			
+			// aapt resource value: 0x7f070057
+			public const int icon_name = 2131165271;
+			
+			// aapt resource value: 0x7f070035
+			public const int import_item = 2131165237;
+			
+			// aapt resource value: 0x7f070027
+			public const int in_phone = 2131165223;
+			
+			// aapt resource value: 0x7f07004c
+			public const int join_group_inet = 2131165260;
+			
+			// aapt resource value: 0x7f07003a
+			public const int login = 2131165242;
+			
+			// aapt resource value: 0x7f07003b
+			public const int logout = 2131165243;
+			
+			// aapt resource value: 0x7f070049
+			public const int logout_req = 2131165257;
+			
+			// aapt resource value: 0x7f070042
+			public const int member_name = 2131165250;
+			
+			// aapt resource value: 0x7f070029
+			public const int menu_item = 2131165225;
+			
 			// aapt resource value: 0x7f070023
 			public const int name = 2131165219;
+			
+			// aapt resource value: 0x7f070041
+			public const int name_item = 2131165249;
+			
+			// aapt resource value: 0x7f07004a
+			public const int new_group_inet = 2131165258;
+			
+			// aapt resource value: 0x7f07004b
+			public const int new_group_phone = 2131165259;
+			
+			// aapt resource value: 0x7f070024
+			public const int new_participant = 2131165220;
 			
 			// aapt resource value: 0x7f070017
 			public const int ok = 2131165207;
 			
+			// aapt resource value: 0x7f070028
+			public const int on_internet = 2131165224;
+			
+			// aapt resource value: 0x7f070045
+			public const int part_bill_desc = 2131165253;
+			
+			// aapt resource value: 0x7f07002c
+			public const int participant = 2131165228;
+			
+			// aapt resource value: 0x7f07002d
+			public const int participant_colon = 2131165229;
+			
+			// aapt resource value: 0x7f07002e
+			public const int participants = 2131165230;
+			
+			// aapt resource value: 0x7f070031
+			public const int payments = 2131165233;
+			
+			// aapt resource value: 0x7f07002f
+			public const int people = 2131165231;
+			
+			// aapt resource value: 0x7f070047
+			public const int psw_item = 2131165255;
+			
+			// aapt resource value: 0x7f07002b
+			public const int remove_item = 2131165227;
+			
+			// aapt resource value: 0x7f070043
+			public const int sep_bill_desc = 2131165251;
+			
+			// aapt resource value: 0x7f07004e
+			public const int sep_events = 2131165262;
+			
+			// aapt resource value: 0x7f07003c
+			public const int sign_up = 2131165244;
+			
 			// aapt resource value: 0x7f070013
 			public const int status_bar_notification_info_overflow = 2131165203;
+			
+			// aapt resource value: 0x7f07003e
+			public const int sum_colon = 2131165246;
+			
+			// aapt resource value: 0x7f070032
+			public const int total = 2131165234;
 			
 			// aapt resource value: 0x7f070021
 			public const int welcome = 2131165217;

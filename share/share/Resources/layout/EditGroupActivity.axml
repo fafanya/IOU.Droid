@@ -33,7 +33,7 @@
                 android:layout_weight="1"
                 android:textSize="20sp"
                 android:textStyle="bold"
-                android:text="Название: " />
+                android:text="@string/name_item" />
             <EditText
                 android:id="@+id/etGroupName"
                 android:layout_height="wrap_content"
