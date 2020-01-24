@@ -31,7 +31,7 @@ namespace IOU.Droid
                     transaction.ExecuteCommand("CREATE TABLE IF NOT EXISTS DEBT (ID INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE," +
                         "Group_ID INTEGER NOT NULL, Name TEXT NOT NULL, Debtor_ID INTEGER NOT NULL, Lender_ID INTEGER NOT NULL, Amount REAL NOT NULL);");
                     transaction.ExecuteCommand("CREATE TABLE IF NOT EXISTS BILL (ID INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE," +
-                        "Event_ID INTEGER NOT NULL, Member_ID INTEGER NOT NULL, Amount REAL);");
+                        "Event_ID INTEGER NOT NULL, Member_ID INTEGER NOT NULL, Amount REAL, Level INTEGER NOT NULL);");
                     transaction.ExecuteCommand("CREATE TABLE IF NOT EXISTS PAYMENT (ID INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE," +
                         "Event_ID INTEGER NOT NULL, Member_ID INTEGER NOT NULL, Amount REAL NOT NULL);");
                     transaction.ExecuteCommand("INSERT INTO EVENTTYPE (ID, Name) VALUES (1, \"Личный\");");
@@ -70,16 +70,16 @@ namespace IOU.Droid
                 DebtorId = m2.Id, Amount = 19.05 };
             CreateObject(d1);
 
-            UBill b1 = new UBill() { UEventId = e2.Id, UMemberId = m1.Id, Amount = 80 };
+            UBill b1 = new UBill() { UEventId = e2.Id, UMemberId = m1.Id, Amount = 80, Level = 100 };
             CreateObject(b1);
-            UBill b2 = new UBill() { UEventId = e2.Id, UMemberId = m2.Id, Amount = 60 };
+            UBill b2 = new UBill() { UEventId = e2.Id, UMemberId = m2.Id, Amount = 60, Level = 100 };
             CreateObject(b2);
-            UBill b3 = new UBill() { UEventId = e2.Id, UMemberId = m3.Id, Amount = 100 };
+            UBill b3 = new UBill() { UEventId = e2.Id, UMemberId = m3.Id, Amount = 100, Level = 100 };
             CreateObject(b3);
 
-            UBill b4 = new UBill() { UEventId = e3.Id, UMemberId = m2.Id, Amount = 0 };
+            UBill b4 = new UBill() { UEventId = e3.Id, UMemberId = m2.Id, Amount = 0, Level = 100 };
             CreateObject(b4);
-            UBill b5 = new UBill() { UEventId = e3.Id, UMemberId = m3.Id, Amount = 0 };
+            UBill b5 = new UBill() { UEventId = e3.Id, UMemberId = m3.Id, Amount = 0, Level = 100 };
             CreateObject(b5);
 
             UPayment p1 = new UPayment() { UEventId = e1.Id, UMemberId = m1.Id, Amount = 60 };

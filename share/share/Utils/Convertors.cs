@@ -13,6 +13,15 @@ namespace IOU.Droid
             return output;
         }
 
+        public static int StringToInt(string input)
+        {
+            input = input.Replace(',', '.');
+
+            int output;
+            int.TryParse(input, NumberStyles.Any, CultureInfo.InvariantCulture, out output);
+            return output;
+        }
+
         public static string DoubleToString(double input)
         {
             string output = input.ToString("0.00", CultureInfo.InvariantCulture);

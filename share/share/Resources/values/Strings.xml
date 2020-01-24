@@ -44,6 +44,7 @@
     <string name="creditor_colon">Кредитор: </string>
     <string name="name_item">Название: </string>
     <string name="member_name">Имя: </string>
+    <string name="bill_level">Уровень: </string>
     <string name="sep_bill_desc">Раздельный - участвует кто хочет. У каждого свой счёт. Оплачивает кто хочет</string>
     <string name="com_bill_desc">Общий - участвуют все люди. Счёт делится на всех поровну. Оплачивает кто хочет.</string>
     <string name="part_bill_desc">Полуобщий - участвует кто хочет. Счёт делится на участников поровну. Оплачивает кто хочет.</string>

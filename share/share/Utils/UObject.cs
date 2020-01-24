@@ -322,6 +322,7 @@ namespace IOU.Droid
             EditableFields.Add("Member_ID", 0);
             EditableFields.Add("Amount", 0.0);
             ReadOnlyFields.Add("MemberName", null);
+            EditableFields.Add("Level", 100);
         }
         [DataMember]
         public int UEventId
@@ -357,6 +358,18 @@ namespace IOU.Droid
             set
             {
                 EditableFields["Amount"] = value;
+            }
+        }
+        [DataMember]
+        public int Level
+        {
+            get
+            {
+                return Convert.ToInt32(EditableFields["Level"]);
+            }
+            set
+            {
+                EditableFields["Level"] = value;
             }
         }
 

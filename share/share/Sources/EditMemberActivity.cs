@@ -37,6 +37,7 @@ namespace IOU.Droid
             m_Member = new UMember();
             m_Member.UGroupId = groupId;
             m_Member.UEventId = eventId;
+
             SupportActionBar.Title = Resources.GetText(Resource.String.new_participant);
         }
 

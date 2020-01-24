@@ -44,6 +44,7 @@
     <string name="creditor_colon">Creditor: </string>
     <string name="name_item">Name: </string>
     <string name="member_name">Name: </string>
+    <string name="bill_level">Level: </string>
     <string name="sep_bill_desc">Separate - participation is optional. Everyone has their own bill. Paid by anyone who volunteers</string>
     <string name="com_bill_desc">Common - everyone takes part. Amount equally divided between all participants. Paid by anyone who volunteers</string>
     <string name="part_bill_desc">Partial - participation is optional. Amount equally divided between all participants. Paid by anyone who volunteers</string>

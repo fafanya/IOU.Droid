@@ -85,14 +85,19 @@ namespace IOU.Droid
                         }
                     }
 
-                    int count = bills.Where(x=>x.UEventId == e.Id).GroupBy(y=>y.UMemberId).Count();
+                    double commonLevel = 0.0;
+                    var eventBills = bills.Where(x => x.UEventId == e.Id);
+                    foreach (UBill b in eventBills)
+                    {
+                        commonLevel += b.Level / 100.0;
+                    }
+                    double priceItem = sum / commonLevel;
 
-                    double avg = sum / count;
                     foreach (UBill b in bills.Where(x => x.UEventId == e.Id))
                     {
                         foreach (CustomMember m in cMembers.Where(x => x.Member.Id == b.UMemberId))
                         {
-                            m.Balance += avg;
+                            m.Balance += priceItem * (b.Level / 100.0);
                         }
                     }
                 }
@@ -165,14 +170,19 @@ namespace IOU.Droid
                     }
                 }
 
-                int count = bills.Where(x => x.UEventId == e.Id).GroupBy(y => y.UMemberId).Count();
+                double commonLevel = 0.0;
+                var eventBills = bills.Where(x => x.UEventId == e.Id);
+                foreach(UBill b in eventBills)
+                {
+                    commonLevel += b.Level / 100.0;
+                }
+                double priceItem = sum / commonLevel;
 
-                double avg = sum / count;
                 foreach (UBill b in bills.Where(x => x.UEventId == e.Id))
                 {
                     foreach (CustomMember m in cMembers.Where(x => x.Member.Id == b.UMemberId))
                     {
-                        m.Balance += avg;
+                        m.Balance += priceItem * (b.Level / 100.0);
                     }
                 }
             }

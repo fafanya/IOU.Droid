@@ -12,6 +12,7 @@ namespace IOU.Droid
     {
         UBill m_Bill;
         EditText m_etBillAmount;
+        EditText m_etBillLevel;
         Spinner m_spMember;
         LinearLayout m_ll;
         UEvent m_Event;
@@ -27,6 +28,7 @@ namespace IOU.Droid
             SupportActionBar.SetDisplayShowHomeEnabled(true);
 
             m_etBillAmount = FindViewById<EditText>(Resource.Id.etBillAmount);
+            m_etBillLevel = FindViewById<EditText>(Resource.Id.etBillLevel);
             m_spMember = FindViewById<Spinner>(Resource.Id.spBillMember);
             m_ll = FindViewById<LinearLayout>(Resource.Id.llEditBillActivity);
             Button btnOK = FindViewById<Button>(Resource.Id.btnBillOK);
@@ -44,6 +46,7 @@ namespace IOU.Droid
             m_Bill = new UBill();
             m_Bill.UEventId = eventId;
             m_Bill.Amount = 0.0;
+            m_Bill.Level = 100;
 
             m_Event = LocalDBController.LoadObjectDetails<UEvent>(eventId);
             List<UMember> memberItems;
@@ -57,9 +60,12 @@ namespace IOU.Droid
             }
             m_spMember.Adapter = new DebtorListAdapter(this, memberItems.ToArray());
 
+            m_etBillLevel.Text = m_Bill.Level.ToString();
             if (m_Event.UEventTypeId == UEventType.tOwn)
             {
                 m_etBillAmount.Text = m_Bill.Amount.ToString();
+                LinearLayout ll = FindViewById<LinearLayout>(Resource.Id.llBillLevel);
+                ll.Visibility = ViewStates.Gone;
             }
             else
             {
@@ -74,14 +80,19 @@ namespace IOU.Droid
             m_Bill = new UBill();
             m_Bill.UEventId = eventId;
             m_Bill.Amount = 0.0;
+            m_Bill.Level = 100;
 
             m_Event = WebApiController.LoadObjectDetails<UEvent>(eventId);
             List<UMember> memberItems = WebApiController.LoadMemberList(m_Event.UGroupId);
             m_spMember.Adapter = new DebtorListAdapter(this, memberItems.ToArray());
 
+
+            m_etBillLevel.Text = m_Bill.Level.ToString();
             if (m_Event.UEventTypeId == UEventType.tOwn)
             {
                 m_etBillAmount.Text = m_Bill.Amount.ToString();
+                LinearLayout ll = FindViewById<LinearLayout>(Resource.Id.llBillLevel);
+                ll.Visibility = ViewStates.Gone;
             }
             else
             {
@@ -115,9 +126,12 @@ namespace IOU.Droid
                 }
             }
 
+            m_etBillLevel.Text = m_Bill.Level.ToString();
             if (m_Event.UEventTypeId == UEventType.tOwn)
             {
                 m_etBillAmount.Text = m_Bill.Amount.ToString();
+                LinearLayout ll = FindViewById<LinearLayout>(Resource.Id.llBillLevel);
+                ll.Visibility = ViewStates.Gone;
             }
             else
             {
@@ -142,9 +156,12 @@ namespace IOU.Droid
                 }
             }
 
+            m_etBillLevel.Text = m_Bill.Level.ToString();
             if (m_Event.UEventTypeId == UEventType.tOwn)
             {
                 m_etBillAmount.Text = m_Bill.Amount.ToString();
+                LinearLayout ll = FindViewById<LinearLayout>(Resource.Id.llBillLevel);
+                ll.Visibility = ViewStates.Gone;
             }
             else
             {
@@ -159,6 +176,7 @@ namespace IOU.Droid
             {
                 m_Bill.Amount = Convertors.StringToDouble(m_etBillAmount.Text);
             }
+            m_Bill.Level = Convertors.StringToInt(m_etBillLevel.Text);
             m_Bill.UMemberId = (int)(m_spMember.SelectedItemId);
             LocalDBController.CreateObject(m_Bill);
         }
@@ -169,6 +187,7 @@ namespace IOU.Droid
             {
                 m_Bill.Amount = Convertors.StringToDouble(m_etBillAmount.Text);
             }
+            m_Bill.Level = Convertors.StringToInt(m_etBillLevel.Text);
             m_Bill.UMemberId = (int)(m_spMember.SelectedItemId);
             WebApiController.CreateObject(m_Bill);
         }
@@ -179,6 +198,7 @@ namespace IOU.Droid
             {
                 m_Bill.Amount = Convertors.StringToDouble(m_etBillAmount.Text);
             }
+            m_Bill.Level = Convertors.StringToInt(m_etBillLevel.Text);
             m_Bill.UMemberId = (int)(m_spMember.SelectedItemId);
             LocalDBController.UpdateObject(m_Bill);
         }
@@ -189,6 +209,7 @@ namespace IOU.Droid
             {
                 m_Bill.Amount = Convertors.StringToDouble(m_etBillAmount.Text);
             }
+            m_Bill.Level = Convertors.StringToInt(m_etBillLevel.Text);
             m_Bill.UMemberId = (int)(m_spMember.SelectedItemId);
             WebApiController.UpdateObject(m_Bill);
         }
