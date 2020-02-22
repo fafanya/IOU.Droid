@@ -9,7 +9,7 @@ using System.Linq;
 
 namespace IOU.Droid
 {
-    [Android.App.Activity(Label = "Менеджер долгов", Theme = "@style/MyTheme")]
+    [Android.App.Activity(Label = "@string/app_name", Theme = "@style/MyTheme")]
     public class MainActivity : AppCompatActivity
     {
         private Toolbar toolbar;
@@ -67,8 +67,8 @@ namespace IOU.Droid
                     {
                         AlertDialog alertDialog;
                         alertDialog = new AlertDialog.Builder(this).Create();
-                        alertDialog.SetTitle("Попытка входа");
-                        alertDialog.SetMessage("Выйдите из текущего профиля");
+                        alertDialog.SetTitle(Resources.GetText(Resource.String.app_name));
+                        alertDialog.SetMessage(Resources.GetText(Resource.String.need_logout));
                         alertDialog.Show();
                     }
                 }

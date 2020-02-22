@@ -7,7 +7,7 @@ using System.Collections.Generic;
 
 namespace IOU.Droid
 {
-    [Activity(Label = "Событие", Theme = "@style/MyTheme")]
+    [Activity(Label = "@string/event", Theme = "@style/MyTheme")]
     public class EditEventActivity : EditActivityEx
     {
         UEvent m_Event;
@@ -44,7 +44,7 @@ namespace IOU.Droid
             m_Event = new UEvent();
             m_Event.UGroupId = groupId;
             m_Event.UEventTypeId = 1;
-            SupportActionBar.Title = "Новое событие";
+            SupportActionBar.Title = Resources.GetText(Resource.String.add_event);
 
             List<UEventType> items = LocalDBController.LoadEventTypeList();
             if (m_Event.UGroupId == 0)
@@ -71,7 +71,7 @@ namespace IOU.Droid
             m_Event = new UEvent();
             m_Event.UGroupId = groupId;
             m_Event.UEventTypeId = 1;
-            SupportActionBar.Title = "Новое событие";
+            SupportActionBar.Title = Resources.GetText(Resource.String.add_event);
 
             List<UEventType> items = LocalDBController.LoadEventTypeList();
             m_EventTypeListAdapter = new EventTypeListAdapter(this, items.ToArray());

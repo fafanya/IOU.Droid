@@ -4,7 +4,7 @@ using Android.Content;
 
 namespace IOU.Droid
 {
-    [Android.App.Activity(Label = "Долг", Theme = "@style/MyTheme")]
+    [Android.App.Activity(Label = "@string/debt", Theme = "@style/MyTheme")]
     public class EditDebtActivity : EditActivityEx
     {
         UDebt m_Debt;
@@ -42,7 +42,7 @@ namespace IOU.Droid
 
             m_Debt = new UDebt();
             m_Debt.UGroupId = uGroupId;
-            SupportActionBar.Title = "Добавить долг";
+            SupportActionBar.Title = Resources.GetText(Resource.String.add_debt);
             
             var debtorItems = LocalDBController.LoadMemberList(uGroupId);
             var lenderItems = LocalDBController.LoadMemberList(uGroupId);
@@ -56,7 +56,7 @@ namespace IOU.Droid
 
             m_Debt = new UDebt();
             m_Debt.UGroupId = uGroupId;
-            SupportActionBar.Title = "Добавить долг";
+            SupportActionBar.Title = Resources.GetText(Resource.String.add_debt);
 
             var debtorItems = WebApiController.LoadMemberList(uGroupId);
             var lenderItems = WebApiController.LoadMemberList(uGroupId);
@@ -66,8 +66,6 @@ namespace IOU.Droid
 
         protected override void StartEditLocal()
         {
-            //int uGroupId = Intent.GetIntExtra("Group_ID", 0);
-
             m_Debt = LocalDBController.LoadObjectDetails<UDebt>(m_Key);
             m_etName.Text = m_Debt.Name;
             m_etDebtAmount.Text = m_Debt.Amount.ToString();

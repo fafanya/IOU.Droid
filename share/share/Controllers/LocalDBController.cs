@@ -34,9 +34,9 @@ namespace IOU.Droid
                         "Event_ID INTEGER NOT NULL, Member_ID INTEGER NOT NULL, Amount REAL, Level INTEGER NOT NULL);");
                     transaction.ExecuteCommand("CREATE TABLE IF NOT EXISTS PAYMENT (ID INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE," +
                         "Event_ID INTEGER NOT NULL, Member_ID INTEGER NOT NULL, Amount REAL NOT NULL);");
-                    transaction.ExecuteCommand("INSERT INTO EVENTTYPE (ID, Name) VALUES (1, \"Личный\");");
-                    transaction.ExecuteCommand("INSERT INTO EVENTTYPE (ID, Name) VALUES (2, \"Общий\");");
-                    transaction.ExecuteCommand("INSERT INTO EVENTTYPE (ID, Name) VALUES (3, \"Полуобщий\");");
+                    transaction.ExecuteCommand("INSERT INTO EVENTTYPE (ID, Name) VALUES (1, \"sep_bill_name\");");
+                    transaction.ExecuteCommand("INSERT INTO EVENTTYPE (ID, Name) VALUES (2, \"com_bill_name\");");
+                    transaction.ExecuteCommand("INSERT INTO EVENTTYPE (ID, Name) VALUES (3, \"part_bill_name\");");
                     transaction.Commit();
                 }
                 catch

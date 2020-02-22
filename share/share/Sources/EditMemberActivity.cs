@@ -5,7 +5,7 @@ using Android.Content;
 
 namespace IOU.Droid
 {
-    [Activity(Label = "Участник", Theme = "@style/MyTheme")]
+    [Activity(Label = "@string/member", Theme = "@style/MyTheme")]
     public class EditMemberActivity : EditActivityEx
     {
         UMember m_Member;

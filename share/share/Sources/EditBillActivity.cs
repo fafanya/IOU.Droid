@@ -7,7 +7,7 @@ using Android.Content;
 
 namespace IOU.Droid
 {
-    [Activity(Label = "Ñ÷¸ò", Theme = "@style/MyTheme")]
+    [Activity(Label = "@string/bill", Theme = "@style/MyTheme")]
     public class EditBillActivity : EditActivityEx
     {
         UBill m_Bill;

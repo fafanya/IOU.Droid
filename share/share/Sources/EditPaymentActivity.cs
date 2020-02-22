@@ -7,7 +7,7 @@ using Android.Content;
 
 namespace IOU.Droid
 {
-    [Activity(Label = "Оплата", Theme = "@style/MyTheme")]
+    [Activity(Label = "@string/payment", Theme = "@style/MyTheme")]
     public class EditPaymentActivity : EditActivityEx
     {
         UPayment m_Payment;

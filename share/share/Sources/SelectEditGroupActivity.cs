@@ -10,7 +10,7 @@ using Android.Widget;
 
 namespace IOU.Droid
 {
-    [Activity(Label = "Добавление группы", Theme = "@style/MyTheme")]
+    [Activity(Label = "@string/select_edit_group", Theme = "@style/MyTheme")]
     public class SelectEditGroupActivity : AppCompatActivity
     {
         private Android.Support.V7.Widget.Toolbar toolbar;

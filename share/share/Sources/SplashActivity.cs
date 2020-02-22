@@ -8,7 +8,7 @@ using System.Collections.Generic;
 
 namespace IOU.Droid
 {
-    [Activity(Theme = "@style/MyTheme.Splash", MainLauncher = true, NoHistory = true, Label = "Общак", Icon = "@drawable/icon")]
+    [Activity(Theme = "@style/MyTheme.Splash", MainLauncher = true, NoHistory = true, Label = "@string/icon_name", Icon = "@drawable/icon")]
     public class SplashActivity : AppCompatActivity
     {
         public override void OnCreate(Bundle savedInstanceState, PersistableBundle persistentState)

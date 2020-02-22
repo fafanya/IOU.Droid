@@ -34,7 +34,8 @@ namespace IOU.Droid
             {
                 uevent = LocalDBController.LoadObjectDetails<UEvent>(m_Key);
             }
-            SupportActionBar.Title = uevent.Name + " (" + Resources.GetText(Resource.String.bill) + ": " + uevent.EventTypeName + ")";
+            SupportActionBar.Title = uevent.Name + " (" + Resources.GetText(Resource.String.bill) + ": " + 
+                Resources.GetString(Resources.GetIdentifier(uevent.EventTypeName, "string", PackageName))  + ")";
 
             SupportActionBar.SetDisplayHomeAsUpEnabled(true);
             SupportActionBar.SetDisplayShowHomeEnabled(true);

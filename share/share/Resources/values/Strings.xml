@@ -27,8 +27,11 @@
     <string name="people">Люди</string>
     <string name="bills">Счета</string>
     <string name="payments">Оплаты</string>
+    <string name="payment">Оплата</string>
+    <string name="member">Участник</string>
     <string name="total">Итого</string>
     <string name="debts">Долги</string>
+    <string name="debt">Долг</string>
     <string name="events">События</string>
     <string name="import_item">Импорт</string>
     <string name="export_item">Экспорт</string>
@@ -36,8 +39,11 @@
     <string name="check_in">Отметить себя</string>
     <string name="about">О приложении</string>
     <string name="login">Войти</string>
+    <string name="the_login">Войти</string>
     <string name="logout">Выйти</string>
+    <string name="the_logout">Выход</string>
     <string name="sign_up">Зарегистрироваться</string>
+    <string name="the_sign_up">Регистрация</string>
     <string name="about_desc">Лучшее приложение для общака. Серьёзно</string>
     <string name="sum_colon">Сумма: </string>
     <string name="debtor_colon">Должник: </string>
@@ -45,9 +51,9 @@
     <string name="name_item">Название: </string>
     <string name="member_name">Имя: </string>
     <string name="bill_level">Уровень: </string>
-    <string name="sep_bill_desc">Раздельный - участвует кто хочет. У каждого свой счёт. Оплачивает кто хочет</string>
-    <string name="com_bill_desc">Общий - участвуют все люди. Счёт делится на всех поровну. Оплачивает кто хочет.</string>
-    <string name="part_bill_desc">Полуобщий - участвует кто хочет. Счёт делится на участников поровну. Оплачивает кто хочет.</string>
+    <string name="sep_bill_desc">Раздельный - участвует кто хочет. У каждого свой счёт</string>
+    <string name="com_bill_desc">Общий - участвуют все. Счёт делится поровну</string>
+    <string name="part_bill_desc">Частичный - участвует кто хочет. Счёт делится в зависимости от степени участия</string>
     <string name="email_item">Почта: </string>
     <string name="psw_item">Пароль: </string>
     <string name="group_id_item">ID группы: </string>
@@ -55,7 +61,8 @@
     <string name="new_group_inet">Новая в интернете</string>
     <string name="new_group_phone">Новая в телефоне</string>
     <string name="join_group_inet">Присоединиться к группе в интернете</string>
-    <string name="groups_of_events">Группы\nМероприятий</string>
+    <string name="groups_of_events">Группы</string>
+    <string name="group_of_events">Группа</string>
     <string name="sep_events">Отдельные\nМероприятия</string>
     <string name="exam_group_name">Поездка в Прагу</string>
     <string name="exam_event1_name">Такси</string>
@@ -66,4 +73,14 @@
     <string name="exam_guy3_name">Оля</string>
     <string name="exam_debt_desc">Пиво</string>
     <string name="icon_name">Общак</string>
+    <string name="sep_bill_name">Раздельный</string>
+    <string name="com_bill_name">Общий</string>
+    <string name="part_bill_name">Частичный</string>
+    <string name="event">Событие</string>
+    <string name="select_member">Выбор участника</string>
+    <string name="select_edit_group">Добавление группы</string>
+    <string name="need_logout">Выйдите из текущего профиля</string>
+    <string name="add_group">Добавить группу</string>
+    <string name="add_debt">Добавить долг</string>
+    <string name="add_event">Добавить событие</string>
 </resources>

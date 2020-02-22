@@ -44,7 +44,11 @@ namespace IOU.Droid
             {
                 view = context.LayoutInflater.Inflate(Resource.Layout.SpinnerItem, null);
             }
-            view.FindViewById<TextView>(Resource.Id.SpinnerItemText).Text = items[position].Name;
+
+            TextView textView = view.FindViewById<TextView>(Resource.Id.SpinnerItemText);
+            string eventTypeName = 
+                context.Resources.GetString(context.Resources.GetIdentifier(items[position].Name, "string", context.PackageName));
+            textView.Text = eventTypeName;
             return view;
         }
     }

@@ -44,8 +44,14 @@ namespace IOU.Droid
             {
                 view = context.LayoutInflater.Inflate(Android.Resource.Layout.SimpleListItem1, null);
             }
-            view.FindViewById<TextView>(Android.Resource.Id.Text1).Text = items[position].Name + 
-                " (" + context.GetText(Resource.String.bill) + ": " + items[position].EventTypeName + ")";
+
+            int eventTypeNameResID = context.Resources.GetIdentifier(items[position].EventTypeName, "string", context.PackageName);
+            string eventTypeName = context.Resources.GetString(eventTypeNameResID);
+
+            TextView textView = view.FindViewById<TextView>(Android.Resource.Id.Text1);
+            string text = items[position].Name +
+                " (" + context.GetText(Resource.String.bill) + ": " + eventTypeName + ")";
+            textView.Text = text;
             return view;
         }
     }

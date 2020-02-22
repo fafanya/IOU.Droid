@@ -12,7 +12,7 @@ using Android.Widget;
 
 namespace IOU.Droid
 {
-    [Android.App.Activity(Label = "¬ход", Theme = "@style/MyTheme")]
+    [Android.App.Activity(Label = "@string/the_login", Theme = "@style/MyTheme")]
     public class LoginActivity : AppCompatActivity
     {
         EditText m_etEmail;

@@ -9,7 +9,7 @@ using Android.Support.V7.App;
 
 namespace IOU.Droid
 {
-    [Activity(Label = "Выбор участника", Theme = "@style/MyTheme")]
+    [Activity(Label = "@string/select_member", Theme = "@style/MyTheme")]
     public class SelectMemberActivity : AppCompatActivity
     {
         Spinner m_spMember;

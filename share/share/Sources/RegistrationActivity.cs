@@ -12,7 +12,7 @@ using Android.Widget;
 
 namespace IOU.Droid
 {
-    [Android.App.Activity(Label = "Регистрация", Theme = "@style/MyTheme")]
+    [Android.App.Activity(Label = "@string/the_sign_up", Theme = "@style/MyTheme")]
     public class RegistrationActivity : AppCompatActivity
     {
         Android.Support.V7.Widget.Toolbar m_Toolbar;

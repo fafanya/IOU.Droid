@@ -4,7 +4,7 @@ using Android.Widget;
 
 namespace IOU.Droid
 {
-    [Activity(Label = "Группа", Theme = "@style/MyTheme")]
+    [Activity(Label = "@string/group_of_events", Theme = "@style/MyTheme")]
     public class EditGroupActivity : EditActivityEx
     {
         UGroup m_Group;
@@ -34,7 +34,7 @@ namespace IOU.Droid
         protected override void StartCreateLocal()
         {
             m_Group = new UGroup();
-            SupportActionBar.Title = "Создание группы";
+            SupportActionBar.Title = Resources.GetText(Resource.String.add_group);
         }
         protected override void FinishCreateLocal()
         {
@@ -45,7 +45,7 @@ namespace IOU.Droid
         protected override void StartCreateInternet()
         {
             m_Group = new UGroup();
-            SupportActionBar.Title = "Создание группы";
+            SupportActionBar.Title = Resources.GetText(Resource.String.add_group);
         }
         protected override void FinishCreateInternet()
         {

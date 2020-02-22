@@ -12,7 +12,7 @@ using Android.Widget;
 
 namespace IOU.Droid
 {
-    [Android.App.Activity(Label = "О приложении", Theme = "@style/MyTheme")]
+    [Android.App.Activity(Label = "@string/about", Theme = "@style/MyTheme")]
     public class AboutActivity : AppCompatActivity
     {
         private Android.Support.V7.Widget.Toolbar toolbar;

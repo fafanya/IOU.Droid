@@ -12,7 +12,7 @@ using Android.Widget;
 
 namespace IOU.Droid
 {
-    [Android.App.Activity(Label = "Выход", Theme = "@style/MyTheme")]
+    [Android.App.Activity(Label = "@string/the_logout", Theme = "@style/MyTheme")]
     public class LogoutActivity : AppCompatActivity
     {
         protected override void OnCreate(Bundle savedInstanceState)
